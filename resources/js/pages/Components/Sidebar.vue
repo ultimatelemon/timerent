@@ -1,0 +1,281 @@
+<template>
+  <!--
+    This example requires updating your template:
+
+    ```
+    <html class="h-full bg-white">
+    <body class="h-full">
+    ```
+  -->
+  <div v-if="user">
+    <TransitionRoot as="template" :show="sidebarOpen">
+      <Dialog class="relative z-50 lg:hidden" @close="sidebarOpen = false">
+        <TransitionChild as="template" enter="transition-opacity ease-linear duration-300" enter-from="opacity-0" enter-to="opacity-100" leave="transition-opacity ease-linear duration-300" leave-from="opacity-100" leave-to="opacity-0">
+          <div class="fixed inset-0 bg-gray-900/80" />
+        </TransitionChild>
+
+        <div class="fixed inset-0 flex">
+          <TransitionChild as="template" enter="transition ease-in-out duration-300 transform" enter-from="-translate-x-full" enter-to="translate-x-0" leave="transition ease-in-out duration-300 transform" leave-from="translate-x-0" leave-to="-translate-x-full">
+            <DialogPanel class="relative mr-16 flex w-full max-w-xs flex-1">
+              <TransitionChild as="template" enter="ease-in-out duration-300" enter-from="opacity-0" enter-to="opacity-100" leave="ease-in-out duration-300" leave-from="opacity-100" leave-to="opacity-0">
+                <div class="absolute left-full top-0 flex w-16 justify-center pt-5">
+                  <button type="button" class="-m-2.5 p-2.5" @click="sidebarOpen = false">
+                    <span class="sr-only">Close sidebar</span>
+                    <XMarkIcon class="h-6 w-6 text-white" aria-hidden="true" />
+                  </button>
+                </div>
+              </TransitionChild>
+              <!-- Sidebar component, swap this element with another sidebar if you like -->
+              <div class="flex grow flex-col gap-y-5 overflow-y-auto bg-white px-6 pb-2">
+                <div class="flex h-16 shrink-0 items-center">
+                  <img class="h-8 w-auto" src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600" alt="Your Company" />
+                  <span class="ml-3 font-semibold">Timerent</span>
+                </div>
+                <nav class="flex flex-1 flex-col">
+                  <ul role="list" class="flex flex-1 flex-col gap-y-7">
+                    <li>
+                      <ul role="list" class="-mx-2 space-y-1">
+                        <li v-for="item in navigation" :key="item.name">
+                          <div v-if="item.type === 'category' && (item.permission.length > 0 ? hasCommon(item.permission, user.role.permissions) : true)" class="mb-1 mt-3 text-sm flex items-center">
+                    <span class="font-bold text-xs pr-1">
+                      {{item.name}}
+                    </span>
+                          </div>
+                          <router-link v-else :to="item.link" active-class="bg-gray-50 text-indigo-600" class="text-gray-700 hover:text-indigo-600 hover:bg-gray-50 group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold">
+                            <component :is="item.icon" class="text-gray-400 group-hover:text-indigo-600 h-6 w-6 shrink-0" aria-hidden="true"></component>
+                            <!--                    <i :class="'bx bx-' + item.icon"></i>-->
+                            {{ item.name }}
+                          </router-link>
+                        </li>
+                      </ul>
+                    </li>
+<!--                    <li>-->
+<!--                      <div class="text-xs font-semibold leading-6 text-gray-400">Your teams</div>-->
+<!--                      <ul role="list" class="-mx-2 mt-2 space-y-1">-->
+<!--                        <li v-for="team in teams" :key="team.name">-->
+<!--                          <a :href="team.href" :class="[team.current ? 'bg-gray-50 text-indigo-600' : 'text-gray-700 hover:text-indigo-600 hover:bg-gray-50', 'group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold']">-->
+<!--                            <span :class="[team.current ? 'text-indigo-600 border-indigo-600' : 'text-gray-400 border-gray-200 group-hover:border-indigo-600 group-hover:text-indigo-600', 'flex h-6 w-6 shrink-0 items-center justify-center rounded-lg border text-[0.625rem] font-medium bg-white']">{{ team.initial }}</span>-->
+<!--                            <span class="truncate">{{ team.name }}</span>-->
+<!--                          </a>-->
+<!--                        </li>-->
+<!--                      </ul>-->
+<!--                    </li>-->
+                  </ul>
+                </nav>
+              </div>
+            </DialogPanel>
+          </TransitionChild>
+        </div>
+      </Dialog>
+    </TransitionRoot>
+
+    <!-- Static sidebar for desktop -->
+    <div class="hidden lg:fixed lg:inset-y-0 lg:z-50 lg:flex lg:w-72 lg:flex-col">
+      <!-- Sidebar component, swap this element with another sidebar if you like -->
+      <div class="flex grow flex-col gap-y-5 overflow-y-auto border-r border-gray-200 bg-white px-6">
+        <div class="flex h-16 shrink-0 items-center">
+          <img class="h-8 w-auto" src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600" alt="Your Company" />
+          <span class="ml-3 font-semibold">{{ current_venue.name }}</span>
+        </div>
+        <a href="/select">Terug naar select</a>
+        <nav class="flex flex-1 flex-col">
+          <ul role="list" class="flex flex-1 flex-col gap-y-7">
+            <li>
+              <ul role="list" class="-mx-2 space-y-1">
+                <li v-for="item in navigation" :key="item.name">
+                  <div v-if="item.type === 'category' && (item.permission.length > 0 ? hasCommon(item.permission, user.role.permissions) : true)" class="mb-1 mt-3 text-sm flex items-center">
+                    <span class="font-bold text-xs pr-1">
+                      {{item.name}}
+                    </span>
+                  </div>
+                  <router-link v-else :to="item.link" active-class="bg-gray-50 text-indigo-600" class="text-gray-700 hover:text-indigo-600 hover:bg-gray-50 group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold">
+                    <component :is="item.icon" class="text-gray-400 group-hover:text-indigo-600 h-6 w-6 shrink-0" aria-hidden="true"></component>
+                    <!--                    <i :class="'bx bx-' + item.icon"></i>-->
+                    {{ item.name }}
+                  </router-link>
+                </li>
+              </ul>
+            </li>
+<!--            <li>-->
+<!--              <div class="text-xs font-semibold leading-6 text-gray-400">Your teams</div>-->
+<!--              <ul role="list" class="-mx-2 mt-2 space-y-1">-->
+<!--                <li v-for="team in teams" :key="team.name">-->
+<!--                  <router-link :to="team.href" :class="[team.current ? 'bg-gray-50 text-indigo-600' : 'text-gray-700 hover:text-indigo-600 hover:bg-gray-50', 'group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold']">-->
+<!--                    <span :class="[team.current ? 'text-indigo-600 border-indigo-600' : 'text-gray-400 border-gray-200 group-hover:border-indigo-600 group-hover:text-indigo-600', 'flex h-6 w-6 shrink-0 items-center justify-center rounded-lg border text-[0.625rem] font-medium bg-white']">{{ team.initial }}</span>-->
+<!--                    <span class="truncate">{{ team.name }}</span>-->
+<!--                  </router-link>-->
+<!--                </li>-->
+<!--              </ul>-->
+<!--            </li>-->
+            <li class="-mx-6 mt-auto">
+              <a href="#" class="flex items-center bg-gray-50 hover:bg-gray-100 border-t gap-x-4 px-6 py-3 text-sm font-semibold leading-6 text-gray-900 hover:bg-gray-50 justify-between">
+                <img class="h-8 w-8 rounded-full bg-gray-50" src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="" />
+                <div class="flex flex-col">
+                  <span class="sr-only">Your profile</span>
+                  <span aria-hidden="true">{{ user.name }}</span>
+                  <span aria-hidden="true" class="font-light text-xs">{{ user.email }}</span>
+                </div>
+                <div @click="logout">
+                  <i><component :is="ArrowRightEndOnRectangleIcon" class="h-6 w-6 text-red-500"></component></i>
+                </div>
+              </a>
+            </li>
+          </ul>
+        </nav>
+      </div>
+    </div>
+
+    <div class="sticky top-0 z-40 flex items-center gap-x-6 bg-white px-4 py-4 shadow-sm sm:px-6 lg:hidden">
+      <button type="button" class="-m-2.5 p-2.5 text-gray-700 lg:hidden" @click="sidebarOpen = true">
+        <span class="sr-only">Open sidebar</span>
+        <i class="bx bx-menu"></i>
+      </button>
+      <div class="flex-1 text-sm font-semibold leading-6 text-gray-900">Dashboard</div>
+      <a href="#">
+        <span class="sr-only">Your profile</span>
+        <img class="h-8 w-8 rounded-full bg-gray-50" src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="" />
+      </a>
+    </div>
+
+    <main class="py-10 lg:pl-72">
+      <div class="px-4 sm:px-6 lg:px-8">
+        <router-view></router-view>
+      </div>
+    </main>
+  </div>
+</template>
+
+<script setup>
+import { ref } from 'vue'
+import { Dialog, DialogPanel, TransitionChild, TransitionRoot } from '@headlessui/vue'
+import {HomeIcon, ArrowRightEndOnRectangleIcon} from "@heroicons/vue/24/outline/index.js";
+
+  // { name: 'Dashboard', href: '#', icon: HomeIcon, current: true },
+  // { name: 'Team', href: '#', icon: UsersIcon, current: false },
+  // { name: 'Projects', href: '#', icon: FolderIcon, current: false },
+  // { name: 'Calendar', href: '#', icon: CalendarIcon, current: false },
+  // { name: 'Documents', href: '#', icon: DocumentDuplicateIcon, current: false },
+  // { name: 'Reports', href: '#', icon: ChartPieIcon, current: false },
+const teams = [
+  // { id: 1, name: 'Heroicons', href: '#', initial: 'H', current: false },
+  // { id: 2, name: 'Tailwind Labs', href: '#', initial: 'T', current: false },
+  // { id: 3, name: 'Workcation', href: '#', initial: 'W', current: false },
+]
+
+const sidebarOpen = ref(false)
+</script>
+
+<script>
+
+import {
+  HomeIcon,
+  UserIcon,
+  CircleStackIcon,
+  ArchiveBoxIcon,
+  CalendarDaysIcon, ListBulletIcon
+} from "@heroicons/vue/24/outline/index.js";
+// import {CircleStackIcon} from "@heroicons/vue/16/solid/index.js";
+
+export default {
+  name: "Sidebar",
+  data() {
+    return {
+      user: null,
+      navigation: [],
+    }
+  },
+
+  methods: {
+    fetchUser() {
+      axios.get('/users/current')
+          .then(response => {
+            this.user = response.data.data;
+            this.fetchNavigation();
+          })
+    },
+
+    hasCommon(arr1, arr2) {
+      return arr1.some(item1 => arr2.some(item2 => item1 === item2));
+    },
+
+    fetchNavigation() {
+      this.navigation = [
+        {
+          'type': 'category',
+          'name': 'Algemeen',
+          'permission': [],
+        },
+        {
+          'name': 'Dashboard',
+          'link': {name: 'index'},
+          'icon': HomeIcon,
+          'permission': null,
+        },
+        {
+          'type': 'category',
+          'name': 'Algemeen',
+          'permission': [],
+        },
+        {
+          'name': 'Units',
+          'link': {name: 'venues.units.index', params: {venue: this.$store.state.venue.id}},
+          'icon': CircleStackIcon,
+          'permission': 'VIEW_UNITS',
+        },
+        {
+          'name': 'Templates',
+          'link': {name: 'venues.templates.index', params: {venue: this.$store.state.venue.id}},
+          'icon': ListBulletIcon,
+          'permission': 'VIEW_UNITS',
+        },
+        {
+          'name': 'Agenda',
+          'link': {name: 'venues.calendar.index', params: {venue: this.$store.state.venue.id}},
+          'icon': CalendarDaysIcon,
+          'permission': 'VIEW_UNITS',
+        },
+        {
+          'name': 'Producten',
+          'link': {name: 'venues.products.index', params: {venue: this.$store.state.venue.id}},
+          'icon': ArchiveBoxIcon,
+          'permission': 'VIEW_UNITS',
+        },
+        {
+          'type': 'category',
+          'name': 'Gebruikers',
+          'permission': ['VIEW_USERS']
+        },
+        {
+          'name': 'Gebruikers',
+          'link': {name: 'users.index'},
+          'icon': UserIcon,
+          'permission': 'VIEW_USERS',
+        },
+      ]
+    },
+
+    logout() {
+
+    },
+  },
+
+  mounted() {
+    this.fetchUser();
+  },
+
+  // TODO: Fix user store in Vuex to remove the api call to fetch user.
+  computed: {
+    current_venue: {
+      get() {
+        return this.$store.state.venue;
+      }
+    },
+
+    current_user: {
+      get() {
+        return this.$store.state.user;
+      }
+    }
+  }
+}
+</script>

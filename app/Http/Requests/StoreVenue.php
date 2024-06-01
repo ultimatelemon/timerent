@@ -1,0 +1,42 @@
+<?php
+
+namespace App\Http\Requests;
+
+use Illuminate\Contracts\Validation\ValidationRule;
+use Illuminate\Foundation\Http\FormRequest;
+
+class StoreVenue extends FormRequest
+{
+    /**
+     * Determine if the user is authorized to make this request.
+     */
+    public function authorize(): bool
+    {
+        return true;
+    }
+
+    /**
+     * Get the validation rules that apply to the request.
+     *
+     * @return array<string, ValidationRule|array|string>
+     */
+    public function rules(): array
+    {
+        return [
+            'name' => 'required|string',
+            'description' => 'nullable|string|max:200',
+            'address' => 'nullable|string',
+            'postal_code' => 'nullable|string',
+            'city' => 'nullable|string',
+            'email' => 'nullable|email',
+            'phone' => 'nullable|string',
+            'coc_number' => 'nullable|string',
+            'tax_number' => 'nullable|string',
+            'bank_number' => 'nullable|string',
+
+            'avatar_id' => 'nullable|uuid|exists:files,id',
+            'cover_id' => 'nullable|uuid|exists:files,id',
+            'receipt_logo_id' => 'nullable|uuid|exists:files,id',
+        ];
+    }
+}

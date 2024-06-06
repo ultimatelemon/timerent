@@ -24,10 +24,13 @@
             </tr>
             </thead>
             <tbody class="divide-y divide-gray-200 bg-white">
-            <tr v-for="template in templates" :key="template.id" class="even:bg-gray-50 hover:bg-gray-100 hover:cursor-pointer" @click="this.$router.push({name: 'venues.templates.edit', params: {venue: this.$route.params.venue, template: template.id}})">
+            <tr v-if="templates.length >= 1" v-for="template in templates" :key="template.id" class="even:bg-gray-50 hover:bg-gray-100 hover:cursor-pointer" @click="this.$router.push({name: 'venues.templates.edit', params: {venue: this.$route.params.venue, template: template.id}})">
               <td class="whitespace-nowrap py-2 pl-4 pr-3 text-sm text-gray-500 sm:pl-0">{{ template.name }}</td>
               <td class="whitespace-nowrap px-2 py-2 text-sm font-medium text-gray-900">{{ template.interval }}</td>
               <td class="whitespace-nowrap px-2 py-2 text-sm font-medium text-gray-900">{{ $filters.currency(template.price) }}</td>
+            </tr>
+            <tr v-else class="text-center">
+              <td colspan="3" class="pt-12">Er zijn nog geen templates aangemaakt</td>
             </tr>
             </tbody>
           </table>

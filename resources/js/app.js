@@ -10,7 +10,7 @@ window.axios = axios;
 window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 window.axios.defaults.headers.common['Authorization'] = ' Bearer ' + window.localStorage.getItem('tr_auth_token');
 window.axios.defaults.headers.common['X-CSRF-TOKEN'] = window.Laravel.csrfToken;
-window.axios.defaults.baseURL = import.meta.env.VITE_API_URL
+window.axios.defaults.baseURL = (isApplication ? window.location.origin + '/api' : import.meta.env.VITE_API_URL)
 
 axios.interceptors.response.use(function (response) {
     return response;
@@ -50,7 +50,7 @@ import lodash from "lodash";
 const router = VueRouter.createRouter({
     mode: 'history',
     history: VueRouter.createWebHistory(),
-    routes,
+    routes: isApplication(window.location.href) ? ApplicationRoutes : routes,
     // 'routes': isVenue(window.location.href) ? VenueRoutes : routes,
 });
 router.beforeEach((to, from, next) => {
@@ -69,6 +69,8 @@ for (const file in files) {
 }
 
 import Sidebar from "./pages/Components/Sidebar.vue";
+import {isApplication} from "./utilities.js";
+import {ApplicationRoutes} from "./ApplicationRoutes.js";
 // import {isVenue} from "./Utils.js";
 // import {VenueRoutes} from "./VenueRoutes.js";
 app.component('side-bar', Sidebar)

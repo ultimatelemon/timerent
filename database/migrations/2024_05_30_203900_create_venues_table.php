@@ -17,6 +17,7 @@ return new class extends Migration
 
             $table->string('name');
             $table->text('description')->nullable();
+            $table->string('subdomain')->unique();
 
             $table->string('address')->nullable();
             $table->string('postal_code')->nullable();

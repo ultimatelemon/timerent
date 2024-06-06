@@ -43,15 +43,6 @@
         </div>
         <p v-if="errors.description" class="mt-2 text-sm text-red-600" id="description-error">{{ errors.description[0] }}</p>
       </div>
-
-      <div>
-        <label for="tax_percentage" class="block text-sm font-medium leading-6 text-gray-900">Belasting tarief <span class="required-star">*</span></label>
-        <select v-model="formData.tax_percentage" id="location" name="location" class="mt-2 block w-full rounded-md border-0 py-1.5 pl-3 pr-10 text-gray-900 ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600 sm:text-sm sm:leading-6">
-          <option :value="0">0%</option>
-          <option :value="9">9%</option>
-          <option :value="21">21%</option>
-        </select>
-      </div>
     </div>
 
     <div class="flex justify-end">
@@ -74,7 +65,6 @@ export default {
       formData: {
         name: "",
         description: "",
-        tax_percentage: 0,
       },
     }
   },
@@ -88,7 +78,6 @@ export default {
               this.unit = response.data.data;
               this.formData.name = this.unit.name;
               this.formData.description = this.unit.description;
-              this.formData.tax_percentage = this.unit.tax_percentage;
             })
             .finally(() => {
               this.loading = false;

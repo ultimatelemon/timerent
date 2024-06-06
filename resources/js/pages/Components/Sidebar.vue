@@ -21,7 +21,7 @@
                 <div class="absolute left-full top-0 flex w-16 justify-center pt-5">
                   <button type="button" class="-m-2.5 p-2.5" @click="sidebarOpen = false">
                     <span class="sr-only">Close sidebar</span>
-                    <XMarkIcon class="h-6 w-6 text-white" aria-hidden="true" />
+                    <component :is="XMarkIcon" class="h-6 w-6"></component>
                   </button>
                 </div>
               </TransitionChild>
@@ -128,7 +128,7 @@
     <div class="sticky top-0 z-40 flex items-center gap-x-6 bg-white px-4 py-4 shadow-sm sm:px-6 lg:hidden">
       <button type="button" class="-m-2.5 p-2.5 text-gray-700 lg:hidden" @click="sidebarOpen = true">
         <span class="sr-only">Open sidebar</span>
-        <i class="bx bx-menu"></i>
+        <component :is="Bars3Icon" class="h-6 w-6"></component>
       </button>
       <div class="flex-1 text-sm font-semibold leading-6 text-gray-900">Dashboard</div>
       <a href="#">
@@ -149,6 +149,7 @@
 import { ref } from 'vue'
 import { Dialog, DialogPanel, TransitionChild, TransitionRoot } from '@headlessui/vue'
 import {HomeIcon, ArrowRightEndOnRectangleIcon} from "@heroicons/vue/24/outline/index.js";
+import {Bars3Icon, XMarkIcon} from "@heroicons/vue/16/solid/index.js";
 
   // { name: 'Dashboard', href: '#', icon: HomeIcon, current: true },
   // { name: 'Team', href: '#', icon: UsersIcon, current: false },
@@ -172,7 +173,7 @@ import {
   UserIcon,
   CircleStackIcon,
   ArchiveBoxIcon,
-  CalendarDaysIcon, ListBulletIcon
+  CalendarDaysIcon, ListBulletIcon, BriefcaseIcon
 } from "@heroicons/vue/24/outline/index.js";
 // import {CircleStackIcon} from "@heroicons/vue/16/solid/index.js";
 
@@ -213,7 +214,7 @@ export default {
         },
         {
           'type': 'category',
-          'name': 'Algemeen',
+          'name': 'Applicatie',
           'permission': [],
         },
         {
@@ -238,6 +239,12 @@ export default {
           'name': 'Producten',
           'link': {name: 'venues.products.index', params: {venue: this.$store.state.venue.id}},
           'icon': ArchiveBoxIcon,
+          'permission': 'VIEW_UNITS',
+        },
+        {
+          'name': 'Reserveringen',
+          'link': {name: 'venues.reservations.index', params: {venue: this.$store.state.venue.id}},
+          'icon': BriefcaseIcon,
           'permission': 'VIEW_UNITS',
         },
         {

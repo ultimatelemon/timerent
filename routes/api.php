@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\ReservationController;
 use App\Http\Controllers\TemplateController;
 use App\Http\Controllers\UnitController;
 use App\Http\Controllers\User\UserVenueController;
@@ -20,9 +21,10 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/venues/{venue}/weeks/update', [WeekController::class, 'updateOrCreate']);
 
     // Todo: Permission routes
-    Route::resource('venues',               VenueController::class)->except(['create', 'edit']);
-    Route::resource('venues.units',         UnitController::class)->except(['create', 'edit']);
-    Route::resource('venues.templates',     TemplateController::class)->except(['create', 'edit']);
-    Route::resource('venues.weeks',         WeekController::class)->except(['create', 'edit']);
-    Route::resource('venues.products',      ProductController::class)->except(['create', 'edit']);
+    Route::resource('venues',                   VenueController::class)->except(['create', 'edit']);
+    Route::resource('venues.units',             UnitController::class)->except(['create', 'edit']);
+    Route::resource('venues.templates',         TemplateController::class)->except(['create', 'edit']);
+    Route::resource('venues.weeks',             WeekController::class)->except(['create', 'edit']);
+    Route::resource('venues.products',          ProductController::class)->except(['create', 'edit']);
+    Route::resource('venues.reservations',      ReservationController::class)->except(['create', 'edit']);
 });

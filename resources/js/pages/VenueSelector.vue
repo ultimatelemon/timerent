@@ -26,7 +26,10 @@
               <i class="far fa-info-circle mr-4"></i>
               <p>Registreer een nieuwe venue</p>
             </div>
+            <label>Naam</label>
             <input v-model="name" type="text">
+            <label>Subdomein</label>
+            <input v-model="subdomain" type="text">
           </div>
           <div class="flex justify-end bg-gray-50 px-5 py-3">
             <button class="btn btn-primary ml-auto" @click="addVenue">
@@ -73,6 +76,7 @@ export default {
       current_user: null,
 
       name: "",
+      subdomain: "",
     }
   },
 
@@ -98,7 +102,7 @@ export default {
     },
 
     addVenue() {
-      axios.post('/venues', {name: this.name})
+      axios.post('/venues', {name: this.name, subdomain: this.subdomain})
           .then(response => {
             this.name = "";
             this.showNewVenue = false;

@@ -21,6 +21,7 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
             $this->mapWebRoutes();
+            $this->mapApiRoutes();
     }
 
     public function mapWebRoutes()
@@ -31,10 +32,26 @@ class AppServiceProvider extends ServiceProvider
                 $host = request()->getHost();
 
                 if($host !== env('MAIN_DOMAIN')) {
-                    Route::middleware(['venue'])
-                        ->group(base_path('routes/venue/web.php'));
+                    Route::middleware(['web'])
+                        ->group(base_path('routes/application/web.php'));
                 } else {
                     require base_path('routes/web.php');
+                }
+            });
+    }
+
+    public function mapApiRoutes()
+    {
+        Route::middleware('api')
+            ->prefix('api')
+            ->namespace('App\\Http\\Controllers\\')
+            ->group(function () {
+                $host = request()->getHost();
+                ray($host !== env('MAIN_DOMAIN'));
+                if($host !== env('MAIN_DOMAIN')) {
+                    require base_path('routes/application/api.php');
+                } else {
+                    require base_path('routes/api.php');
                 }
             });
     }

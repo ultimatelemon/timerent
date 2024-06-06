@@ -46,4 +46,14 @@ export const routes = [
             { path: ':product', component: () => import('./pages/Venues/Products/Edit.vue'), name: 'venues.products.edit' },
         ]
     },
+
+    {
+        path: '/store/:venue/reservations',
+        component: Wrapper,
+        children: [
+            { path: '', component: () => import('./pages/Venues/Reservations/Index.vue'), name: 'venues.reservations.index' },
+            // { path: 'create', component: () => import('./pages/Venues/Products/Edit.vue'), name: 'venues.products.create' },
+            { path: ':reservation', component: () => import('./pages/Venues/Reservations/Edit.vue'), name: 'venues.reservations.edit' },
+        ]
+    },
 ];

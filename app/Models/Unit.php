@@ -14,5 +14,6 @@ class Unit extends Model
     protected $fillable = [
         'name',
         'description',
+        'tax_percentage',
     ];
 }

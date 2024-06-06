@@ -13,7 +13,7 @@ class Venue extends Model
 
     protected $fillable = [
         'name', 'description', 'address', 'postal_code', 'city', 'email', 'phone', 'coc_number', 'tax_number', 'bank_number', 'avatar_id', 'cover_id', 'receipt_logo_id',
-        'receipt_top', 'receipt_bottom',
+        'receipt_top', 'receipt_bottom', 'subdomain',
     ];
 
     /**
@@ -49,5 +49,10 @@ class Venue extends Model
     public function products()
     {
         return $this->hasMany(Product::class);
+    }
+
+    public function reservations()
+    {
+        return $this->hasMany(Reservation::class);
     }
 }

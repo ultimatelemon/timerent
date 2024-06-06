@@ -47,7 +47,31 @@
       </div>
 
       <div>
-        <label for="description" class="block text-sm font-medium leading-6 text-gray-900">Actief</label>
+        <label for="tax_percentage" class="block text-sm font-medium leading-6 text-gray-900">Belasting tarief <span class="required-star">*</span></label>
+        <select v-model="formData.tax_percentage" id="location" name="location" class="mt-2 block w-full rounded-md border-0 py-1.5 pl-3 pr-10 text-gray-900 ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600 sm:text-sm sm:leading-6">
+          <option :value="0">0%</option>
+          <option :value="9">9%</option>
+          <option :value="21">21%</option>
+        </select>
+      </div>
+
+      <div>
+        <label for="price" class="block text-sm font-medium leading-6 text-gray-900">Prijs per reservering</label>
+        <div class="relative mt-2">
+          <CurrencyInput v-on:keyup.enter='postData' v-model='formData.price'></CurrencyInput>
+          <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
+            <svg v-if="errors.price" class="h-5 w-5 text-red-500" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+              <path fill-rule="evenodd"
+                    d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-8-5a.75.75 0 01.75.75v4.5a.75.75 0 01-1.5 0v-4.5A.75.75 0 0110 5zm0 10a1 1 0 100-2 1 1 0 000 2z"
+                    clip-rule="evenodd"/>
+            </svg>
+          </div>
+        </div>
+        <p v-if="errors.price" class="mt-2 text-sm text-red-600" id="description-error">{{ errors.price[0] }}</p>
+      </div>
+
+      <div>
+        <label for="is_active" class="block text-sm font-medium leading-6 text-gray-900">Actief</label>
         <div class="relative mt-2">
           <Switch v-model="formData.is_active" :class="[formData.is_active ? 'bg-indigo-600' : 'bg-gray-200', 'relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-indigo-600 focus:ring-offset-2']">
             <span class="sr-only">Use setting</span>
@@ -65,29 +89,14 @@
             </span>
           </Switch>
           <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
-            <svg v-if="errors.description" class="h-5 w-5 text-red-500" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+            <svg v-if="errors.is_active" class="h-5 w-5 text-red-500" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
               <path fill-rule="evenodd"
                     d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-8-5a.75.75 0 01.75.75v4.5a.75.75 0 01-1.5 0v-4.5A.75.75 0 0110 5zm0 10a1 1 0 100-2 1 1 0 000 2z"
                     clip-rule="evenodd"/>
             </svg>
           </div>
         </div>
-        <p v-if="errors.description" class="mt-2 text-sm text-red-600" id="description-error">{{ errors.description[0] }}</p>
-      </div>
-
-      <div>
-        <label for="description" class="block text-sm font-medium leading-6 text-gray-900">Prijs per reservering</label>
-        <div class="relative mt-2">
-          <CurrencyInput v-on:keyup.enter='postData' v-model='formData.price'></CurrencyInput>
-          <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
-            <svg v-if="errors.description" class="h-5 w-5 text-red-500" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-              <path fill-rule="evenodd"
-                    d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-8-5a.75.75 0 01.75.75v4.5a.75.75 0 01-1.5 0v-4.5A.75.75 0 0110 5zm0 10a1 1 0 100-2 1 1 0 000 2z"
-                    clip-rule="evenodd"/>
-            </svg>
-          </div>
-        </div>
-        <p v-if="errors.description" class="mt-2 text-sm text-red-600" id="description-error">{{ errors.description[0] }}</p>
+        <p v-if="errors.is_active" class="mt-2 text-sm text-red-600" id="description-error">{{ errors.is_active[0] }}</p>
       </div>
 
     </div>
@@ -116,6 +125,7 @@ export default {
         name: "",
         description: "",
         price: 0,
+        tax_percentage: 0,
         is_active: false,
       },
     }
@@ -131,6 +141,7 @@ export default {
               this.formData.name = this.product.name;
               this.formData.description = this.product.description;
               this.formData.price = this.product.price;
+              this.formData.tax_percentage = this.product.tax_percentage;
               this.formData.is_active = this.product.is_active;
             })
             .finally(() => {

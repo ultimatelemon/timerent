@@ -1,0 +1,34 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Http\Resources\ReservationResource;
+use App\Models\Venue;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
+
+class ReservationController extends ApiController
+{
+    /**
+     * Display a listing of the resource
+     *
+     * @param Request $request
+     * @param Venue $venue
+     * @return JsonResponse
+     */
+    public function index(Request $request, Venue $venue): JsonResponse
+    {
+        $reservations = $venue->reservations();
+
+        if($request->has('q'))
+            $reservations = $reservations->where('id', 'ILIKE', "%{$request->q}%")
+                ->orWhere('email', 'ILIKE', "%{$request->q}%");
+
+        $reservations = $reservations->paginate(env('POSTS_PER_PAGE'));
+
+        return $this->success(
+            ReservationResource::collection($reservations),
+            collect($reservations)->only(['from', 'to', 'total', 'per_page', 'last_page', 'current_page'])->toArray(),
+        );
+    }
+}

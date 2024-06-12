@@ -4,10 +4,12 @@ namespace App\Http\Controllers\Application;
 
 use App\Helpers\ReservationHelper;
 use App\Http\Controllers\ApiController;
+use App\Http\Resources\ProductResource;
 use App\Http\Resources\UnitResource;
 use App\Http\Resources\VenueResource;
 use App\Models\Venue;
 use Carbon\Carbon;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
@@ -55,13 +57,13 @@ class ApplicationTenantController extends ApiController
 
             foreach ($ranges as $range) {
                 $from = Carbon::create($request->date)->setHour(intval(explode(':', $range['from'])[0]))->setMinute(intval(explode(':', $range['from'])[1]));
-                $till = Carbon::create($request->date)->setHour(intval(explode(':', $range['till'])[0]))->setMinute(intval(explode(':', $range['till'])[1]));
+                $to = Carbon::create($request->date)->setHour(intval(explode(':', $range['to'])[0]))->setMinute(intval(explode(':', $range['to'])[1]));
 
-                while ($from < $till) {
+                while ($from < $to) {
                     $availabilityForWeek['timeblocks'][] = [
                         'available' => ReservationHelper::checkIfTimeblockIsAvailable($week->unit->id, $from->toDateTimeString(), Carbon::parse($from)->addMinutes($week->template->interval - 1)->toDateTimeString()),
                         'from' => Carbon::parse($from)->toTimeString('minute'),
-                        'till' => Carbon::parse($from)->addMinutes($week->template->interval - 1)->toTimeString('minute'),
+                        'to' => Carbon::parse($from)->addMinutes($week->template->interval - 1)->toTimeString('minute'),
                         'interval' => $week->template->interval,
                         'price' => $week->template->price,
                         'unit_id' => $week->unit->id,
@@ -72,5 +74,17 @@ class ApplicationTenantController extends ApiController
             $availability[] = $availabilityForWeek;
         }
         return $this->success($availability);
+    }
+
+
+    /**
+     * Get the available products for reservation
+     *
+     * @param Venue $venue
+     * @return JsonResponse
+     */
+    public function getAvailableProducts(Venue $venue): JsonResponse
+    {
+        return $this->success(ProductResource::collection($venue->products->where('is_active', true)));
     }
 }

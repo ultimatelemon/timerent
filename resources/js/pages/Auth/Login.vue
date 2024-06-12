@@ -81,7 +81,7 @@ export default {
           .then(response => {
             this.errors = [];
             window.localStorage.setItem('tr_auth_token', response.data.data.token);
-            window.location = '/';
+            window.location = '/select';
           })
           .catch(e => {
             this.errors = e.response.data

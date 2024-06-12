@@ -5,7 +5,7 @@
       <div class="text-sm">Beheer hier het product</div>
     </div>
 
-    <div class="grid grid-cols-2 gap-12 mb-12">
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 mb-12">
 
       <div>
         <label for="name" class="block text-sm font-medium leading-6 text-gray-900">Naam <span

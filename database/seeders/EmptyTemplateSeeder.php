@@ -19,7 +19,7 @@ class EmptyTemplateSeeder extends Seeder
                 'ranges' => [
                     [
                         'from' => '09:00',
-                        'till' => '17:00',
+                        'to' => '17:00',
                     ]
                 ]
             ];
@@ -29,7 +29,7 @@ class EmptyTemplateSeeder extends Seeder
         // Todo: Venue ID
         $template = new Template;
         $template->id = "0a2f32e0-3002-4348-8576-1979b9905c2e";
-        $template->venue_id = '9c2ebd0e-f6fc-4824-9425-00ad75b04645';
+        $template->venue_id = null;
         $template->name = "Lege template";
         $template->price = 2000;
         $template->visible = false;

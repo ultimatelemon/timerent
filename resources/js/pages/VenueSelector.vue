@@ -45,7 +45,7 @@
       <div class="venue-wrap flex flex-wrap justify-center gap-4">
         <loader v-if="loading"></loader>
         <template v-for="user_venue in user_venues">
-          <a @click="current_venue = user_venue.venue;" :href="'/store/' + user_venue.id + '/home'" class="cursor-pointer">
+          <a @click="current_venue = user_venue.venue;" :href="'/store/' + user_venue.venue.id + '/home'" class="cursor-pointer">
             <img v-if="user_venue.venue.avatar" class="w-32 h-32 rounded-md bg-gray-100 shadow border-8 border-white object-contain" :src="user_venue.venue.avatar.full_path"></img>
             <p v-else class="w-32 h-32 rounded-md bg-gray-100 shadow border-8 border-white flex items-center justify-center text-center">{{ user_venue.venue.name }}</p>
           </a>

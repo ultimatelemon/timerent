@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ReservationController;
+use App\Http\Controllers\StatisticsController;
 use App\Http\Controllers\TemplateController;
 use App\Http\Controllers\UnitController;
 use App\Http\Controllers\User\UserVenueController;
@@ -15,10 +16,14 @@ Route::post('/sanctum/token', [\App\Http\Controllers\AuthenticationController::c
 
 
 Route::middleware('auth:sanctum')->group(function () {
+    Route::post('/sanctum/logout', [\App\Http\Controllers\AuthenticationController::class, 'revokeToken']);
+
     Route::get('/users/current', [\App\Http\Controllers\User\UserController::class, 'current']);
     Route::resource('/users', \App\Http\Controllers\User\UserController::class);
     Route::resource('users.user-venues', UserVenueController::class)->only(['index']);
     Route::post('/venues/{venue}/weeks/update', [WeekController::class, 'updateOrCreate']);
+
+    Route::get('/venues/{venue}/statistics', [StatisticsController::class, 'index']);
 
     // Todo: Permission routes
     Route::resource('venues',                   VenueController::class)->except(['create', 'edit']);

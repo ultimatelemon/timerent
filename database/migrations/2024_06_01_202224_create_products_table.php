@@ -19,7 +19,7 @@ return new class extends Migration
             $table->string('description')->nullable();
             $table->integer('price');
             $table->boolean('is_active')->default(false);
-            $table->string('tax_percentage');
+            $table->integer('tax_percentage');
 
             $table->softDeletes();
             $table->timestamps();

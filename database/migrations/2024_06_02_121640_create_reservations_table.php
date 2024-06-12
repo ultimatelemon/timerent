@@ -17,18 +17,18 @@ return new class extends Migration
 
             $table->string('name');
             $table->string('phone_number');
-            $table->text('comments')->nullable();
             $table->string('email');
+            $table->text('comments')->nullable();
 
             $table->string('payment_provider');
-            $table->string('payment_amount');
-            $table->string('payment_id');
+            $table->integer('payment_amount');
+            $table->integer('tax_low')->nullable();
+            $table->integer('tax_high')->nullable();
+            $table->string('payment_id')->nullable();
             $table->string('payment_status');
 
             $table->timestamp('date');
 
-            $table->string('unit_name');
-            $table->foreignUuid('unit_id')->constrained();
             $table->longText('payment_url')->nullable();
             $table->uuid('rebook_id')->nullable();
             $table->uuid('rebook_of')->nullable();

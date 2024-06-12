@@ -27,6 +27,9 @@ return new class extends Migration
             $table->string('coc_number')->nullable();
             $table->string('tax_number')->nullable();
 
+            $table->string('payment_service_provider')->nullable();
+            $table->string('stripe_connect_id')->nullable();
+
             $table->softDeletes();
             $table->timestamps();
         });

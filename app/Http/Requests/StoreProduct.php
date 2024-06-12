@@ -25,7 +25,8 @@ class StoreProduct extends FormRequest
             'name' => 'required|string',
             'description' => 'string|nullable',
             'price' => 'integer|required',
-            'is_active' => 'required|boolean'
+            'is_active' => 'required|boolean',
+            'tax_percentage' => 'required|integer|in:0,9,21',
         ];
     }
 }

@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('templates', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->foreignUuid('venue_id')->constrained()->cascadeOnDelete();
+            $table->foreignUuid('venue_id')->nullable()->constrained()->cascadeOnDelete();
 
             $table->string('name');
             $table->json('template');

@@ -1,16 +1,16 @@
 <template>
   <div>
-    <div class="mb-12 flex justify-between">
+    <div class="mb-12 lg:flex justify-between">
       <div>
         <div class="font-semibold text-lg">Agenda</div>
         <div class="text-sm">Wijs hier per week een template toe aan een unit</div>
       </div>
-      <div class="flex items-center gap-5">
+      <div class="flex items-center gap-5 mt-4 lg:mt-0">
         <component @click="year--" :is="MinusIcon" class="icon-btn"></component>
         {{ year }}
         <component @click="year++" :is="PlusIcon" class="icon-btn"></component>
       </div>
-      <div>
+      <div class="mt-4 lg:mt-0">
         <a @click='year = DateTime.now().year'
            :href='"#" + (DateTime.now().weekNumber === 1 ? "1" : (DateTime.now().weekNumber -1))'>Naar huidige week</a>
       </div>

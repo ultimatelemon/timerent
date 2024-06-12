@@ -47,7 +47,6 @@ class AppServiceProvider extends ServiceProvider
             ->namespace('App\\Http\\Controllers\\')
             ->group(function () {
                 $host = request()->getHost();
-                ray($host !== env('MAIN_DOMAIN'));
                 if($host !== env('MAIN_DOMAIN')) {
                     require base_path('routes/application/api.php');
                 } else {

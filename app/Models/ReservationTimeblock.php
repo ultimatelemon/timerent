@@ -15,6 +15,8 @@ class ReservationTimeblock extends Model
         'from',
         'to',
         'date',
+        'reservation_id',
+        'venue_id',
         'canceled_at'
     ];
 

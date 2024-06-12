@@ -12,7 +12,7 @@
 <script>
 export default {
   name: "ButtonTimeReservation",
-  props: ['till', 'unit', 'timeblock', 'selected'],
+  props: ['to', 'unit', 'timeblock', 'selected'],
 
   methods: {
     toggleSelect(unit_id, timeblock) {
@@ -20,6 +20,8 @@ export default {
         unit_id,
         timeblock,
       };
+
+      console.log(bookObject)
 
       let list = this.selected;
       if (this.selected.filter(x => JSON.stringify(x) === JSON.stringify(bookObject)).length) {
@@ -44,7 +46,7 @@ export default {
     isSelected() {
       return Object.keys(this.selected).length > 0 &&
           this.selected.filter(x => JSON.stringify(x) === JSON.stringify({
-            room: this.unit.id,
+            unit_id: this.unit.id,
             timeblock: this.timeblock
           })).length;
     }

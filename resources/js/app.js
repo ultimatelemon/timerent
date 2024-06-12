@@ -16,8 +16,8 @@ axios.interceptors.response.use(function (response) {
     return response;
 }, function (error) {
     if(error.response.status === 401) {
-        // window.localStorage.removeItem('tr_auth_token');
-        // window.location = '/login';
+        window.localStorage.removeItem('tr_auth_token');
+        window.location = '/login';
     }
     return Promise.reject(error);
 })
@@ -71,6 +71,7 @@ for (const file in files) {
 import Sidebar from "./pages/Components/Sidebar.vue";
 import {isApplication} from "./utilities.js";
 import {ApplicationRoutes} from "./ApplicationRoutes.js";
+import {DateTime} from "luxon";
 // import {isVenue} from "./Utils.js";
 // import {VenueRoutes} from "./VenueRoutes.js";
 app.component('side-bar', Sidebar)

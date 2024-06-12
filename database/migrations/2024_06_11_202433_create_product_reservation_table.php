@@ -11,16 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('units', function (Blueprint $table) {
-            $table->uuid('id')->primary();
-
-            $table->foreignUuid('venue_id')->constrained()->cascadeOnDelete();
-
-            $table->string('name');
-            $table->string('description')->nullable();
-            $table->integer('tax_percentage');
-
-            $table->softDeletes();
+        Schema::create('product_reservation', function (Blueprint $table) {
+            $table->foreignUuid('product_id')->constrained();
+            $table->foreignUuid('reservation_id')->constrained();
             $table->timestamps();
         });
     }
@@ -30,6 +23,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('units');
+        Schema::dropIfExists('product_reservation');
     }
 };

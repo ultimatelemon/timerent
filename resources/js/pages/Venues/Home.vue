@@ -1,18 +1,33 @@
 <template>
   <div>
-    <strong>Goedemiddag</strong>
+    <h1 class="font-semibold text-xl">{{ greeting }}</h1>
+    <h3 class="text-base leading-6 text-gray-900">Bekijk hier een overzicht van deze week t.o.v. vorige week</h3>
+
     <div class="mt-6">
-      <h3 class="text-base leading-6 text-gray-900">Overzicht deze week t.o.v. vorige week</h3>
-      <dl class="mt-5 grid grid-cols-1 divide-y divide-gray-200 overflow-hidden rounded-lg bg-white shadow md:grid-cols-3 md:divide-x md:divide-y-0">
+
+      <div v-if="loading" class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6 mt-5">
+        <div class="bg-gray-100 rounded-md h-32 relative overflow-hidden"><div class="load-activity"></div></div>
+        <div class="bg-gray-100 rounded-md h-32 relative overflow-hidden"><div class="load-activity"></div></div>
+        <div class="bg-gray-100 rounded-md h-32 relative overflow-hidden"><div class="load-activity"></div></div>
+
+        <!--      <div class="col-span-1 md:col-span-2 bg-gray-100 rounded-md h-64 relative overflow-hidden"><div class="load-activity"></div></div>-->
+        <!--      <div class="col-span-1 md:col-span-2 bg-gray-100 rounded-md h-64 relative overflow-hidden"><div class="load-activity"></div></div>-->
+
+        <!--      <div class="col-span-1 md:col-span-2 bg-gray-100 rounded-md h-64 relative overflow-hidden"><div class="load-activity"></div></div>-->
+        <!--      <div class="col-span-1 md:col-span-2 bg-gray-100 rounded-md h-64 relative overflow-hidden"><div class="load-activity"></div></div>-->
+      </div>
+      <dl v-else class="mt-5 grid grid-cols-1 divide-y divide-gray-200 overflow-hidden rounded-lg bg-white shadow md:grid-cols-3 md:divide-x md:divide-y-0">
         <div class="px-4 py-5 sm:p-6">
-          <dt class="text-base font-normal text-gray-900">Totaal omzet</dt>
+          <dt class="text-base font-normal text-gray-900">Omzet</dt>
           <dd class="mt-1 flex items-baseline justify-between md:block lg:flex">
             <div class="flex items-baseline text-2xl font-semibold text-indigo-600">
-              &euro;1237,-
-              <span class="ml-2 text-sm font-medium text-gray-500">vorige periode &euro;492,-</span>
+              {{ $filters.currency(statistics.revenue.now) }}
+              <span
+                  class="ml-2 text-sm font-medium text-gray-500">was {{ $filters.currency(statistics.revenue.previous_week) }}</span>
             </div>
 
             <div
+                v-if="calculatePercentageChange(statistics.revenue.previous_week, statistics.revenue.now) >= 0"
                 class="inline-flex items-baseline rounded-full px-2.5 py-0.5 text-sm font-medium bg-green-100 text-green-800 md:mt-2 lg:mt-0">
               <svg class="-ml-1 mr-0.5 h-5 w-5 flex-shrink-0 self-center text-green-500" viewBox="0 0 20 20"
                    fill="currentColor" aria-hidden="true">
@@ -20,8 +35,19 @@
                       d="M10 17a.75.75 0 01-.75-.75V5.612L5.29 9.77a.75.75 0 01-1.08-1.04l5.25-5.5a.75.75 0 011.08 0l5.25 5.5a.75.75 0 11-1.08 1.04l-3.96-4.158V16.25A.75.75 0 0110 17z"
                       clip-rule="evenodd"/>
               </svg>
-              <span class="sr-only"> Increased by </span>
-              102%
+              <span class="sr-only"> Difference </span>
+              {{ calculatePercentageChange(statistics.revenue.previous_week, statistics.revenue.now) }}%
+            </div>
+            <div v-else
+                 class="inline-flex items-baseline rounded-full px-2.5 py-0.5 text-sm font-medium bg-red-100 text-red-800 md:mt-2 lg:mt-0">
+              <svg class="-ml-1 mr-0.5 h-5 w-5 flex-shrink-0 self-center text-red-500" viewBox="0 0 20 20"
+                   fill="currentColor" aria-hidden="true">
+                <path fill-rule="evenodd"
+                      d="M10 3a.75.75 0 01.75.75v10.638l3.96-4.158a.75.75 0 111.08 1.04l-5.25 5.5a.75.75 0 01-1.08 0l-5.25-5.5a.75.75 0 111.08-1.04l3.96 4.158V3.75A.75.75 0 0110 3z"
+                      clip-rule="evenodd"/>
+              </svg>
+              <span class="sr-only"> Difference </span>
+              {{ calculatePercentageChange(statistics.reservations.previous_week, statistics.reservations.now) }}%
             </div>
           </dd>
         </div>
@@ -29,11 +55,13 @@
           <dt class="text-base font-normal text-gray-900">Aantal reserveringen</dt>
           <dd class="mt-1 flex items-baseline justify-between md:block lg:flex">
             <div class="flex items-baseline text-2xl font-semibold text-indigo-600">
-              58
-              <span class="ml-2 text-sm font-medium text-gray-500">van 12</span>
+              {{ statistics.reservations.now }}
+              <span
+                  class="ml-2 text-sm font-medium text-gray-500">was {{ statistics.reservations.previous_week }}</span>
             </div>
 
             <div
+                v-if="calculatePercentageChange(statistics.reservations.previous_week, statistics.reservations.now) >= 0"
                 class="inline-flex items-baseline rounded-full px-2.5 py-0.5 text-sm font-medium bg-green-100 text-green-800 md:mt-2 lg:mt-0">
               <svg class="-ml-1 mr-0.5 h-5 w-5 flex-shrink-0 self-center text-green-500" viewBox="0 0 20 20"
                    fill="currentColor" aria-hidden="true">
@@ -42,7 +70,18 @@
                       clip-rule="evenodd"/>
               </svg>
               <span class="sr-only"> Increased by </span>
-              301%
+              {{ calculatePercentageChange(statistics.reservations.previous_week, statistics.reservations.now) }}%
+            </div>
+            <div v-else
+                 class="inline-flex items-baseline rounded-full px-2.5 py-0.5 text-sm font-medium bg-red-100 text-red-800 md:mt-2 lg:mt-0">
+              <svg class="-ml-1 mr-0.5 h-5 w-5 flex-shrink-0 self-center text-red-500" viewBox="0 0 20 20"
+                   fill="currentColor" aria-hidden="true">
+                <path fill-rule="evenodd"
+                      d="M10 3a.75.75 0 01.75.75v10.638l3.96-4.158a.75.75 0 111.08 1.04l-5.25 5.5a.75.75 0 01-1.08 0l-5.25-5.5a.75.75 0 111.08-1.04l3.96 4.158V3.75A.75.75 0 0110 3z"
+                      clip-rule="evenodd"/>
+              </svg>
+              <span class="sr-only"> Increased by </span>
+              {{ calculatePercentageChange(statistics.reservations.previous_week, statistics.reservations.now) }}%
             </div>
           </dd>
         </div>
@@ -50,20 +89,33 @@
           <dt class="text-base font-normal text-gray-900">Gemiddelde besteding</dt>
           <dd class="mt-1 flex items-baseline justify-between md:block lg:flex">
             <div class="flex items-baseline text-2xl font-semibold text-indigo-600">
-              &euro;21,37
-              <span class="ml-2 text-sm font-medium text-gray-500">van &euro;28,62</span>
+              {{ $filters.currency(statistics.average_spending.now) }}
+              <span
+                  class="ml-2 text-sm font-medium text-gray-500">was {{ $filters.currency(statistics.average_spending.previous_week) }}</span>
             </div>
 
             <div
-                class="inline-flex items-baseline rounded-full px-2.5 py-0.5 text-sm font-medium bg-red-100 text-red-800 md:mt-2 lg:mt-0">
+                v-if="calculatePercentageChange(statistics.average_spending.previous_week, statistics.average_spending.now) >= 0"
+                class="inline-flex items-baseline rounded-full px-2.5 py-0.5 text-sm font-medium bg-green-100 text-green-800 md:mt-2 lg:mt-0">
+              <svg class="-ml-1 mr-0.5 h-5 w-5 flex-shrink-0 self-center text-green-500" viewBox="0 0 20 20"
+                   fill="currentColor" aria-hidden="true">
+                <path fill-rule="evenodd"
+                      d="M10 17a.75.75 0 01-.75-.75V5.612L5.29 9.77a.75.75 0 01-1.08-1.04l5.25-5.5a.75.75 0 011.08 0l5.25 5.5a.75.75 0 11-1.08 1.04l-3.96-4.158V16.25A.75.75 0 0110 17z"
+                      clip-rule="evenodd"/>
+              </svg>
+              <span class="sr-only"> Difference </span>
+              {{ calculatePercentageChange(statistics.average_spending.previous_week, statistics.average_spending.now) }}%
+            </div>
+            <div v-else
+                 class="inline-flex items-baseline rounded-full px-2.5 py-0.5 text-sm font-medium bg-red-100 text-red-800 md:mt-2 lg:mt-0">
               <svg class="-ml-1 mr-0.5 h-5 w-5 flex-shrink-0 self-center text-red-500" viewBox="0 0 20 20"
                    fill="currentColor" aria-hidden="true">
                 <path fill-rule="evenodd"
                       d="M10 3a.75.75 0 01.75.75v10.638l3.96-4.158a.75.75 0 111.08 1.04l-5.25 5.5a.75.75 0 01-1.08 0l-5.25-5.5a.75.75 0 111.08-1.04l3.96 4.158V3.75A.75.75 0 0110 3z"
                       clip-rule="evenodd"/>
               </svg>
-              <span class="sr-only"> Decreased by </span>
-              105%
+              <span class="sr-only"> Difference </span>
+              {{ calculatePercentageChange(statistics.average_spending.previous_week, statistics.average_spending.now) }}%
             </div>
           </dd>
         </div>
@@ -73,12 +125,50 @@
 </template>
 
 <script>
+import {DateTime} from "luxon";
+
 export default {
   name: "Index",
   data() {
     return {
-      key: 'value'
+      venue_id: this.$route.params.venue,
+      from: DateTime.now(),
+      statistics: null,
+      loading: true,
     }
+  },
+
+  methods: {
+    fetchStats() {
+      axios.get('/venues/' + this.$route.params.venue + '/statistics')
+          .then(response => {
+            this.statistics = response.data.data;
+            this.loading = false;
+          })
+    },
+
+    calculatePercentageChange(oldValue, newValue) {
+      let changeInAmount = newValue - oldValue;
+      let percentage = (changeInAmount / oldValue) * 100;
+      if (percentage.toString() === 'Infinity') return 100;
+      if (percentage.toString() === 'NaN') return 0;
+      return percentage;
+    },
+  },
+
+  computed: {
+    greeting() {
+      const hour = DateTime.now().hour;
+      if (hour >= 0 && hour < 6) return 'Goedenacht';
+      if (hour >= 6 && hour < 12) return 'Goedemorgen';
+      if (hour >= 12 && hour < 18) return 'Goedemiddag';
+      if (hour >= 18 && hour < 23) return 'Goedenavond';
+      return hour;
+    },
+  },
+
+  mounted() {
+    this.fetchStats();
   },
 }
 </script>

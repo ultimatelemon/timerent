@@ -7,13 +7,12 @@
     <body class="h-full">
     ```
   -->
-  <div v-if="user">
+  <div v-if="user && current_venue">
     <TransitionRoot as="template" :show="sidebarOpen">
       <Dialog class="relative z-50 lg:hidden" @close="sidebarOpen = false">
         <TransitionChild as="template" enter="transition-opacity ease-linear duration-300" enter-from="opacity-0" enter-to="opacity-100" leave="transition-opacity ease-linear duration-300" leave-from="opacity-100" leave-to="opacity-0">
           <div class="fixed inset-0 bg-gray-900/80" />
         </TransitionChild>
-
         <div class="fixed inset-0 flex">
           <TransitionChild as="template" enter="transition ease-in-out duration-300 transform" enter-from="-translate-x-full" enter-to="translate-x-0" leave="transition ease-in-out duration-300 transform" leave-from="translate-x-0" leave-to="-translate-x-full">
             <DialogPanel class="relative mr-16 flex w-full max-w-xs flex-1">
@@ -78,6 +77,10 @@
           <span class="ml-3 font-semibold">{{ current_venue.name }}</span>
         </div>
         <a href="/select">Terug naar select</a>
+        <a :href="'https://' + current_venue.subdomain + '.timerent-rewrite.test'" target="_blank" class="flex items-center space-x-2">
+          <p>Bekijk pagina</p>
+          <component :is="ArrowTopRightOnSquareIcon" class="text-gray-400 group-hover:text-indigo-600 h-6 w-6 shrink-0" aria-hidden="true"></component>
+        </a>
         <nav class="flex flex-1 flex-col">
           <ul role="list" class="flex flex-1 flex-col gap-y-7">
             <li>
@@ -107,18 +110,18 @@
 <!--                </li>-->
 <!--              </ul>-->
 <!--            </li>-->
-            <li class="-mx-6 mt-auto">
-              <a href="#" class="flex items-center bg-gray-50 hover:bg-gray-100 border-t gap-x-4 px-6 py-3 text-sm font-semibold leading-6 text-gray-900 hover:bg-gray-50 justify-between">
+            <li class="-mx-6 mt-auto cursor-pointer" @click="logout">
+              <div class="flex items-center bg-gray-50 hover:bg-gray-100 border-t gap-x-4 px-6 py-3 text-sm font-semibold leading-6 text-gray-900 hover:bg-gray-50 justify-between">
                 <img class="h-8 w-8 rounded-full bg-gray-50" src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="" />
                 <div class="flex flex-col">
                   <span class="sr-only">Your profile</span>
                   <span aria-hidden="true">{{ user.name }}</span>
                   <span aria-hidden="true" class="font-light text-xs">{{ user.email }}</span>
                 </div>
-                <div @click="logout">
+                <div>
                   <i><component :is="ArrowRightEndOnRectangleIcon" class="h-6 w-6 text-red-500"></component></i>
                 </div>
-              </a>
+              </div>
             </li>
           </ul>
         </nav>
@@ -148,7 +151,7 @@
 <script setup>
 import { ref } from 'vue'
 import { Dialog, DialogPanel, TransitionChild, TransitionRoot } from '@headlessui/vue'
-import {HomeIcon, ArrowRightEndOnRectangleIcon} from "@heroicons/vue/24/outline/index.js";
+import {HomeIcon, ArrowRightEndOnRectangleIcon, ArrowTopRightOnSquareIcon} from "@heroicons/vue/24/outline/index.js";
 import {Bars3Icon, XMarkIcon} from "@heroicons/vue/16/solid/index.js";
 
   // { name: 'Dashboard', href: '#', icon: HomeIcon, current: true },
@@ -173,7 +176,7 @@ import {
   UserIcon,
   CircleStackIcon,
   ArchiveBoxIcon,
-  CalendarDaysIcon, ListBulletIcon, BriefcaseIcon
+  CalendarDaysIcon, ListBulletIcon, BriefcaseIcon, CogIcon
 } from "@heroicons/vue/24/outline/index.js";
 // import {CircleStackIcon} from "@heroicons/vue/16/solid/index.js";
 
@@ -183,6 +186,7 @@ export default {
     return {
       user: null,
       navigation: [],
+      venue: null,
     }
   },
 
@@ -208,7 +212,7 @@ export default {
         },
         {
           'name': 'Dashboard',
-          'link': {name: 'index'},
+          'link': {name: 'venues.home', params: {venue: this.$store.state.venue.id}},
           'icon': HomeIcon,
           'permission': null,
         },
@@ -249,6 +253,17 @@ export default {
         },
         {
           'type': 'category',
+          'name': 'Beheer',
+          'permission': ['VIEW_USERS']
+        },
+        {
+          'name': 'Instellingen',
+          'link': {name: 'venues.settings.index', params: {venue: this.$store.state.venue.id}},
+          'icon': CogIcon,
+          'permission': 'VIEW_UNITS',
+        },
+        {
+          'type': 'category',
           'name': 'Gebruikers',
           'permission': ['VIEW_USERS']
         },
@@ -262,7 +277,10 @@ export default {
     },
 
     logout() {
-
+      axios.post('/sanctum/logout')
+          .then(response => {
+            window.location.href = '/login'
+          })
     },
   },
 

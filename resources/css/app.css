@@ -26,6 +26,11 @@ input { @apply block w-full rounded-md border-0 px-3 py-1.5 text-gray-900 shadow
 .icon-btn { @apply h-8 w-8 bg-indigo-500 text-white rounded p-1 hover:bg-indigo-800 cursor-pointer }
 .icon-btn-red { @apply h-8 w-8 bg-red-500 text-white rounded p-1 hover:bg-red-800 cursor-pointer }
 
+.label { @apply text-xs font-semibold inline-block py-1 px-2 uppercase rounded text-gray-600 bg-gray-200 items-center }
+.label-danger { @apply text-red-600 bg-red-200 }
+.label-success { @apply text-emerald-600 bg-emerald-200 }
+.label-warning { @apply text-orange-600 bg-orange-200 }
+
 .required-star { @apply text-xl text-red-500 }
 
 div.flatpickr-calendar {
@@ -38,9 +43,10 @@ div.flatpickr-calendar {
     border-color: #4a2c98 !important;
 }
 
-.numInputWrapper {
+.cur-year {
     display: none !important;
 }
+
 /*.btn-secondary { @apply bg-gray-100 text-black hover:bg-gray-200; }*/
 /*.btn-danger { @apply bg-red-500 text-white hover:bg-red-600; }*/
 /*.btn-warning { @apply bg-yellow-500 text-white hover:bg-yellow-600; }*/
@@ -55,3 +61,25 @@ div.flatpickr-calendar {
 /*.card table:not(.regular-table) th::after { @apply absolute left-0 right-0 h-px bg-gray-200; content: ""; bottom: -1px; }*/
 /*.card table:not(.regular-table) td { @apply px-2 py-2.5 border-b border-gray-200; }*/
 /*.card table:not(.regular-table).thick td { @apply py-4; }*/
+
+
+.load-activity{
+    position: absolute;
+    left: -45%;
+    height: 100%;
+    width: 45%;
+    background-image: linear-gradient(to left, rgba(251,251,251, .05), rgba(251,251,251, .3), rgba(251,251,251, .6), rgba(251,251,251, .3), rgba(251,251,251, .05));
+    background-image: -moz-linear-gradient(to left, rgba(251,251,251, .05), rgba(251,251,251, .3), rgba(251,251,251, .6), rgba(251,251,251, .3), rgba(251,251,251, .05));
+    background-image: -webkit-linear-gradient(to left, rgba(251,251,251, .05), rgba(251,251,251, .3), rgba(251,251,251, .6), rgba(251,251,251, .3), rgba(251,251,251, .05));
+    animation: loading 1s infinite;
+    z-index: 45;
+}
+
+@keyframes loading {
+    0%{
+        left: -45%;
+    }
+    100%{
+        left: 100%;
+    }
+}

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Resources\ReservationResource;
+use App\Models\Reservation;
 use App\Models\Venue;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -30,5 +31,17 @@ class ReservationController extends ApiController
             ReservationResource::collection($reservations),
             collect($reservations)->only(['from', 'to', 'total', 'per_page', 'last_page', 'current_page'])->toArray(),
         );
+    }
+
+    /**
+     * Show the specific resource
+     *
+     * @param Venue $venue
+     * @param Reservation $reservation
+     * @return JsonResponse
+     */
+    public function show(Venue $venue, Reservation $reservation): JsonResponse
+    {
+        return $this->success(new ReservationResource($reservation));
     }
 }

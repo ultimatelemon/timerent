@@ -2,14 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\StoreWeek;
+use App\Http\Requests\Venue\StoreWeek;
 use App\Http\Resources\WeekResource;
-use App\Models\Template;
 use App\Models\Unit;
 use App\Models\Venue;
 use App\Models\Week;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 
 class WeekController extends ApiController
 {

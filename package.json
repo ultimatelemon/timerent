@@ -19,15 +19,18 @@
         "@sentry/vue": "^8.7.0",
         "@tailwindcss/forms": "^0.5.7",
         "@vitejs/plugin-vue": "^5.0.4",
+        "apexcharts": "^3.49.1",
         "api": "^6.1.1",
         "flatpickr": "^4.6.13",
         "lodash": "^4.17.21",
         "luxon": "^3.4.4",
         "vue": "^3.4.27",
+        "vue-apexcharts": "^1.6.2",
         "vue-currency-input": "^3.1.0",
         "vue-flatpickr-component": "^11.0.5",
         "vue-i18n": "^9.13.1",
         "vue-router": "^4.3.2",
+        "vue3-apexcharts": "^1.5.3",
         "vuex": "^4.1.0",
         "vuex-persistedstate": "^4.1.0"
     }

@@ -1,5 +1,5 @@
 <template>
-  <div v-if="venue">
+  <div v-if="venue && activeSubscription">
 
     <div class="mt-12">
       <div class="text-xl font-semibold">{{ venue.name }}</div>
@@ -151,8 +151,11 @@
 
   </div>
 
-  <div v-else>
-    Pagina niet gevonden
+  <div v-else class="h-full flex items-center justify-center">
+    <div>
+      <div class="mb-4">Deze pagina is (tijdelijk) niet bereikbaar.</div>
+      <a href="https://timerent.nl" class="text-blue-500">&larr; Naar timerent.nl</a>
+    </div>
   </div>
 </template>
 
@@ -173,6 +176,7 @@ export default {
       loading: false,
       showModal: false,
       url: "",
+      activeSubscription: true,
 
       date: null,
       year: null,
@@ -208,6 +212,7 @@ export default {
       axios.get('/venue/' + this.subdomain)
           .then(response => {
             this.venue = response.data.data;
+            if(new Date(response.data.data.stripe_current_period_ends_at) >= new Date()) this.activeSubscription = false;
             this.fetchProducts();
       })
     },
@@ -280,13 +285,14 @@ export default {
 
   mounted() {
     this.fetchVenue();
+    console.log('test object')
     // this.fetchProducts();
   },
 
   computed: {
     subdomain: function() {
       return window.location.hostname.split('.')[0]
-    }
+    },
   },
 
   watch: {

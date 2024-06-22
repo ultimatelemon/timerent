@@ -111,8 +111,8 @@
 <!--              </ul>-->
 <!--            </li>-->
             <li class="-mx-6 mt-auto cursor-pointer" @click="logout">
-              <div class="flex items-center bg-gray-50 hover:bg-gray-100 border-t gap-x-4 px-6 py-3 text-sm font-semibold leading-6 text-gray-900 hover:bg-gray-50 justify-between">
-                <img class="h-8 w-8 rounded-full bg-gray-50" src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="" />
+              <div class="flex items-center border-t gap-x-4 px-6 py-3 text-sm font-semibold leading-6 text-gray-900 hover:bg-gray-50 justify-between">
+<!--                <img class="h-8 w-8 rounded-full bg-gray-50" src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="" />-->
                 <div class="flex flex-col">
                   <span class="sr-only">Your profile</span>
                   <span aria-hidden="true">{{ user.name }}</span>
@@ -136,7 +136,7 @@
       <div class="flex-1 text-sm font-semibold leading-6 text-gray-900">Dashboard</div>
       <a href="#">
         <span class="sr-only">Your profile</span>
-        <img class="h-8 w-8 rounded-full bg-gray-50" src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="" />
+<!--        <img class="h-8 w-8 rounded-full bg-gray-50" src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="" />-->
       </a>
     </div>
 
@@ -159,7 +159,7 @@ import {Bars3Icon, XMarkIcon} from "@heroicons/vue/16/solid/index.js";
   // { name: 'Projects', href: '#', icon: FolderIcon, current: false },
   // { name: 'Calendar', href: '#', icon: CalendarIcon, current: false },
   // { name: 'Documents', href: '#', icon: DocumentDuplicateIcon, current: false },
-  // { name: 'Reports', href: '#', icon: ChartPieIcon, current: false },
+  // { name: 'Finance', href: '#', icon: ChartPieIcon, current: false },
 const teams = [
   // { id: 1, name: 'Heroicons', href: '#', initial: 'H', current: false },
   // { id: 2, name: 'Tailwind Labs', href: '#', initial: 'T', current: false },
@@ -176,7 +176,7 @@ import {
   UserIcon,
   CircleStackIcon,
   ArchiveBoxIcon,
-  CalendarDaysIcon, ListBulletIcon, BriefcaseIcon, CogIcon
+  CalendarDaysIcon, ListBulletIcon, BriefcaseIcon, CogIcon, ChartBarIcon
 } from "@heroicons/vue/24/outline/index.js";
 // import {CircleStackIcon} from "@heroicons/vue/16/solid/index.js";
 
@@ -196,6 +196,9 @@ export default {
           .then(response => {
             this.user = response.data.data;
             this.fetchNavigation();
+          })
+          .catch(e => {
+            console.log(e.message)
           })
     },
 
@@ -254,7 +257,7 @@ export default {
         {
           'type': 'category',
           'name': 'Beheer',
-          'permission': ['VIEW_USERS']
+          'permission': []
         },
         {
           'name': 'Instellingen',
@@ -264,8 +267,19 @@ export default {
         },
         {
           'type': 'category',
+          'name': 'Finance',
+          'permission': []
+        },
+        {
+          'name': 'Rapportage',
+          'link': {name: 'venues.finance.reports.index', params: {venue: this.$store.state.venue.id}},
+          'icon': ChartBarIcon,
+          'permission': 'VIEW_UNITS',
+        },
+        {
+          'type': 'category',
           'name': 'Gebruikers',
-          'permission': ['VIEW_USERS']
+          'permission': []
         },
         {
           'name': 'Gebruikers',

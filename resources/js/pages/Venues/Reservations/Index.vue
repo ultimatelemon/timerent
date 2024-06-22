@@ -22,6 +22,7 @@
               <th scope="col" class="whitespace-nowrap px-2 py-3.5 text-left text-sm font-semibold text-gray-900">Datum</th>
               <th scope="col" class="whitespace-nowrap px-2 py-3.5 text-left text-sm font-semibold text-gray-900">Email</th>
               <th scope="col" class="whitespace-nowrap px-2 py-3.5 text-left text-sm font-semibold text-gray-900">Totaalbedrag</th>
+              <th scope="col" class="whitespace-nowrap px-2 py-3.5 text-left text-sm font-semibold text-gray-900">Aangemaakt op</th>
               <th scope="col" class="whitespace-nowrap px-2 py-3.5 text-left text-sm font-semibold text-gray-900">Betaalstatus</th>
             </tr>
             </thead>
@@ -31,6 +32,7 @@
               <td class="whitespace-nowrap px-2 py-2 text-sm font-medium text-gray-900">{{ $filters.humanDate(reservation.date) }}</td>
               <td class="whitespace-nowrap px-2 py-2 text-sm font-medium text-gray-900">{{ reservation.email }}</td>
               <td class="whitespace-nowrap px-2 py-2 text-sm font-medium text-gray-900">{{ $filters.currency(reservation.payment_amount) }}</td>
+              <td class="whitespace-nowrap px-2 py-2 text-sm font-medium text-gray-900">{{ $filters.humanDateTime(reservation.created_at) }}</td>
               <td class="whitespace-nowrap px-2 py-2 text-sm font-medium text-gray-900 label label-warning mt-2" v-if="reservation.payment_status === 'open'">Open</td>
               <td class="whitespace-nowrap px-2 py-2 text-sm font-medium text-gray-900 label label-success mt-2" v-if="reservation.payment_status === 'paid'">Betaald</td>
             </tr>

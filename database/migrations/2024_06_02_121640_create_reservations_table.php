@@ -27,7 +27,7 @@ return new class extends Migration
             $table->string('payment_id')->nullable();
             $table->string('payment_status');
 
-            $table->timestamp('date');
+            $table->date('date');
 
             $table->longText('payment_url')->nullable();
             $table->uuid('rebook_id')->nullable();

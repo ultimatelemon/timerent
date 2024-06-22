@@ -12,11 +12,11 @@ class StatisticsController extends ApiController
 {
     public function index(Venue $venue, Request $request): JsonResponse
     {
-        $reservations = Reservation::whereBetween('created_at', [Carbon::now()->startOfWeek(), Carbon::now()->endOfWeek()])->where('payment_status', 'paid')->count();
-        $reservations_prev_week = Reservation::whereBetween('created_at', [Carbon::now()->subWeek()->startOfWeek(), Carbon::now()->subWeek()->endOfWeek()])->where('payment_status', 'paid')->count();
+        $reservations = $venue->reservations->whereBetween('created_at', [Carbon::now()->startOfWeek(), Carbon::now()->endOfWeek()])->where('payment_status', 'paid')->count();
+        $reservations_prev_week = $venue->reservations->whereBetween('created_at', [Carbon::now()->subWeek()->startOfWeek(), Carbon::now()->subWeek()->endOfWeek()])->where('payment_status', 'paid')->count();
 
-        $revenue = Reservation::whereBetween('created_at', [Carbon::now()->startOfWeek(), Carbon::now()->endOfWeek()])->where('payment_status', 'paid')->sum('payment_amount');
-        $revenue_prev_week = Reservation::whereBetween('created_at', [Carbon::now()->subWeek()->startOfWeek(), Carbon::now()->subWeek()->endOfWeek()])->where('payment_status', 'paid')->sum('payment_amount');
+        $revenue = $venue->reservations->whereBetween('created_at', [Carbon::now()->startOfWeek(), Carbon::now()->endOfWeek()])->where('payment_status', 'paid')->sum('payment_amount');
+        $revenue_prev_week = $venue->reservations->whereBetween('created_at', [Carbon::now()->subWeek()->startOfWeek(), Carbon::now()->subWeek()->endOfWeek()])->where('payment_status', 'paid')->sum('payment_amount');
 
         return $this->success([
             'revenue' => [

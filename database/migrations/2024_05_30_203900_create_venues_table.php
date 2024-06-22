@@ -28,7 +28,12 @@ return new class extends Migration
             $table->string('tax_number')->nullable();
 
             $table->string('payment_service_provider')->nullable();
+            $table->string('stripe_customer_id')->nullable();
             $table->string('stripe_connect_id')->nullable();
+            $table->string('stripe_subscription_id')->nullable();
+            $table->timestamp('stripe_current_period_ends_at')->nullable();
+
+            $table->foreignUuid('plan_id')->constrained();
 
             $table->softDeletes();
             $table->timestamps();

@@ -15,7 +15,7 @@ window.axios.defaults.baseURL = (isApplication ? window.location.origin + '/api'
 axios.interceptors.response.use(function (response) {
     return response;
 }, function (error) {
-    if(error.response.status === 401) {
+    if(error.response.status === 401 && window.location !== '/login') {
         window.localStorage.removeItem('tr_auth_token');
         window.location = '/login';
     }
@@ -51,8 +51,9 @@ const router = VueRouter.createRouter({
     mode: 'history',
     history: VueRouter.createWebHistory(),
     routes: isApplication(window.location.href) ? ApplicationRoutes : routes,
-    // 'routes': isVenue(window.location.href) ? VenueRoutes : routes,
 });
+
+
 router.beforeEach((to, from, next) => {
     // store.commit('setTitle', to.meta.title ? i18n.t(to.meta.title) : "")
     next();
@@ -140,5 +141,13 @@ app.config.globalProperties.$filters = {
         value = new Date(value).toISOString()
     }
 }
+
+/**
+ * Beautiful charts
+ */
+import VueApexCharts from "vue3-apexcharts";
+app.use(VueApexCharts)
+
+app.component('apexchart', VueApexCharts)
 
 app.mount('#app');

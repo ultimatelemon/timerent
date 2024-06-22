@@ -33,6 +33,10 @@ class Reservation extends Model
         'canceled_at',
     ];
 
+    protected $casts = [
+        'date' => 'date',
+    ];
+
     public function venue()
     {
         return $this->belongsTo(Venue::class);

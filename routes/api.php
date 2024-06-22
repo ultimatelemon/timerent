@@ -1,6 +1,8 @@
 <?php
 
+use App\Http\Controllers\Management\PlanController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\ReportController;
 use App\Http\Controllers\ReservationController;
 use App\Http\Controllers\StatisticsController;
 use App\Http\Controllers\TemplateController;
@@ -13,6 +15,9 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/hash', function (Request $request) {return response()->json(\Illuminate\Support\Facades\Hash::make('joejoe123'));});
 Route::post('/sanctum/token', [\App\Http\Controllers\AuthenticationController::class, 'createToken']);
+Route::post('/sanctum/register', [\App\Http\Controllers\AuthenticationController::class, 'createUser']);
+Route::post('/sanctum/email/verify', [\App\Http\Controllers\AuthenticationController::class, 'verifyEmail']);
+Route::post('/sanctum/email/verify/resend', [\App\Http\Controllers\AuthenticationController::class, 'resendVerifyEmail']);
 
 
 Route::middleware('auth:sanctum')->group(function () {
@@ -25,6 +30,9 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::get('/venues/{venue}/statistics', [StatisticsController::class, 'index']);
 
+    Route::get('/plans/available',                          [PlanController::class, 'available']);
+    Route::resource('plans',                    PlanController::class)->except('create', 'edit');
+
     // Todo: Permission routes
     Route::resource('venues',                   VenueController::class)->except(['create', 'edit']);
     Route::resource('venues.units',             UnitController::class)->except(['create', 'edit']);
@@ -32,4 +40,5 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::resource('venues.weeks',             WeekController::class)->except(['create', 'edit']);
     Route::resource('venues.products',          ProductController::class)->except(['create', 'edit']);
     Route::resource('venues.reservations',      ReservationController::class)->except(['create', 'edit']);
+    Route::resource('venues.reports',      ReportController::class)->except(['create', 'edit']);
 });

@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Application;
 
 use App\Helpers\ReservationHelper;
 use App\Http\Controllers\ApiController;
-use App\Http\Requests\StoreReservation;
+use App\Http\Requests\Venue\StoreReservation;
 use App\Models\Product;
 use App\Models\Reservation;
 use App\Models\ReservationTimeblock;

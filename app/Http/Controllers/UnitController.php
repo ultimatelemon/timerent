@@ -2,8 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\StoreProduct;
-use App\Http\Requests\StoreUnit;
+use App\Http\Requests\Venue\StoreUnit;
 use App\Http\Resources\UnitResource;
 use App\Models\Unit;
 use App\Models\Venue;

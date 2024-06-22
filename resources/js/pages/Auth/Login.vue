@@ -20,6 +20,11 @@
           </div>
         </div>
 
+        <div v-else-if="errors.errors?.email_verification" class="flex flex-col justify-center items-center">
+          <div class="text-red-500 mb-4">{{ errors.errors.email_verification }}</div>
+          <button v-if="showResendButton" @click="resendVerificationMail" class="btn btn-secondary">Mail opnieuw versturen</button>
+        </div>
+
         <div>
           <label for="email" class="block text-sm font-medium leading-6 text-gray-900">Email</label>
           <div class="mt-2">
@@ -50,7 +55,7 @@
       </div>
       <p class="mt-10 text-center text-sm text-gray-500">
         Nog geen account?
-<!--        <router-link :to="{name: 'register'}" class="font-semibold leading-6 text-indigo-600 hover:text-indigo-500">Registreer hier</router-link>-->
+        <router-link :to="{name: 'register'}" class="font-semibold leading-6 text-indigo-600 hover:text-indigo-500">Maak hier een account aan</router-link>
       </p>
     </div>
   </div>
@@ -66,6 +71,7 @@ export default {
     return {
       loading: false,
       errors: [],
+      showResendButton: false,
 
       formData: {
         email: null,
@@ -85,10 +91,21 @@ export default {
           })
           .catch(e => {
             this.errors = e.response.data
+            if(e.response.data.errors.email_verification) this.showResendButton = true;
             console.log(e.response.data)
           })
           .finally(e => {
             this.loading = false;
+          })
+    },
+
+    resendVerificationMail() {
+      axios.post('/sanctum/email/verify/resend', {
+        email: this.formData.email,
+      })
+          .then(response => {
+            this.errors.errors.email_verification = 'Verificatie mail is opnieuw verzonden';
+            this.showResendButton = false;
           })
     },
 

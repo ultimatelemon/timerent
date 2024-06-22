@@ -1,9 +1,11 @@
 import Wrapper from "./Wrapper.vue";
 
 export const routes = [
+    { path: '/email/verify', component: () => import('./pages/Auth/EmailVerify.vue'), name: 'email.verify', meta: { title: "pages.email-verify" } },
     { path: '/login', component: () => import('./pages/Auth/Login.vue'), name: 'login', meta: { title: "pages.login" } },
+    { path: '/register', component: () => import('./pages/Auth/Register.vue'), name: 'register', meta: { title: "pages.register" } },
     { path: '/select', component: () => import('./pages/VenueSelector.vue'), name: 'venueselect', meta: { title: "pages.login" } },
-    { parth: '/', redirect: '/select' },
+    { path: '/', redirect: '/select' },
 
     { path: '/store/:venue/home', component: () => import('./pages/Venues/Home.vue'), name: 'venues.home' },
 
@@ -62,6 +64,16 @@ export const routes = [
         component: Wrapper,
         children: [
             { path: '', component: () => import('./pages/Venues/Settings/Index.vue'), name: 'venues.settings.index' },
+            // { path: 'create', component: () => import('./pages/Venues/Products/Edit.vue'), name: 'venues.products.create' },
+            // { path: ':reservation', component: () => import('./pages/Venues/Reservations/Edit.vue'), name: 'venues.reservations.edit' },
+        ]
+    },
+
+    {
+        path: '/store/:venue/finance',
+        component: Wrapper,
+        children: [
+            { path: 'reports', component: () => import('./pages/Venues/Finance/Reports/Index.vue'), name: 'venues.finance.reports.index' },
             // { path: 'create', component: () => import('./pages/Venues/Products/Edit.vue'), name: 'venues.products.create' },
             // { path: ':reservation', component: () => import('./pages/Venues/Reservations/Edit.vue'), name: 'venues.reservations.edit' },
         ]

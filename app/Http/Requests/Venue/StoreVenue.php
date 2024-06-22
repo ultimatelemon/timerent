@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\Venue;
 
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
@@ -33,6 +33,8 @@ class StoreVenue extends FormRequest
             'coc_number' => 'nullable|string',
             'tax_number' => 'nullable|string',
             'bank_number' => 'nullable|string',
+
+            'plan_id' => 'required|exists:plans,id',
 
             'avatar_id' => 'nullable|uuid|exists:files,id',
             'cover_id' => 'nullable|uuid|exists:files,id',

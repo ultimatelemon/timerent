@@ -26,10 +26,20 @@
               <i class="far fa-info-circle mr-4"></i>
               <p>Registreer een nieuwe venue</p>
             </div>
-            <label>Naam</label>
-            <input v-model="name" type="text">
-            <label>Subdomein</label>
-            <input v-model="subdomain" type="text">
+            <div class="mb-4">
+              <label>Naam <span class="required-star">*</span></label>
+              <input v-model="name" type="text" class="input">
+            </div>
+            <div class="mb-4">
+              <label>Subdomein <span class="required-star">*</span></label>
+              <input v-model="subdomain" type="text" class="input">
+            </div>
+            <div class="mb-4 flex flex-col">
+              <label for="plan">Abonnement <span class="required-star">*</span></label>
+              <select name="plan" id="plan" v-model="plan_id">
+                <option :value="plan.id" v-for="plan in plans" :selected="plan">{{ plan.name }}</option>
+              </select>
+            </div>
           </div>
           <div class="flex justify-end bg-gray-50 px-5 py-3">
             <button class="btn btn-primary ml-auto" @click="addVenue">
@@ -39,16 +49,47 @@
         </modal>
       </transition>
 
+
+      <!--
+          Payment modal
+      -->
+      <modal v-if="subscription_url && !showNewVenue">
+        <div class="px-1 border-b border-gray-200 flex items-center justify-between h-full">
+          <p class="font-medium p-4">Rond je betaling af</p>
+          <button class="p-4" @click="showNewVenue = false"><i class="far fa-times"></i></button>
+        </div>
+        <div class="p-5">
+          <div class="bg-red-50 text-red-400 p-4 rounded-md text-sm mb-5 flex items-center">
+            <i class="fas fa-triangle-exclamation mr-4"></i>
+            <p>Rond de betaling voor je abonnement af.</p>
+          </div>
+        </div>
+        <div class="flex justify-end bg-gray-50 px-5 py-3">
+          <button class="btn btn-secondary ml-auto" @click="openURL(subscription_url)">
+            Naar betalen
+          </button>
+        </div>
+      </modal>
+
       <!--
           Content
       -->
       <div class="venue-wrap flex flex-wrap justify-center gap-4">
         <loader v-if="loading"></loader>
         <template v-for="user_venue in user_venues">
-          <a @click="current_venue = user_venue.venue;" :href="'/store/' + user_venue.venue.id + '/home'" class="cursor-pointer">
-            <img v-if="user_venue.venue.avatar" class="w-32 h-32 rounded-md bg-gray-100 shadow border-8 border-white object-contain" :src="user_venue.venue.avatar.full_path"></img>
+          <a v-if="user_venue.venue.stripe_current_period_ends_at != null && (new Date(user_venue.venue.stripe_current_period_ends_at) > new Date())" @click="current_venue = user_venue.venue;" :href="'/store/' + user_venue.venue.id + '/home'" class="cursor-pointer">
+            <img v-if="user_venue.venue.avatar" class="w-32 h-32 rounded-md bg-gray-100 shadow border-8 border-white object-contain" :src="user_venue.venue.avatar.full_path" :alt="user_venue.venue.name"></img>
             <p v-else class="w-32 h-32 rounded-md bg-gray-100 shadow border-8 border-white flex items-center justify-center text-center">{{ user_venue.venue.name }}</p>
           </a>
+
+          <div v-else class="cursor-not-allowed relative">
+            <img v-if="user_venue.venue.avatar" class="w-32 h-32 rounded-md bg-gray-100 shadow border-8 border-white object-contain" :src="user_venue.venue.avatar.full_path" :alt="user_venue.venue.name"></img>
+            <p v-else class="w-32 h-32 rounded-md bg-gray-100 shadow border-8 border-white flex items-center justify-center text-center opacity-45"
+            >{{ user_venue.venue.name }}</p>
+            <div class="absolute top-1/3 left-3 -rotate-45 text-semibold text-3xl text-red-500">
+              Inactive
+            </div>
+          </div>
         </template>
         <div class="w-32 h-32 rounded-md bg-gray-100 text-gray-500 shadow border-8 border-white font-bold cursor-pointer flex items-center justify-center text-center" @click="showNewVenue = true">
           <span class="text-3xl material-symbols-outlined">add</span>
@@ -62,6 +103,7 @@
 
 import Loader from "./Components/Loader.vue";
 import Modal from "./Components/Modal.vue";
+import {DateTime} from "luxon";
 
 export default {
   name: "VenueSelector",
@@ -70,13 +112,16 @@ export default {
     return {
       showNewVenue: false,
       user_venues: [],
+      plans: [],
 
       errors: [],
       loading: false,
       current_user: null,
+      subscription_url: null,
 
       name: "",
       subdomain: "",
+      plan_id: null,
     }
   },
 
@@ -96,29 +141,52 @@ export default {
           .then(response => {
             this.user_venues = response.data.data;
           })
+          .catch(e => {
+            console.log("ERROR", e)
+          })
           .finally(() => {
             this.loading = false;
           })
     },
 
     addVenue() {
-      axios.post('/venues', {name: this.name, subdomain: this.subdomain})
+      axios.post('/venues', {
+        name: this.name,
+        subdomain: this.subdomain,
+        plan_id: this.plan_id,
+      })
           .then(response => {
             this.name = "";
             this.showNewVenue = false;
-            this.fetchData();
+            this.subscription_url = response.data.data;
           })
           .catch(error => {
             this.errors = error.response.data.errors;
+            console.log(this.errors);
+          })
+    },
+
+    openURL(url) {
+      window.location.href = url
+    },
+
+    fetchPlans() {
+      axios.get('/plans/available')
+          .then(response => {
+            this.plans = response.data.data;
           })
     }
   },
 
   mounted() {
     this.fetchUser();
+    this.fetchPlans();
   },
 
   computed: {
+    DateTime() {
+      return DateTime
+    },
     current_venue: {
       get() {
         return this.$store.state.venue;

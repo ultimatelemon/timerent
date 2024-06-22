@@ -162,7 +162,7 @@ export default {
       if (hour >= 0 && hour < 6) return 'Goedenacht';
       if (hour >= 6 && hour < 12) return 'Goedemorgen';
       if (hour >= 12 && hour < 18) return 'Goedemiddag';
-      if (hour >= 18 && hour < 23) return 'Goedenavond';
+      if (hour >= 18 && hour < 24) return 'Goedenavond';
       return hour;
     },
   },

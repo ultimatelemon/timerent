@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\StoreTemplate;
+use App\Http\Requests\Venue\StoreTemplate;
 use App\Http\Resources\TemplateResource;
 use App\Models\Template;
 use App\Models\Venue;

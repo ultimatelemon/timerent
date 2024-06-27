@@ -26,6 +26,7 @@ class LoginRequest extends FormRequest
             'password' => 'required|min:8',
             'device_name' => 'nullable|string',
             'tfa_code' => 'nullable|string',
+            'minutes' => 'nullable|integer',
         ];
     }
 }

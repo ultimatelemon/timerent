@@ -4,6 +4,7 @@ use App\Http\Controllers\Management\PlanController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\ReservationController;
+use App\Http\Controllers\SettingController;
 use App\Http\Controllers\StatisticsController;
 use App\Http\Controllers\TemplateController;
 use App\Http\Controllers\UnitController;
@@ -33,6 +34,10 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/plans/available',                          [PlanController::class, 'available']);
     Route::resource('plans',                    PlanController::class)->except('create', 'edit');
 
+    // Settings
+    Route::get('/venues/{venue}/settings/category', [SettingController::class, 'getSettingByCategory']);
+    Route::put('/venues/{venue}/settings', [SettingController::class, 'updateSettings']);
+
     // Todo: Permission routes
     Route::resource('venues',                   VenueController::class)->except(['create', 'edit']);
     Route::resource('venues.units',             UnitController::class)->except(['create', 'edit']);
@@ -40,5 +45,5 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::resource('venues.weeks',             WeekController::class)->except(['create', 'edit']);
     Route::resource('venues.products',          ProductController::class)->except(['create', 'edit']);
     Route::resource('venues.reservations',      ReservationController::class)->except(['create', 'edit']);
-    Route::resource('venues.reports',      ReportController::class)->except(['create', 'edit']);
+    Route::resource('venues.reports',           ReportController::class)->except(['create', 'edit']);
 });

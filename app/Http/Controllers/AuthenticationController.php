@@ -31,6 +31,7 @@ class AuthenticationController extends ApiController
      */
     public function createToken(LoginRequest $request): JsonResponse
     {
+        ray($request->minutes);
         $validatedRequest = $request->validated();
         $user = User::where('email', strtolower($validatedRequest['email']))->first();
 
@@ -45,7 +46,7 @@ class AuthenticationController extends ApiController
         $device_name = $request->get('device_name', $sa);
 
         $token = $user->createToken($device_name);
-        $token->accessToken->expires_at = Carbon::now()->addMinutes(env('TOKEN_EXPIRES_AFTER_MINUTES', 5)+1);
+        $token->accessToken->expires_at = ($request->minutes !== null ? Carbon::now()->addMinutes($request->minutes) : null);
         $token->accessToken->save();
 
         return $this->success(['token' => $token->plainTextToken]);
@@ -73,7 +74,6 @@ class AuthenticationController extends ApiController
      *
      * @param StoreUser $request
      * @return JsonResponse
-     * @throws ApiErrorException
      */
     public function createUser(StoreUser $request): JsonResponse
     {

@@ -47,6 +47,25 @@
         </div>
 
         <div>
+          <div class="flex items-center justify-between">
+            <label for="password" class="block text-sm font-medium leading-6 text-gray-900">Hoelang wil je ingelogd blijven?</label>
+            <div class="text-sm">
+
+            </div>
+          </div>
+          <div class="mt-2">
+            <select v-model="formData.minutes" v-on:keyup.enter="login" type="password" autocomplete="password" required :class="errors?.errors?.password ? 'border-1 border-red-500': ''" class="block w-full border rounded-md  p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+              <option :value="1">1 minuut</option>
+              <option :value="5">5 minuten</option>
+              <option :value="30">30 minuten</option>
+              <option :value="60">1 uur</option>
+              <option :value="null">Ingelogd blijven</option>
+            </select>
+            <span class="text-red-500 text-sm" v-if="errors?.errors?.minutes">{{ errors.errors.minutes[0]  }}</span>
+          </div>
+        </div>
+
+        <div>
           <button v-if="!loading" @click="login" type="submit" class="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Inloggen</button>
           <button v-else type="submit" class="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
             <svg class="animate-spin" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" style="fill: rgba(255, 255, 255, 1);transform: ;msFilter:;"><path d="M12 22c5.421 0 10-4.579 10-10h-2c0 4.337-3.663 8-8 8s-8-3.663-8-8c0-4.336 3.663-8 8-8V2C6.579 2 2 6.58 2 12c0 5.421 4.579 10 10 10z"></path></svg>
@@ -75,7 +94,8 @@ export default {
 
       formData: {
         email: null,
-        password: null
+        password: null,
+        minutes: 5
       }
     }
   },

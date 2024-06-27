@@ -9,7 +9,9 @@ use App\Http\Resources\VenueResource;
 use App\Models\Plan;
 use App\Models\UserVenue;
 use App\Models\Venue;
+use Database\Seeders\SettingSeeder;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Artisan;
 use Stripe\Exception\ApiErrorException;
 
 class VenueController extends ApiController
@@ -28,10 +30,15 @@ class VenueController extends ApiController
 
         UserVenue::create(['user_id' => $request->user()->id, 'venue_id' => $venue->id, 'accepted' => true]);
 
-        if(!(new StripeCustomerController())->create($venue, $request->user())) return $this->error(['']);
+        if (!(new StripeCustomerController())->create($venue, $request->user())) return $this->error(['']);
 
         $plan = Plan::findOrFail($request->plan_id);
         $subscription_url = (new StripeSubscriptionController())->create($venue, $plan);
+
+        Artisan::call('db:seed', [
+            '--class' => 'SettingSeeder',
+            '--venue_id' => $venue->id,
+        ]);
 
         return $this->success($subscription_url);
     }

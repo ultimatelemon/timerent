@@ -22,13 +22,60 @@ class SettingController extends ApiController
         return $this->success($settings);
     }
 
-    public function updateSettings(Venue $venue, Request $request)
+    /**
+     * Update the venue's settings
+     *
+     * @param Venue $venue
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function updateSettings(Venue $venue, Request $request): JsonResponse
     {
         foreach ($request->settings as $setting) {
             $s = Setting::findOrFail($setting['id']);
             $s->value = $setting['value'];
             $s->save();
         }
+
+        return $this->success();
+    }
+
+    /**
+     * Get the venue's payment settings
+     *
+     * @param Venue $venue
+     * @return JsonResponse
+     */
+    public function getPaymentSettings(Venue $venue)
+    {
+        $settings = $venue->settings()->where('category', 'finance')->get();
+        return $this->success(
+          [
+              'venue' => $venue,
+              'settings' => [
+                  'payment_provider' => $settings->where('key', 'payment_provider')->first()->value,
+              ]
+          ]
+        );
+    }
+
+    /**
+     * Update the venue's payment settings
+     *
+     * @param Venue $venue
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function updatePaymentSettings(Venue $venue, Request $request): JsonResponse
+    {
+        $setting_provider = $venue->settings->where('key', 'payment_provider')->first();
+        $setting_api_key = $venue->settings->where('key', 'payment_api_key')->first();
+
+        $setting_provider->value = $request->payment_provider;
+        $setting_provider->save();
+
+        $setting_api_key->value = $request->payment_api_key;
+        $setting_api_key->save();
 
         return $this->success();
     }

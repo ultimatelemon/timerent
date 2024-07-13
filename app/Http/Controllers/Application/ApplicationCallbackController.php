@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Application;
 use App\Http\Controllers\Controller;
 use App\Models\Reservation;
 use App\WebPayment\PaymentStatus;
-use App\WebPayment\Timerent\TimerentPaymentClient;
+use App\WebPayment\Timerent\MolliePaymentClient;
 use Illuminate\Http\Request;
 use Stripe\StripeClient;
 
@@ -13,6 +13,7 @@ class ApplicationCallbackController extends Controller
 {
     public function success(Request $request)
     {
+        ray('test2')->red();
         $session_id = $request->session_id;
         $client = new StripeClient(env('STRIPE_SECRET'));
 

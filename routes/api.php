@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Management\PaymentProviderController;
 use App\Http\Controllers\Management\PlanController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ReportController;
@@ -8,6 +9,7 @@ use App\Http\Controllers\SettingController;
 use App\Http\Controllers\StatisticsController;
 use App\Http\Controllers\TemplateController;
 use App\Http\Controllers\UnitController;
+use App\Http\Controllers\User\UserController;
 use App\Http\Controllers\User\UserVenueController;
 use App\Http\Controllers\VenueController;
 use App\Http\Controllers\WeekController;
@@ -36,7 +38,12 @@ Route::middleware('auth:sanctum')->group(function () {
 
     // Settings
     Route::get('/venues/{venue}/settings/category', [SettingController::class, 'getSettingByCategory']);
+    Route::put('/venues/{venue}/settings/payment', [SettingController::class, 'updatePaymentSettings']);
+    Route::get('/venues/{venue}/settings/payment', [SettingController::class, 'getPaymentSettings']);
     Route::put('/venues/{venue}/settings', [SettingController::class, 'updateSettings']);
+
+    // Payment Providers
+    Route::get('/paymentproviders/available', [PaymentProviderController::class, 'available']);
 
     // Todo: Permission routes
     Route::resource('venues',                   VenueController::class)->except(['create', 'edit']);
@@ -46,4 +53,5 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::resource('venues.products',          ProductController::class)->except(['create', 'edit']);
     Route::resource('venues.reservations',      ReservationController::class)->except(['create', 'edit']);
     Route::resource('venues.reports',           ReportController::class)->except(['create', 'edit']);
+    Route::resource('venues.users',             UserController::class)->except(['create', 'edit']);
 });

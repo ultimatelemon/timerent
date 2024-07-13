@@ -4,6 +4,8 @@ namespace App\Http\Requests\Venue;
 
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Validator;
 
 class StoreVenue extends FormRequest
 {
@@ -35,6 +37,7 @@ class StoreVenue extends FormRequest
             'bank_number' => 'nullable|string',
 
             'plan_id' => 'required|exists:plans,id',
+            'subdomain' => 'required|string|unique:venues,subdomain',
 
             'avatar_id' => 'nullable|uuid|exists:files,id',
             'cover_id' => 'nullable|uuid|exists:files,id',

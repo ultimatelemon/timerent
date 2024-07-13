@@ -59,7 +59,7 @@
               <option :value="5">5 minuten</option>
               <option :value="30">30 minuten</option>
               <option :value="60">1 uur</option>
-              <option :value="null">Ingelogd blijven</option>
+              <option :value="null">Altijd</option>
             </select>
             <span class="text-red-500 text-sm" v-if="errors?.errors?.minutes">{{ errors.errors.minutes[0]  }}</span>
           </div>

@@ -282,8 +282,8 @@ export default {
           'permission': []
         },
         {
-          'name': 'Gebruikers',
-          'link': {name: 'users.index'},
+          'name': 'Medewerkers',
+          'link': {name: 'venues.users.index', params: {venue: this.$store.state.venue.id}},
           'icon': UserIcon,
           'permission': 'VIEW_USERS',
         },

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Venue;
 use Carbon\Carbon;
+use Carbon\CarbonInterface;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
@@ -23,15 +24,35 @@ class ReportController extends ApiController
             'to' => 'required|date',
         ]);
 
+        // TODO: Kijken naar week ipv from en to voor charts;
 
-        $from = Carbon::parse($validatedRequest['from']);
-        $to = Carbon::parse($validatedRequest['to']);
+        $from = Carbon::parse($validatedRequest['from'])->setHour(23)->setMinute(59)->setSecond(59);
+        $to = Carbon::parse($validatedRequest['to'])->setHour(23)->setMinute(59)->setSecond(59);
 
         $reservations = $venue->reservations->where('created_at', '>=', $from)->where('created_at', '<=', $to)->where('payment_status', 'paid');
         $revenue = collect($reservations->map(function ($reservation) {return $reservation->payment_amount;}))->sum();
-        $tax_low = collect($reservations->map(function ($reservation) {return $reservation->tax_high;}))->sum();
-        $tax_high = collect($reservations->map(function ($reservation) {return $reservation->tax_low;}))->sum();
+        $tax_low = collect($reservations->map(function ($reservation) {return $reservation->tax_low;}))->sum();
+        $tax_high = collect($reservations->map(function ($reservation) {return $reservation->tax_high;}))->sum();
         $customer_count = $venue->reservations()->where('payment_status', 'paid')->distinct()->count('email');
+
+        $charts = [];
+        $charts['reservations'] = [
+            'options' => [
+                'chart' => [
+                    'id' => 'reservations'
+                ],
+                'xaxis' => [
+                    'categories' => ['Ma', 'Di', 'Wo', 'Do', 'Vr', 'Za', 'Zo']
+                ]
+            ],
+
+            'series' => [
+                [
+                    'name' => 'reservations',
+                    'data' => [CarbonInterface::MONDAY, 40, 45, 50, 49, 60, 70, 91]
+                ]
+            ]
+        ];
 
         return $this->success([
             'reservations_count' => $reservations->count(),
@@ -40,6 +61,7 @@ class ReportController extends ApiController
             'tax_low' => $tax_low,
             'tax_high' => $tax_high,
             'customer_count' => $customer_count,
+            'charts' => $charts,
         ]);
     }
 }

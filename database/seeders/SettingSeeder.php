@@ -16,6 +16,9 @@ class SettingSeeder extends Seeder
         if(!$venueId) return;
 
         $settings = [
+
+            // General
+
             [
                 'id' => Str::uuid(),
                 'key' => 'name',
@@ -46,6 +49,31 @@ class SettingSeeder extends Seeder
                 'required' => true,
                 'venue_id' => $venueId,
             ],
+
+            // Finance
+
+            [
+                'id' => Str::uuid(),
+                'key' => 'payment_provider',
+                'value' => 'timerent',
+                'category' => 'finance',
+                'type' => 'text',
+                'display_name' => 'Seleteer je betaalprovider',
+                'required' => true,
+                'venue_id' => $venueId,
+            ],
+            [
+                'id' => Str::uuid(),
+                'key' => 'payment_api_key',
+                'value' => '',
+                'category' => 'finance',
+                'type' => 'text',
+                'display_name' => 'API key',
+                'required' => false,
+                'venue_id' => $venueId,
+            ],
+
+            // Reservation
 
             [
                 'id' => Str::uuid(),

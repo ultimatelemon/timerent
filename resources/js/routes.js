@@ -10,10 +10,10 @@ export const routes = [
     { path: '/store/:venue/home', component: () => import('./pages/Venues/Home.vue'), name: 'venues.home' },
 
     {
-        path: '/users',
+        path: '/store/:venue/users',
         component: Wrapper,
         children: [
-            { path: '', component: () => import('./pages/Users/UserIndex.vue'), name: 'users.index' },
+            { path: '', component: () => import('./pages/Venues/Users/Index.vue'), name: 'venues.users.index' },
         ]
     },
 

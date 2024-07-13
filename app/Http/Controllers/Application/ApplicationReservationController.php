@@ -8,8 +8,10 @@ use App\Http\Requests\Venue\StoreReservation;
 use App\Models\Product;
 use App\Models\Reservation;
 use App\Models\ReservationTimeblock;
+use App\Models\Setting;
 use App\Models\Unit;
 use App\Models\Venue;
+use App\WebPayment\Mollie\MolliePaymentClient;
 use App\WebPayment\PaymentStatus;
 use App\WebPayment\Timerent\TimerentPaymentClient;
 use Carbon\Carbon;
@@ -112,11 +114,19 @@ class ApplicationReservationController extends ApiController
 
         // Todo; PSP modules,
         $paymentUrl = '';
-        $payment_provider = 'timerent';
+        $payment_provider = Setting::where([['key', '=', 'payment_provider'], ['venue_id', '=', $venue->id]])->firstOrFail()->value;
         switch($payment_provider) {
             case 'timerent':
                 $client = new TimerentPaymentClient(env('STRIPE_SECRET'));
-                $payment = $client->startPayment('Reservering via Timerent.nl', $total, 'http://'.$request->getHttpHost().'/callback/success?session_id={CHECKOUT_SESSION_ID}', 'http://'.$request->getHttpHost() .'/callback/success?session_id={CHECKOUT_SESSION_ID}', $validatedRequest['email'], $venue->stripe_connect_id);
+                $payment = $client->startPayment('Reservering via Timerent.nl', $total, 'http://'.$request->getHttpHost().'/callback/success?session_id={CHECKOUT_SESSION_ID}', 'http://'.$request->getHttpHost() .'/callback/success?session_id={CHECKOUT_SESSION_ID}', $validatedRequest['email'], $venue);
+                $reservation->update(['payment_id' => $payment->id]);
+                $paymentUrl = $payment->getPaymentUrl();
+                break;
+
+            case 'mollie':
+                $api_key = Setting::where([['key', '=', 'payment_api_key'], ['venue_id', '=', $venue->id]])->firstOrFail()->value;
+                $client = new MolliePaymentClient($api_key);
+                $payment = $client->startPayment('Reservering via Timerent.nl', $total, 'http://'.$request->getHttpHost().'/callback/success?session_id={CHECKOUT_SESSION_ID}', 'http://'.$request->getHttpHost() .'/callback/success?session_id={CHECKOUT_SESSION_ID}', $validatedRequest['email'], $venue);
                 $reservation->update(['payment_id' => $payment->id]);
                 $paymentUrl = $payment->getPaymentUrl();
         }

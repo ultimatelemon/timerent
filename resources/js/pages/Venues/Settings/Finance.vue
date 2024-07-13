@@ -1,11 +1,120 @@
 <template>
   <div>
-    <div class="font-semibold text-lg">Financiën</div>
+    <div class="font-semibold text-lg mb-4">Financiën</div>
+    <div class="mt-8 mb-12">
+      <div class="pb-2">Kies een betaling provider</div>
+      <div class="flex flex-wrap gap-2 justify-items-stretch">
+        <div v-for="psp in psps">
+          <div
+              @click="formData.payment_provider = psp.text_id"
+              :class="formData.payment_provider === psp.text_id ? 'border-blue-500' : ''"
+              class="bg-white rounded-lg border-2 w-28 leading-none px-4 py-6 transition duration-150 relative cursor-pointer">
+<!--            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"-->
+<!--                 class="w-5 h-5 absolute top-1 right-1 text-yellow-400">-->
+<!--              <path fill-rule="evenodd"-->
+<!--                    d="M10.788 3.21c.448-1.077 1.976-1.077 2.424 0l2.082 5.007 5.404.433c1.164.093 1.636 1.545.749 2.305l-4.117 3.527 1.257 5.273c.271 1.136-.964 2.033-1.96 1.425L12 18.354 7.373 21.18c-.996.608-2.231-.29-1.96-1.425l1.257-5.273-4.117-3.527c-.887-.76-.415-2.212.749-2.305l5.404-.433 2.082-5.006z"-->
+<!--                    clip-rule="evenodd"></path>-->
+<!--            </svg>-->
+            <img :src="psp.image" :alt="psp.name"
+                 class="mx-auto w-16 h-8 object-contain mb-4">
+            <h1 class="text-xs text-center text-gray-500">{{psp.name}}</h1></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+      <div v-if="formData.payment_provider !== 'timerent'">
+        <label for="name" class="block text-sm font-medium leading-6 text-gray-900">API key<span
+            v-if="true"
+            class="required-star">*</span> <span class="text-xs">(Je API key is vanwege veiligheid niet meer zichtbaar na het opslaan van je instellingen)</span></label>
+        <div class="relative mt-2 rounded-md shadow-sm">
+          <input v-model="formData.payment_api_key" type="text" name="name" id="name"
+                 v-on:keyup.enter="postData"
+                 :class="errors.name ? 'ring-red-300' : ''"
+                 class="block w-full rounded-md border-0 py-1.5 pr-10 ring-1 ring-inset focus:ring-2 focus:ring-inset focus:ring-indigo-500 sm:text-sm sm:leading-6"
+                 aria-invalid="true" aria-describedby="name-error"/>
+          <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
+            <svg v-if="errors.name" class="h-5 w-5 text-red-500" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+              <path fill-rule="evenodd"
+                    d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-8-5a.75.75 0 01.75.75v4.5a.75.75 0 01-1.5 0v-4.5A.75.75 0 0110 5zm0 10a1 1 0 100-2 1 1 0 000 2z"
+                    clip-rule="evenodd"/>
+            </svg>
+          </div>
+        </div>
+      </div>
+      <div v-else>
+        <div v-if="venue.stripe_connect_id" class="text-green-500"><i class="fa fa-check"></i> Je maakt nu gebruik van Timerent payments</div>
+        <div v-else>
+          <div>
+            <p>Om betalingen via Timerent te laten verlopen vragen we je om een aantal stappen te voltooien bij onze partner Stripe.</p>
+            <br>
+            <p class="font-semibold">Belangrijk is dat je je persoonlijke- en bedrijfsgegevens bij de hand houd en de verificatie in één keer afmaakt.</p>
+          </div>
+          <button class="btn text-white bg-green-500 my-12">Start verificatie</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="mt-12 flex justify-end">
+      <button @click="postData" class="btn btn-lg btn-secondary">Instellingen opslaan</button>
+    </div>
   </div>
 </template>
 
 <script>
+
 export default {
-  name: "Finance"
+  name: "Finance",
+  data() {
+    return {
+      errors: [],
+      settings: [],
+      venue: null,
+
+      psps: [],
+
+      formData: {
+        payment_provider: '',
+        payment_api_key: '',
+      },
+    }
+  },
+
+  methods: {
+
+    fetchVenue() {
+      axios.get('/venues/' + this.$route.params.venue + '/settings/payment')
+          .then(response => {
+            this.venue = response.data.data.venue;
+            this.settings = response.data.data.settings;
+
+            this.formData.payment_provider = response.data.data.settings.payment_provider;
+          })
+    },
+
+    postData() {
+      axios.put('/venues/' + this.$route.params.venue + '/settings/payment', this.formData)
+          .then(response => {
+            alert('Instellingen opgeslagen')
+            this.formData.payment_api_key = '';
+          })
+          .catch(e => {
+            alert('Er is een onbekende fout opgetreden');
+            console.log(e.response.data)
+          })
+    },
+
+    fetchPaymentProviders() {
+      axios.get('/paymentproviders/available')
+          .then(response => {
+            this.psps = response.data.data;
+          })
+    }
+  },
+
+  mounted() {
+    this.fetchVenue()
+    this.fetchPaymentProviders()
+  }
 }
 </script>

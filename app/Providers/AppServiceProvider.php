@@ -29,9 +29,10 @@ class AppServiceProvider extends ServiceProvider
         Route::middleware('web')
             ->namespace('App\\Http\\Controllers\\')
             ->group(function () {
-                $host = request()->getHost();
+                $host = request()->getHttpHost();
 
                 if($host !== env('MAIN_DOMAIN')) {
+                    ray('test')->green();
                     Route::middleware(['web'])
                         ->group(base_path('routes/application/web.php'));
                 } else {

@@ -6,21 +6,22 @@ use App\Http\Controllers\ApiController;
 use App\Http\Resources\TokenResource;
 use App\Http\Resources\UserResource;
 use App\Models\User;
+use App\Models\Venue;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controllers\HasMiddleware;
 use Illuminate\Routing\Controllers\Middleware;
 
-class UserController extends ApiController implements HasMiddleware
+class UserController extends ApiController
 {
 
-    public static function middleware(): array
-    {
-        return [
-            new Middleware('hasPermissions:VIEW_USERS', only: ['index', 'show']),
-            new Middleware('hasPermissions:MANAGE_USERS', only: ['store', 'update', 'destroy']),
-        ];
-    }
+//    public static function middleware(): array
+//    {
+//        return [
+//            new Middleware('hasPermissions:VIEW_USERS', only: ['index', 'show']),
+//            new Middleware('hasPermissions:MANAGE_USERS', only: ['store', 'update', 'destroy']),
+//        ];
+//    }
 
     /**
      * Return the current user object
@@ -49,11 +50,12 @@ class UserController extends ApiController implements HasMiddleware
      * Get the index of the resource
      *
      * @param Request $request
+     * @param Venue $venue
      * @return JsonResponse
      */
-    public function index(Request $request): JsonResponse
+    public function index(Request $request, Venue $venue): JsonResponse
     {
-        $users = User::query();
+        $users = $venue->users();
 
         if($request->has('q'))
             $users = $users->where('name', 'ILIKE', "%{$request->q}%")

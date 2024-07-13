@@ -35,11 +35,22 @@ class VenueController extends ApiController
         $plan = Plan::findOrFail($request->plan_id);
         $subscription_url = (new StripeSubscriptionController())->create($venue, $plan);
 
-        Artisan::call('db:seed', [
-            '--class' => 'SettingSeeder',
-            '--venue_id' => $venue->id,
+        Artisan::call('venue:seed', [
+            'venue_id' => $venue->id,
         ]);
 
         return $this->success($subscription_url);
+    }
+
+
+    /**
+     * Display venue
+     *
+     * @param Venue $venue
+     * @return JsonResponse
+     */
+    public function show(Venue $venue): JsonResponse
+    {
+        return $this->success(new VenueResource($venue));
     }
 }

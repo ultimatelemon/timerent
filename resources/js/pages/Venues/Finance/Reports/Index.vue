@@ -73,6 +73,25 @@
         <p class="font-semibold text-3xl">{{ $filters.currency((statistics.revenue_incl / statistics.reservations_count || 0)) }}</p>
       </div>
     </div>
+
+    <div v-if="charts" class="grid grid-cols-4 gap-4 font-semibold">
+      <div>
+        <p>Reserveringen per dag</p>
+        <apexchart width="375" :series="charts.reservations.series" :options="charts.reservations.options"></apexchart>
+      </div>
+      <div>
+        <p>Reserveringen per dag</p>
+        <apexchart width="375" :series="series" :options="options"></apexchart>
+      </div>
+      <div>
+        <p>Reserveringen per dag</p>
+        <apexchart width="375" :series="series" :options="options"></apexchart>
+      </div>
+      <div>
+        <p>Reserveringen per dag</p>
+        <apexchart width="375" :series="series" :options="options"></apexchart>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -109,6 +128,8 @@ export default {
         customer_count: 0,
       },
 
+      charts: null,
+
       options: {
         chart: {
           id: 'vuechart-example'
@@ -143,6 +164,7 @@ export default {
             this.statistics.tax_low = response.data.data.tax_low
             this.statistics.tax_high = response.data.data.tax_high
             this.statistics.customer_count = response.data.data.customer_count
+            this.charts = response.data.data.charts;
             console.log(response.data.data.reservations_count)
           })
     }

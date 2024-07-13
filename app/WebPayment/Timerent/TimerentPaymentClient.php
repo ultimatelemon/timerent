@@ -2,7 +2,7 @@
 
 namespace App\WebPayment\Timerent;
 
-use App\Models\Tenant\Setting;
+use App\Models\Venue;
 use App\WebPayment\Payment;
 use App\WebPayment\PaymentProviderInterface;
 use App\WebPayment\PaymentStatus;
@@ -18,7 +18,7 @@ class TimerentPaymentClient implements PaymentProviderInterface
         $this->stripe = new StripeClient($key);
     }
 
-    public function startPayment(string $description, int $cents, string $return_url, string $webhook = null, string $email, string $stripe_connect_id): Payment
+    public function startPayment(string $description, int $cents, string $return_url, string $webhook = null, string $email, Venue $venue): Payment
     {
         $paymentIntent = $this->stripe->checkout->sessions->create([
 //            'payment_method_types' => ['card', 'ideal'],
@@ -35,7 +35,7 @@ class TimerentPaymentClient implements PaymentProviderInterface
             ]],
             'payment_intent_data' => [
                 'application_fee_amount' => env('APPLICATION_FEE_AMOUNT'),
-                'transfer_data' => ['destination' => $stripe_connect_id]
+                'transfer_data' => ['destination' => $venue->stripe_connect_id]
             ],
             'mode' => 'payment',
             'customer_email' => ($email),

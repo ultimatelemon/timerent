@@ -3,7 +3,9 @@
 namespace App\Http\Controllers\Stripe;
 
 use App\Http\Controllers\Controller;
+use App\Models\Reservation;
 use App\Models\Venue;
+use App\WebPayment\PaymentStatus;
 use Carbon\Carbon;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
@@ -31,13 +33,26 @@ class StripeCallbackController extends Controller
         $session_id = $request->session_id;
 
         $session = $this->client->checkout->sessions->retrieve($session_id, ['expand' => ['subscription']]);
-        $period_end = Carbon::createFromTimestamp($session->subscription->current_period_end)->toDateTimeString();
+        if($session->subscription) {
+            $period_end = Carbon::createFromTimestamp($session->subscription->current_period_end)->toDateTimeString();
 
-        $venue = Venue::where('stripe_subscription_id', $session->id)->firstOrFail();
-        $venue->stripe_subscription_id = $session->subscription->id;
-        $venue->stripe_current_period_ends_at = $period_end;
-        $venue->save();
+            $venue = Venue::where('stripe_subscription_id', $session->id)->firstOrFail();
+            $venue->stripe_subscription_id = $session->subscription->id;
+            $venue->stripe_current_period_ends_at = $period_end;
+            $venue->save();
+        } else {
+            //TODO: FIx this in ApplicationCallbackController
+            if($session->payment_status === 'paid') {
+                $reservation = Reservation::where('payment_id', $session->id)->firstOrFail();
+                $reservation->payment_status = PaymentStatus::Paid;
+                $reservation->save();
 
-        return view('callback.success');
+                // TODO: Mail confirmation
+
+                return view('application.callback.success');
+            }
+        }
+
+        return view('application.callback.success');
     }
 }

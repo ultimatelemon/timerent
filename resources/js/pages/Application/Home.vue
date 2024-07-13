@@ -102,6 +102,8 @@
           </div>
         </div>
 
+        <p v-if="errors.error" class="mt-8 text-red-500">Foutmelding: {{errors.error}}</p>
+
         <div class="mt-8 flex justify-end">
           <button @click="postData" class="btn btn-primary btn-lg">Afronden</button>
         </div>
@@ -212,7 +214,7 @@ export default {
       axios.get('/venue/' + this.subdomain)
           .then(response => {
             this.venue = response.data.data;
-            if(new Date(response.data.data.stripe_current_period_ends_at) >= new Date()) this.activeSubscription = false;
+            if(new Date(response.data.data.stripe_current_period_ends_at) <= new Date()) this.activeSubscription = false;
             this.fetchProducts();
       })
     },
@@ -275,7 +277,7 @@ export default {
             this.fetchUnits()
           })
           .catch(e => {
-
+            this.errors = e.response.data.errors;
           })
           .finally(() => {
             this.loading = false;

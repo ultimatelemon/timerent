@@ -6,11 +6,12 @@ use App\Http\Controllers\ApiController;
 use App\Http\Resources\UserVenueResource;
 use App\Models\User;
 use App\Models\Venue;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 class UserVenueController extends ApiController
 {
-    public function index(Request $request, User $user)
+    public function index(Request $request, User $user): JsonResponse
     {
         $user_venues = $user->user_venues()->with('venue');
         if($request->has('q'))

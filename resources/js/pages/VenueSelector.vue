@@ -22,9 +22,12 @@
             <button class="p-4" @click="showNewVenue = false"><i class="far fa-times"></i></button>
           </div>
           <div class="p-5">
-            <div class="bg-blue-50 text-blue-400 p-4 rounded-md text-sm mb-5 flex items-center">
-              <i class="far fa-info-circle mr-4"></i>
-              <p>Registreer een nieuwe venue</p>
+            <div class="p-4 rounded-md text-sm mb-5 flex items-center"
+            :class="errorMessage ? 'bg-red-50 text-red-400' : 'bg-blue-50 text-blue-400' "
+            >
+              <i :class="errorMessage ? 'fa-exclamation' : 'fa-info-circle'" class="far mr-4"></i>
+              <p v-if="!errorMessage">Registreer een nieuwe venue</p>
+              <p v-else>{{errorMessage}}</p>
             </div>
             <div class="mb-4">
               <label>Naam <span class="required-star">*</span></label>
@@ -115,6 +118,7 @@ export default {
       plans: [],
 
       errors: [],
+      errorMessage: "",
       loading: false,
       current_user: null,
       subscription_url: null,
@@ -152,7 +156,7 @@ export default {
     addVenue() {
       axios.post('/venues', {
         name: this.name,
-        subdomain: this.subdomain,
+        subdomain: this.subdomain.toLowerCase(),
         plan_id: this.plan_id,
       })
           .then(response => {
@@ -162,6 +166,7 @@ export default {
           })
           .catch(error => {
             this.errors = error.response.data.errors;
+            this.errorMessage = error.response.data.message;
             console.log(this.errors);
           })
     },

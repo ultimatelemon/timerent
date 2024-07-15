@@ -34,9 +34,9 @@ class MollieWebhookController extends ApiController
 
     public function updatePayment(Request $request)
     {
-        if(!$request->id) return $this->error();
+        if(!$request->input('id')) return $this->error();
         try {
-            $reservation = Reservation::where('payment_id', $request->id)->firstOrFail();
+            $reservation = Reservation::where('payment_id', $request->input('id'))->firstOrFail();
             $venue = $reservation->venue;
 
             $mollie_key = Setting::where([['venue_id', '=', $venue->id], ['key', '=', 'payment_api_key']])->firstOrFail()->value;

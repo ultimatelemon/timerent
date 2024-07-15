@@ -1,10 +1,13 @@
 import Wrapper from "./Wrapper.vue";
 
 export const routes = [
+    { path: '/confirmation/:reservation', component: () => import('./pages/ReservationConfirmation.vue'), name: 'confirmation', meta: { title: "confirmation" } },
+
     { path: '/email/verify', component: () => import('./pages/Auth/EmailVerify.vue'), name: 'email.verify', meta: { title: "pages.email-verify" } },
     { path: '/login', component: () => import('./pages/Auth/Login.vue'), name: 'login', meta: { title: "pages.login" } },
     { path: '/register', component: () => import('./pages/Auth/Register.vue'), name: 'register', meta: { title: "pages.register" } },
     { path: '/select', component: () => import('./pages/VenueSelector.vue'), name: 'venueselect', meta: { title: "pages.login" } },
+
     { path: '/', redirect: '/select' },
 
     { path: '/store/:venue/home', component: () => import('./pages/Venues/Home.vue'), name: 'venues.home' },

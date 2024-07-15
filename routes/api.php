@@ -22,6 +22,7 @@ Route::post('/sanctum/register', [\App\Http\Controllers\AuthenticationController
 Route::post('/sanctum/email/verify', [\App\Http\Controllers\AuthenticationController::class, 'verifyEmail']);
 Route::post('/sanctum/email/verify/resend', [\App\Http\Controllers\AuthenticationController::class, 'resendVerifyEmail']);
 
+Route::get('/reservationispaid/{reservation}', [ReservationController::class, 'isPaid']);
 Route::post('/venuepayments/mollie/webhook', [\App\Http\Controllers\Mollie\MollieWebhookController::class, 'updatePayment']);
 
 

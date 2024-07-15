@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Resources\ReservationResource;
 use App\Models\Reservation;
 use App\Models\Venue;
+use App\WebPayment\PaymentStatus;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
@@ -43,5 +44,16 @@ class ReservationController extends ApiController
     public function show(Venue $venue, Reservation $reservation): JsonResponse
     {
         return $this->success(new ReservationResource($reservation));
+    }
+
+    /**
+     * Return if the reservation has been paid
+     *
+     * @param Reservation $reservation
+     * @return JsonResponse
+     */
+    public function isPaid(Reservation $reservation): JsonResponse
+    {
+        return $this->success($reservation->payment_status === PaymentStatus::Paid->value);
     }
 }

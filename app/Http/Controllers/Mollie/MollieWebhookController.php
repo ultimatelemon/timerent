@@ -44,7 +44,7 @@ class MollieWebhookController extends ApiController
 
             $payment = $client->getPayment($reservation->payment_id);
 
-            $reservation->payment_status = $payment->getStatus();
+            $reservation->payment_status = $payment->getStatus()->value;
             $reservation->save();
 
             return $this->success();

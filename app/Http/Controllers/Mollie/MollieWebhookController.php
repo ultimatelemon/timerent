@@ -34,7 +34,7 @@ class MollieWebhookController extends ApiController
 
     public function updatePayment(Request $request)
     {
-        if(!$request->has('id')) return;
+        if(!$request->has('id')) return $this->error();
         try {
             $reservation = Reservation::where('payment_id', 'tr_GvSM7TEcmY')->firstOrFail();
             $venue = $reservation->venue;

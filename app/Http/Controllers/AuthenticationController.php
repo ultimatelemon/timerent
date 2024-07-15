@@ -82,6 +82,7 @@ class AuthenticationController extends ApiController
         $user->password = Hash::make($validatedRequest['password']);
         $user->email = strtolower($validatedRequest['email']);
         $user->name = $validatedRequest['name'];
+        $user->role_id = '509ab95a-9dbc-4857-a142-c3a1fa9a9812';
         $user->email_verification_token = Str::random(64);
         $user->email_verification_token_expires_at = Carbon::now()->addHours(2);
         $user->save();

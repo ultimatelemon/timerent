@@ -26,7 +26,7 @@ class ReportController extends ApiController
 
         // TODO: Kijken naar week ipv from en to voor charts;
 
-        $from = Carbon::parse($validatedRequest['from'])->setHour(23)->setMinute(59)->setSecond(59);
+        $from = Carbon::parse($validatedRequest['from'])->setHour(0)->setMinute(0)->setSecond(0);
         $to = Carbon::parse($validatedRequest['to'])->setHour(23)->setMinute(59)->setSecond(59);
 
         $reservations = $venue->reservations->where('created_at', '>=', $from)->where('created_at', '<=', $to)->where('payment_status', 'paid');

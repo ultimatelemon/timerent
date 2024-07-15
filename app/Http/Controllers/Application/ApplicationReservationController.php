@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Application;
 
+use App\Helpers\PaymentHelper;
 use App\Helpers\ReservationHelper;
 use App\Http\Controllers\ApiController;
 use App\Http\Requests\Venue\StoreReservation;
@@ -34,7 +35,7 @@ class ApplicationReservationController extends ApiController
     {
         $validatedRequest = $request->validated();
         $venue = Venue::where('subdomain', $validatedRequest['subdomain'])->firstOrFail();
-        if (!$venue->stripe_connect_id) return $this->error(['error' => 'Er is nog geen betaalprovider gekoppeld.']);
+        if(!PaymentHelper::hasPaymentsEnabled($venue)) return $this->error(['error' => 'Er is nog geen betaalprovider gekoppeld.']);
 
         $total = collect($validatedRequest['timeblocks'])->map(function ($x) {
             return $x['timeblock']['price'];

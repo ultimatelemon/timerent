@@ -6,6 +6,7 @@ use App\Models\Venue;
 use App\WebPayment\Payment;
 use App\WebPayment\PaymentProviderInterface;
 use App\WebPayment\PaymentStatus;
+use Mollie\Api\Exceptions\ApiException;
 use Mollie\Api\Exceptions\IncompatiblePlatform;
 use Mollie\Api\Exceptions\UnrecognizedClientException;
 use Mollie\Api\MollieApiClient;
@@ -19,10 +20,12 @@ class MolliePaymentClient implements PaymentProviderInterface
     /**
      * @throws UnrecognizedClientException
      * @throws IncompatiblePlatform
+     * @throws ApiException
      */
     public function __construct(string $key)
     {
-        $this->mollie = new MollieApiClient($key);
+        $this->mollie = new MollieApiClient();
+        $this->mollie->setApiKey($key);
     }
 
     public function startPayment(string $description, int $cents, string $return_url, string $webhook = null, string $email, Venue $venue): Payment
@@ -30,7 +33,7 @@ class MolliePaymentClient implements PaymentProviderInterface
         $payment = $this->mollie->payments->create([
             'amount' => [
                 'currency' => 'EUR',
-                'value' => $cents,
+                'value' => number_format($cents/100, 2, '.', ''),
             ],
 
             'description' => $description,

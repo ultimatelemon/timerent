@@ -32,7 +32,6 @@ class AppServiceProvider extends ServiceProvider
                 $host = request()->getHttpHost();
 
                 if($host !== env('MAIN_DOMAIN')) {
-                    ray('test')->green();
                     Route::middleware(['web'])
                         ->group(base_path('routes/application/web.php'));
                 } else {

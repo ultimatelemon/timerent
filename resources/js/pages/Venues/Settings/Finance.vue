@@ -9,12 +9,12 @@
               @click="formData.payment_provider = psp.text_id"
               :class="formData.payment_provider === psp.text_id ? 'border-blue-500' : ''"
               class="bg-white rounded-lg border-2 w-28 leading-none px-4 py-6 transition duration-150 relative cursor-pointer">
-<!--            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"-->
-<!--                 class="w-5 h-5 absolute top-1 right-1 text-yellow-400">-->
-<!--              <path fill-rule="evenodd"-->
-<!--                    d="M10.788 3.21c.448-1.077 1.976-1.077 2.424 0l2.082 5.007 5.404.433c1.164.093 1.636 1.545.749 2.305l-4.117 3.527 1.257 5.273c.271 1.136-.964 2.033-1.96 1.425L12 18.354 7.373 21.18c-.996.608-2.231-.29-1.96-1.425l1.257-5.273-4.117-3.527c-.887-.76-.415-2.212.749-2.305l5.404-.433 2.082-5.006z"-->
-<!--                    clip-rule="evenodd"></path>-->
-<!--            </svg>-->
+            <svg v-if="current_psp === psp.text_id" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"
+                 class="w-5 h-5 absolute top-1 right-1 text-yellow-400">
+              <path fill-rule="evenodd"
+                    d="M10.788 3.21c.448-1.077 1.976-1.077 2.424 0l2.082 5.007 5.404.433c1.164.093 1.636 1.545.749 2.305l-4.117 3.527 1.257 5.273c.271 1.136-.964 2.033-1.96 1.425L12 18.354 7.373 21.18c-.996.608-2.231-.29-1.96-1.425l1.257-5.273-4.117-3.527c-.887-.76-.415-2.212.749-2.305l5.404-.433 2.082-5.006z"
+                    clip-rule="evenodd"></path>
+            </svg>
             <img :src="psp.image" :alt="psp.name"
                  class="mx-auto w-16 h-8 object-contain mb-4">
             <h1 class="text-xs text-center text-gray-500">{{psp.name}}</h1></div>
@@ -72,6 +72,7 @@ export default {
       venue: null,
 
       psps: [],
+      current_psp: '',
 
       formData: {
         payment_provider: '',
@@ -89,6 +90,7 @@ export default {
             this.settings = response.data.data.settings;
 
             this.formData.payment_provider = response.data.data.settings.payment_provider;
+            this.current_psp = response.data.data.settings.payment_provider;
           })
     },
 
@@ -97,6 +99,7 @@ export default {
           .then(response => {
             alert('Instellingen opgeslagen')
             this.formData.payment_api_key = '';
+            this.fetchVenue()
           })
           .catch(e => {
             alert('Er is een onbekende fout opgetreden');

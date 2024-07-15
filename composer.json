@@ -6,11 +6,12 @@
     "license": "MIT",
     "require": {
         "php": "^8.2",
+        "guzzlehttp/guzzle": "^7.2",
         "jenssegers/agent": "^2.6",
         "laravel/framework": "^11.9",
         "laravel/sanctum": "^4.0",
         "laravel/tinker": "^2.9",
-        "mollie/mollie-api-php": "^2.70",
+        "mollie/mollie-api-php": "^2.0",
         "spatie/laravel-ray": "^1.36",
         "stripe/stripe-php": "^14.9"
     },

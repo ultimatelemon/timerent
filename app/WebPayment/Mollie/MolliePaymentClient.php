@@ -46,11 +46,25 @@ class MolliePaymentClient implements PaymentProviderInterface
 
     public function getPayment($id): Payment
     {
-        // TODO: Implement getPayment() method.
+        $payment = $this->mollie->payments->get($id);
+        $amount = str_replace(".", "", $payment->amount->value) / 100; // Fix mollies pour development decisions
+        return new Payment($this, $payment->description, $amount, $payment->redirectUrl, $payment->webhookUrl, $payment->id, $this->parsePaymentStatus($payment->status), $payment->getCheckoutUrl());
     }
 
     public function refundPayment($id): string|bool
     {
         // TODO: Implement refundPayment() method.
+    }
+
+    private function parsePaymentStatus(string $status) : \App\WebPayment\PaymentStatus
+    {
+        return match ($status) {
+            \Mollie\Api\Types\PaymentStatus::STATUS_AUTHORIZED => \App\WebPayment\PaymentStatus::Authorized,
+            \Mollie\Api\Types\PaymentStatus::STATUS_EXPIRED => \App\WebPayment\PaymentStatus::Expired,
+            \Mollie\Api\Types\PaymentStatus::STATUS_OPEN => \App\WebPayment\PaymentStatus::Open,
+            \Mollie\Api\Types\PaymentStatus::STATUS_PAID => \App\WebPayment\PaymentStatus::Paid,
+            \Mollie\Api\Types\PaymentStatus::STATUS_PENDING => \App\WebPayment\PaymentStatus::Pending,
+            default => \App\WebPayment\PaymentStatus::Failed,
+        };
     }
 }

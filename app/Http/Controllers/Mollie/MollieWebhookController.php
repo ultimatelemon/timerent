@@ -47,6 +47,8 @@ class MollieWebhookController extends ApiController
             $reservation->payment_status = $payment->getStatus();
             $reservation->save();
 
+            return $this->success();
+
 //            if($payment->isPaid())
                 // TODO: Send confirmation mail
 

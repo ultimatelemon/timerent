@@ -36,6 +36,7 @@ class ApplicationReservationController extends ApiController
         $validatedRequest = $request->validated();
         $venue = Venue::where('subdomain', $validatedRequest['subdomain'])->firstOrFail();
         if(!PaymentHelper::hasPaymentsEnabled($venue)) return $this->error(['error' => 'Er is nog geen betaalprovider gekoppeld.']);
+        $payment_provider = Setting::where([['key', '=', 'payment_provider'], ['venue_id', '=', $venue->id]])->firstOrFail()->value;
 
         $total = collect($validatedRequest['timeblocks'])->map(function ($x) {
             return $x['timeblock']['price'];
@@ -55,7 +56,7 @@ class ApplicationReservationController extends ApiController
 
             'venue_id' => $venue->id,
 
-            'payment_provider' => $validatedRequest['payment_provider'] ?? 'timerent',
+            'payment_provider' => $payment_provider,
             'payment_amount' => $total,
             'tax_high' => $taxHigh,
             'tax_low' => $taxLow,
@@ -118,7 +119,6 @@ class ApplicationReservationController extends ApiController
 
         // Todo; PSP modules,
         $paymentUrl = '';
-        $payment_provider = Setting::where([['key', '=', 'payment_provider'], ['venue_id', '=', $venue->id]])->firstOrFail()->value;
         switch($payment_provider) {
             case 'timerent':
                 $client = new TimerentPaymentClient(env('STRIPE_SECRET'));

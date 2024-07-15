@@ -10,7 +10,7 @@ class ApiController extends Controller
     protected function success($data = null, $pagination = null, $extra = [], $status = 200): JsonResponse
     {
         return response()->json(array_merge([
-            'status' => 'success',
+            'status' => 'failure',
             'pagination' => $pagination,
             'data' => $data
         ], $extra), $status ?? 200);

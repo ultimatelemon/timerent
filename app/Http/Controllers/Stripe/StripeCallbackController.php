@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Reservation;
 use App\Models\Venue;
 use App\Notifications\ReservationConfirmation;
+use App\Notifications\Traits\EmailNotifiable;
 use App\WebPayment\PaymentStatus;
 use Carbon\Carbon;
 use Illuminate\Contracts\Foundation\Application;
@@ -50,7 +51,9 @@ class StripeCallbackController extends Controller
                 $reservation->save();
 
                 // TODO: Mail confirmation
-                Notification::route('email', $reservation->email)->notify(new ReservationConfirmation($reservation));
+                $emailNotifiable = new EmailNotifiable($reservation->email);
+                $emailNotifiable->notify(new ReservationConfirmation($reservation));
+//                Notification::route('email', $reservation->email)->notify(new ReservationConfirmation($reservation));
 
                 return view('application.callback.success');
             }

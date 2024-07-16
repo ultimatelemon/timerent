@@ -70,7 +70,7 @@ class ReservationController extends ApiController
     public function resendConfirmationMail(Venue $venue, Reservation $reservation): JsonResponse
     {
 //        Notification::route('email', $reservation->email)->notify(new ReservationConfirmation($reservation));
-        $user = User::findOrFail('9c5922cd-a3cb-4843-8488-a70ca24baf08');
+        $user = User::where('email', 'info@timerent.nl')->firstOrFail();
         $user->notify(new ReservationConfirmation($reservation));
         Notification::route('email', ['info@timerent.nl' => 'Kevin Terpstra'])->notify(new ReservationConfirmation($reservation));
         return $this->success('Sent to ' . 'info@timerent.nl');

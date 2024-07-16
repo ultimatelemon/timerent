@@ -19,6 +19,7 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 use Jenssegers\Agent\Agent;
+use Resend\Laravel\Facades\Resend;
 use Stripe\Exception\ApiErrorException;
 
 class AuthenticationController extends ApiController

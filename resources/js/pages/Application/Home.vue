@@ -140,7 +140,7 @@
               </div>
             </div>
             <div class='mt-5 sm:mt-4 sm:flex sm:flex-row-reverse gap-4'>
-              <a :href='url' target='blank' type='button' class='btn btn-success'>Betalen</a>
+              <a :href='url' target='blank' type='button' class='btn btn-primary'>Betalen</a>
               <button @click='showModal = !showModal' type='button'
                       class='mt-3 inline-flex w-full justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:mt-0 sm:w-auto'>
                 Sluiten
@@ -258,8 +258,7 @@ export default {
     },
 
     postData() {
-      if(this.loading) return;
-      if(this.selected.length === 0 || this.name === '' || this.email === '' || this.phone_number === '') return;
+      if(this.loading || this.selected.length === 0 || this.name === '' || this.email === '' || this.phone_number === '') return;
 
       this.loading = true;
       axios.post('/reservations/store', {

@@ -5,8 +5,14 @@ use Illuminate\Support\Facades\Route;
 if(env('APP_ENV') === 'local') {
     // Local routes
 }
-// TODO: Hij pakt ook subdomein routes bij redirect.
-//Route::get('/', function () { return redirect('/select' ); });
+Route::get('/', function (\Illuminate\Support\Facades\Request $request) {
+    ray(request()->getHost() === env('MAIN_DOMAIN'));
+    if(request()->getHost() === env('MAIN_DOMAIN')) {
+        return redirect('/select');
+    } else {
+        return view('application.blank');
+    }
+});
 
 Route::get('/login', function () { return view('layouts.authentication'); })->name('login');
 Route::get('/register', function () { return view('layouts.authentication'); })->name('register');

@@ -139,11 +139,16 @@
                     </tr>
                     </thead>
                     <tbody class="divide-y divide-gray-200 bg-white">
-                    <tr v-for="reservation in reservations" :key="reservation.id" @click="this.$router.push({name: 'venues.reservations.edit', params: {venue: this.venue_id, reservation: reservation.id}})" class="even:bg-gray-50 hover:bg-gray-100 hover:cursor-pointer">
+                    <tr v-if="reservations.length > 0" v-for="reservation in reservations" :key="reservation.id" @click="this.$router.push({name: 'venues.reservations.edit', params: {venue: this.venue_id, reservation: reservation.id}})" class="even:bg-gray-50 hover:bg-gray-100 hover:cursor-pointer">
                       <td class="whitespace-nowrap px-2 py-2 text-sm text-gray-900 font-semibold">#{{ reservation.number }}</td>
                       <td class="whitespace-nowrap px-2 py-2 text-sm font-medium text-gray-900">{{ reservation.name }}</td>
                       <td class="whitespace-nowrap px-2 py-2 text-sm font-medium text-gray-900">{{ reservation.email }}</td>
                       <td class="whitespace-nowrap px-2 py-2 text-sm font-medium text-gray-900" v-for="block in group(reservation)">{{ block[0]['unit_name'] }} &mdash; {{ $filters.humanTime(block[0].from) }} - {{ $filters.humanTime(block[block.length - 1].to) }}</td>
+                    </tr>
+                    <tr v-else>
+                      <td class="text-center py-24" colspan="12">
+                        Er zijn geen reserveringen gepland voor vandaag.
+                      </td>
                     </tr>
                     </tbody>
                   </table>

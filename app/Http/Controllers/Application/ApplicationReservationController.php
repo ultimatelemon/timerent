@@ -17,6 +17,7 @@ use App\WebPayment\PaymentStatus;
 use App\WebPayment\Timerent\TimerentPaymentClient;
 use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Str;
 use Mollie\Api\Exceptions\IncompatiblePlatform;
 use Mollie\Api\Exceptions\UnrecognizedClientException;
@@ -129,7 +130,7 @@ class ApplicationReservationController extends ApiController
 
             case 'mollie':
                 $api_key = Setting::where([['key', '=', 'payment_api_key'], ['venue_id', '=', $venue->id]])->firstOrFail()->value;
-                $client = new MolliePaymentClient($api_key);
+                $client = new MolliePaymentClient(Crypt::decrypt($api_key));
                 $payment = $client->startPayment('Reservering via Timerent.nl', $total, env('APP_URL') . '/confirmation/' . $reservation->id, env('MOLLIE_WEBHOOK'), $validatedRequest['email'], $venue);
                 $reservation->update(['payment_id' => $payment->id]);
                 $paymentUrl = $payment->getPaymentUrl();

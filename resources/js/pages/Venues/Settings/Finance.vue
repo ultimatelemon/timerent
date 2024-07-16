@@ -1,23 +1,23 @@
 <template>
   <div v-if="venue">
     <div class="font-semibold text-lg mb-4">Financiën</div>
-    <div class="mt-8 mb-12">
-      <div class="pb-2">Kies een betaling provider</div>
+    <div class="mb-12">
+      <div class="pb-2">Hoe wil je betalingen ontvangen?</div>
       <div class="flex flex-wrap gap-2 justify-items-stretch">
         <div v-for="psp in psps">
           <div
               @click="formData.payment_provider = psp.text_id"
               :class="formData.payment_provider === psp.text_id ? 'border-blue-500' : ''"
-              class="bg-white rounded-lg border-2 w-28 leading-none px-4 py-6 transition duration-150 relative cursor-pointer">
-            <svg v-if="current_psp === psp.text_id" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"
-                 class="w-5 h-5 absolute top-1 right-1 text-yellow-400">
-              <path fill-rule="evenodd"
-                    d="M10.788 3.21c.448-1.077 1.976-1.077 2.424 0l2.082 5.007 5.404.433c1.164.093 1.636 1.545.749 2.305l-4.117 3.527 1.257 5.273c.271 1.136-.964 2.033-1.96 1.425L12 18.354 7.373 21.18c-.996.608-2.231-.29-1.96-1.425l1.257-5.273-4.117-3.527c-.887-.76-.415-2.212.749-2.305l5.404-.433 2.082-5.006z"
-                    clip-rule="evenodd"></path>
-            </svg>
+              class="bg-white rounded-lg border-2 w-48 h-32 leading-none px-4 py-6 transition duration-150 relative cursor-pointer">
             <img :src="psp.image" :alt="psp.name"
                  class="mx-auto w-16 h-8 object-contain mb-4">
-            <h1 class="text-xs text-center text-gray-500">{{psp.name}}</h1></div>
+            <h1 class="text-xs text-center text-gray-500">{{psp.name}}</h1>
+            <div class="absolute bottom-1 right-1 left-1">
+              <div v-if="current_psp === psp.text_id" class="text-green-500 p-1 text-xs rounded-full text-center">
+                Huidige voorkeur
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -43,8 +43,8 @@
         </div>
       </div>
       <div v-else>
-        <div v-if="venue.stripe_connect_id && venue.stripe_connect_onboarded" class="text-green-500"><i class="fa fa-check"></i> Je kunt gebruik maken van Timerent Payments</div>
-        <div v-else>
+<!--        <div v-if="venue.stripe_connect_id && venue.stripe_connect_onboarded" class="text-green-500"><i class="fa fa-check"></i> Je kunt gebruik maken van Timerent Payments</div>-->
+        <div v-if="!venue.stripe_connect_id || !venue.stripe_connect_onboarded">
           <div>
             <p>Om betalingen via Timerent te laten verlopen vragen we je om een aantal stappen te voltooien bij onze partner Stripe.</p>
             <br>
@@ -92,7 +92,7 @@
     </Modal>
 
     <div class="mt-12 flex justify-end">
-      <button :disabled="!venue.stripe_connect_id && formData.payment_provider === 'timerent'" @click="postData" class="btn btn-lg btn-secondary">Instellingen opslaan</button>
+      <button :disabled="!venue.stripe_connect_id && formData.payment_provider === 'timerent'" @click="postData" class="btn btn-lg btn-primary">Instellingen opslaan</button>
     </div>
   </div>
 </template>

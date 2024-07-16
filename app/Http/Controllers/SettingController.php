@@ -6,6 +6,7 @@ use App\Models\Setting;
 use App\Models\Venue;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Crypt;
 
 class SettingController extends ApiController
 {
@@ -74,7 +75,7 @@ class SettingController extends ApiController
         $setting_provider->value = $request->payment_provider;
         $setting_provider->save();
 
-        $setting_api_key->value = $request->payment_api_key;
+        $setting_api_key->value = Crypt::encrypt($request->payment_api_key);
         $setting_api_key->save();
 
         return $this->success();

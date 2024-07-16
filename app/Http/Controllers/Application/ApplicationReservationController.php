@@ -50,7 +50,7 @@ class ApplicationReservationController extends ApiController
         $reservation = Reservation::create([
             'name' => $validatedRequest['name'],
             'phone_number' => $validatedRequest['phone_number'],
-            'email' => $validatedRequest['email'],
+            'email' => strtolower($validatedRequest['email']),
             'comments' => $validatedRequest['comments'],
             'date' => $validatedRequest['date'],
 

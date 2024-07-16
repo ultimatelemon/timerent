@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 if(env('APP_ENV') === 'local') {
     // Local routes
 }
+Route::get('/', function () { return redirect('/select' ); });
 
 Route::get('/login', function () { return view('layouts.authentication'); })->name('login');
 Route::get('/register', function () { return view('layouts.authentication'); })->name('register');

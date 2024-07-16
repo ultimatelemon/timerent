@@ -21,7 +21,7 @@ input { @apply block w-full rounded-md border-0 px-3 py-1.5 text-gray-900 shadow
 
 .btn { @apply font-medium rounded px-5 py-2 transition duration-150 ease-in-out text-xs inline-flex items-center justify-center cursor-pointer; }
 .btn-lg { @apply px-6 py-3.5 text-sm; }
-.btn.primary { @apply bg-indigo-500 text-white }
+.btn-primary { @apply bg-indigo-500 text-white }
 .btn-secondary { @apply bg-gray-200 hover:opacity-90; }
 .icon-btn { @apply h-8 w-8 bg-indigo-500 text-white rounded p-1 hover:bg-indigo-800 cursor-pointer }
 .icon-btn-red { @apply h-8 w-8 bg-red-500 text-white rounded p-1 hover:bg-red-800 cursor-pointer }

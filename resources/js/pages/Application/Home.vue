@@ -105,7 +105,7 @@
         <p v-if="errors.error" class="mt-8 text-red-500">Foutmelding: {{errors.error}}</p>
 
         <div class="mt-8 flex justify-end">
-          <button @click="postData" class="btn btn-primary btn-lg">Afronden</button>
+          <button @click="postData" class="btn btn-primary btn-lg"><i v-if="loading" class="fa fa-spinner mr-2 animate-spin"></i> Afronden</button>
         </div>
 
       </div>
@@ -258,6 +258,9 @@ export default {
     },
 
     postData() {
+      if(this.loading) return;
+      if(this.selected.length === 0 || this.name === '' || this.email === '' || this.phone_number === '') return;
+
       this.loading = true;
       axios.post('/reservations/store', {
         subdomain: this.subdomain,

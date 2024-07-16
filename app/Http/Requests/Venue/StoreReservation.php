@@ -24,9 +24,9 @@ class StoreReservation extends FormRequest
     {
         return [
             'subdomain' => 'required|exists:venues,subdomain',
-            'name' => 'required|string|min:5',
-            'email' => 'required|string|email|min:8',
-            'phone_number' => 'required|string',
+            'name' => 'required|string|min:5|max:128',
+            'email' => 'required|string|email|min:8|max:128',
+            'phone_number' => 'required|numeric|digits:10',
             'date' => 'required',
             'comments' => 'nullable|string',
             'products' => 'nullable',

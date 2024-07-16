@@ -51,7 +51,7 @@
                   </div>
                 </div>
                 <div class="ml-4 flex-shrink-0">
-                  <a href="#" class="font-medium text-indigo-600 hover:text-indigo-500">Bevestiging opnieuw mailen</a>
+                  <button @click="resendConfirmationMail" class="font-medium text-indigo-600 hover:text-indigo-500">Bevestiging opnieuw mailen</button>
                 </div>
               </li>
             </ul>
@@ -117,6 +117,13 @@ export default {
           this.loading = false;
         })
       }
+    },
+
+    resendConfirmationMail() {
+      axios.post('/venues/' + this.$route.params.venue + '/reservations/' + this.$route.params.reservation + '/resend/confirmation')
+          .then(response => {
+            alert('Succesvol verzonden');
+          })
     },
 
     group() {

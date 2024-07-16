@@ -4,11 +4,14 @@ namespace App\Http\Controllers;
 
 use App\Http\Resources\ReservationResource;
 use App\Models\Reservation;
+use App\Models\User;
 use App\Models\Venue;
+use App\Notifications\ReservationConfirmation;
 use App\WebPayment\PaymentStatus;
 use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Notification;
 
 class ReservationController extends ApiController
 {
@@ -62,5 +65,14 @@ class ReservationController extends ApiController
     public function isPaid(Reservation $reservation): JsonResponse
     {
         return $this->success($reservation->payment_status === PaymentStatus::Paid->value);
+    }
+
+    public function resendConfirmationMail(Venue $venue, Reservation $reservation): JsonResponse
+    {
+//        Notification::route('email', $reservation->email)->notify(new ReservationConfirmation($reservation));
+        $user = User::findOrFail('9c5922cd-a3cb-4843-8488-a70ca24baf08');
+        $user->notify(new ReservationConfirmation($reservation));
+        Notification::route('email', ['info@timerent.nl' => 'Kevin Terpstra'])->notify(new ReservationConfirmation($reservation));
+        return $this->success('Sent to ' . 'info@timerent.nl');
     }
 }

@@ -43,8 +43,6 @@ class StripeSubscriptionController extends ApiController
             'success_url' => env('STRIPE_SUCCESS_URL') . '?session_id={CHECKOUT_SESSION_ID}',
             'cancel_url' => env('STRIPE_CANCEL_URL'),
         ]);
-
-        ray('mis2');
         $venue->update(['stripe_subscription_id' => $session->id]);
 
         return $session->url;

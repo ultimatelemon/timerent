@@ -5,12 +5,14 @@ namespace App\Http\Controllers\Stripe;
 use App\Http\Controllers\Controller;
 use App\Models\Reservation;
 use App\Models\Venue;
+use App\Notifications\ReservationConfirmation;
 use App\WebPayment\PaymentStatus;
 use Carbon\Carbon;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Notification;
 use Stripe\Exception\ApiErrorException;
 use Stripe\StripeClient;
 
@@ -28,7 +30,7 @@ class StripeCallbackController extends Controller
      * Handle a success payment for subscription
      * @throws ApiErrorException
      */
-    public function success(Request $request)
+    public function success(Request $request): View|Factory|\Illuminate\Foundation\Application
     {
         $session_id = $request->session_id;
 
@@ -48,6 +50,7 @@ class StripeCallbackController extends Controller
                 $reservation->save();
 
                 // TODO: Mail confirmation
+                Notification::route('email', $reservation->email)->notify(new ReservationConfirmation($reservation));
 
                 return view('application.callback.success');
             }

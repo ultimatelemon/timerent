@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div v-if="venue">
     <div class="font-semibold text-lg mb-4">Financiën</div>
     <div class="mt-8 mb-12">
       <div class="pb-2">Kies een betaling provider</div>
@@ -43,28 +43,66 @@
         </div>
       </div>
       <div v-else>
-        <div v-if="venue.stripe_connect_id" class="text-green-500"><i class="fa fa-check"></i> Je maakt nu gebruik van Timerent payments</div>
+        <div v-if="venue.stripe_connect_id && venue.stripe_connect_onboarded" class="text-green-500"><i class="fa fa-check"></i> Je kunt gebruik maken van Timerent Payments</div>
         <div v-else>
           <div>
             <p>Om betalingen via Timerent te laten verlopen vragen we je om een aantal stappen te voltooien bij onze partner Stripe.</p>
             <br>
             <p class="font-semibold">Belangrijk is dat je je persoonlijke- en bedrijfsgegevens bij de hand houd en de verificatie in één keer afmaakt.</p>
           </div>
-          <button class="btn text-white bg-green-500 my-12">Start verificatie</button>
+          <button @click="setupTimerentPayments" class="btn text-white bg-green-500 my-12">Start verificatie</button>
         </div>
       </div>
     </div>
 
+    <Modal v-if="openPaymentsSetupModal">
+      <div class='fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity'></div>
+
+      <div class='fixed inset-0 z-10 overflow-y-auto'>
+        <div class='flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0'>
+          <div
+              class='relative transform overflow-hidden rounded-lg bg-white px-4 pb-4 pt-5 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg sm:p-6'>
+            <div class='sm:flex sm:items-start'>
+              <div
+                  class='mx-auto flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-red-100 sm:mx-0 sm:h-10 sm:w-10'>
+                <svg class='h-6 w-6 text-red-600' fill='none' viewBox='0 0 24 24' stroke-width='1.5'
+                     stroke='currentColor' aria-hidden='true'>
+                  <path stroke-linecap='round' stroke-linejoin='round'
+                        d='M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z' />
+                </svg>
+              </div>
+              <div class='mt-3 text-center sm:ml-4 sm:mt-0 sm:text-left'>
+                <h3 class='text-base font-semibold leading-6 text-gray-900' id='modal-title'>Let op</h3>
+                <div class='mt-2'>
+                  <p class='text-sm text-gray-500'>De betalingsetup opent in een nieuwe pagina.</p>
+                </div>
+              </div>
+            </div>
+            <div class='mt-5 sm:mt-4 sm:flex sm:flex-row-reverse gap-4'>
+              <a :href="paymentsSetupURL" target='blank' type='button' class='btn btn-success'>Starten &rarr;</a>
+              <button @click='openPaymentsSetupModal = !openPaymentsSetupModal' type='button'
+                      class='mt-3 inline-flex w-full justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:mt-0 sm:w-auto'>
+                Sluiten
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </Modal>
+
     <div class="mt-12 flex justify-end">
-      <button @click="postData" class="btn btn-lg btn-secondary">Instellingen opslaan</button>
+      <button :disabled="!venue.stripe_connect_id && formData.payment_provider === 'timerent'" @click="postData" class="btn btn-lg btn-secondary">Instellingen opslaan</button>
     </div>
   </div>
 </template>
 
 <script>
 
+import Modal from "../../Components/Modal.vue";
+
 export default {
   name: "Finance",
+  components: {Modal},
   data() {
     return {
       errors: [],
@@ -73,6 +111,9 @@ export default {
 
       psps: [],
       current_psp: '',
+
+      openPaymentsSetupModal: false,
+      paymentsSetupURL: '',
 
       formData: {
         payment_provider: '',
@@ -111,6 +152,22 @@ export default {
       axios.get('/paymentproviders/available')
           .then(response => {
             this.psps = response.data.data;
+          })
+    },
+
+    setupTimerentPayments() {
+      // TODO: Start loading button
+
+      axios.post('/venue/' + this.$route.params.venue + '/payments/setup')
+          .then(response => {
+            this.openPaymentsSetupModal = true;
+            this.paymentsSetupURL = response.data.data;
+          })
+          .catch(e => {
+            console.log("ERR", e.response.data);
+          })
+          .finally(() => {
+            // TODO: Stop loading button
           })
     }
   },

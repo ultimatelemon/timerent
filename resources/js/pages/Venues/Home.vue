@@ -120,12 +120,49 @@
           </dd>
         </div>
       </dl>
+
+
+      <div>
+        <h1 class="font-semibold mt-12 mb-4">Reserveringen van vandaag</h1>
+        <div class="col-span-1 md:col-span-2 overflow-hidden rounded-lg bg-white shadow">
+          <div class="divide-y divide-gray-200">
+            <div class="flow-root">
+              <div class="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
+                <div class="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
+                  <table class="min-w-full divide-y divide-gray-300">
+                    <thead>
+                    <tr>
+                      <th scope="col" class="whitespace-nowrap px-2 py-3.5 text-left text-sm font-semibold text-gray-900">Reservering</th>
+                      <th scope="col" class="whitespace-nowrap px-2 py-3.5 text-left text-sm font-semibold text-gray-900">Naam</th>
+                      <th scope="col" class="whitespace-nowrap px-2 py-3.5 text-left text-sm font-semibold text-gray-900">Email</th>
+                      <th scope="col" class="whitespace-nowrap px-2 py-3.5 text-left text-sm font-semibold text-gray-900">Unit &mdash; Tijd</th>
+                    </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-200 bg-white">
+                    <tr v-for="reservation in reservations" :key="reservation.id" @click="this.$router.push({name: 'venues.reservations.edit', params: {venue: this.venue_id, reservation: reservation.id}})" class="even:bg-gray-50 hover:bg-gray-100 hover:cursor-pointer">
+                      <td class="whitespace-nowrap px-2 py-2 text-sm text-gray-900 font-semibold">#{{ reservation.number }}</td>
+                      <td class="whitespace-nowrap px-2 py-2 text-sm font-medium text-gray-900">{{ reservation.name }}</td>
+                      <td class="whitespace-nowrap px-2 py-2 text-sm font-medium text-gray-900">{{ reservation.email }}</td>
+                      <td class="whitespace-nowrap px-2 py-2 text-sm font-medium text-gray-900" v-for="block in group(reservation)">{{ block[0]['unit_name'] }} &mdash; {{ $filters.humanTime(block[0].from) }} - {{ $filters.humanTime(block[block.length - 1].to) }}</td>
+                    </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
     </div>
+
   </div>
 </template>
 
 <script>
 import {DateTime} from "luxon";
+import reservation from "./Settings/Reservation.vue";
+import {groupBy} from "lodash";
 
 export default {
   name: "Index",
@@ -135,6 +172,8 @@ export default {
       from: DateTime.now(),
       statistics: null,
       loading: true,
+
+      reservations: [],
     }
   },
 
@@ -154,9 +193,23 @@ export default {
       if (percentage.toString() === 'NaN') return 0;
       return percentage;
     },
+
+    fetchReservations() {
+      axios.get('/venues/' + this.$route.params.venue + '/reservations?date=today')
+          .then(response => {
+            this.reservations = response.data.data;
+          })
+    },
+
+    group(res) {
+      return groupBy(res.timeblocks, 'unit_id');
+    }
   },
 
   computed: {
+    reservation() {
+      return reservation
+    },
     greeting() {
       const hour = DateTime.now().hour;
       if (hour >= 0 && hour < 6) return 'Goedenacht';
@@ -169,6 +222,7 @@ export default {
 
   mounted() {
     this.fetchStats();
+    this.fetchReservations();
   },
 }
 </script>

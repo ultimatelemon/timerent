@@ -14,7 +14,7 @@ class Venue extends Model
 
     protected $fillable = [
         'name', 'description', 'address', 'postal_code', 'city', 'email', 'phone', 'coc_number', 'tax_number', 'bank_number', 'avatar_id', 'cover_id', 'receipt_logo_id',
-        'receipt_top', 'receipt_bottom', 'subdomain', 'plan_id', 'stripe_customer_id', 'stripe_subscription_id', 'stripe_current_period_ends_at',
+        'receipt_top', 'receipt_bottom', 'subdomain', 'plan_id', 'stripe_customer_id', 'stripe_subscription_id', 'stripe_current_period_ends_at', 'stripe_connect_onboarded', 'stripe_connect_id',
     ];
 
     /**

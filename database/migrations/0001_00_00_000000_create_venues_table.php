@@ -30,6 +30,7 @@ return new class extends Migration
             $table->string('payment_service_provider')->nullable();
             $table->string('stripe_customer_id')->nullable();
             $table->string('stripe_connect_id')->nullable();
+            $table->boolean('stripe_connect_onboarded')->nullable()->default(false);
             $table->string('stripe_subscription_id')->nullable();
             $table->timestamp('stripe_current_period_ends_at')->nullable();
 

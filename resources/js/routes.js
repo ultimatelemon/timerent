@@ -81,4 +81,12 @@ export const routes = [
             // { path: ':reservation', component: () => import('./pages/Venues/Reservations/Edit.vue'), name: 'venues.reservations.edit' },
         ]
     },
+
+
+    // Payments
+    {
+        path: '/timerentpayments/success',
+        component: () => import('./pages/StripeConnectSuccess.vue'),
+        name: 'stripe.connect.success'
+    },
 ];

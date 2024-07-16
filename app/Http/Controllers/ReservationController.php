@@ -6,6 +6,7 @@ use App\Http\Resources\ReservationResource;
 use App\Models\Reservation;
 use App\Models\Venue;
 use App\WebPayment\PaymentStatus;
+use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
@@ -25,6 +26,12 @@ class ReservationController extends ApiController
         if($request->has('q'))
             $reservations = $reservations->where('id', 'ILIKE', "%{$request->q}%")
                 ->orWhere('email', 'ILIKE', "%{$request->q}%");
+
+        if($request->has('max'))
+            $reservations->max($request->max);
+
+        if($request->has('date') && $request->date === 'today')
+            $reservations->where('date', Carbon::today());
 
         $reservations = $reservations->paginate(env('POSTS_PER_PAGE'));
 

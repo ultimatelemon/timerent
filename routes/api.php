@@ -7,6 +7,7 @@ use App\Http\Controllers\ReportController;
 use App\Http\Controllers\ReservationController;
 use App\Http\Controllers\SettingController;
 use App\Http\Controllers\StatisticsController;
+use App\Http\Controllers\Stripe\StripeConnectController;
 use App\Http\Controllers\TemplateController;
 use App\Http\Controllers\UnitController;
 use App\Http\Controllers\User\UserController;
@@ -45,8 +46,10 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/venues/{venue}/settings/payment', [SettingController::class, 'getPaymentSettings']);
     Route::put('/venues/{venue}/settings', [SettingController::class, 'updateSettings']);
 
-    // Payment Providers
+    // Payment
     Route::get('/paymentproviders/available', [PaymentProviderController::class, 'available']);
+    Route::post('/venue/{venue}/payments/setup', [VenueController::class, 'setupTimerentPayments']);
+    Route::post('/venue/{venue}/payments/checkandupdate', [StripeConnectController::class, 'checkOnboardedAndUpdateVenue']);
 
     // Todo: Permission routes
     Route::resource('venues',                   VenueController::class)->except(['create', 'edit']);

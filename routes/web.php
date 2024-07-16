@@ -5,11 +5,14 @@ use Illuminate\Support\Facades\Route;
 if(env('APP_ENV') === 'local') {
     // Local routes
 }
-Route::get('/', function () { return redirect('/select' ); });
+// TODO: Hij pakt ook subdomein routes bij redirect.
+//Route::get('/', function () { return redirect('/select' ); });
 
 Route::get('/login', function () { return view('layouts.authentication'); })->name('login');
 Route::get('/register', function () { return view('layouts.authentication'); })->name('register');
 Route::get('/email/verify', function () { return view('layouts.authentication'); })->name('verification.verify');
+
+Route::get('/timerentpayments/success', function() {return view('layouts.authentication');})->name('timerent.payments.success');
 
 Route::get('/callback/success', [\App\Http\Controllers\Stripe\StripeCallbackController::class, 'success'])->name('callback.success');
 Route::get('/confirmation/{any}', function() { return view('layouts.blank-page'); })->name('confirmation');

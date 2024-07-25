@@ -33,7 +33,7 @@
       </div>
     </div>
 
-    <div class="mt-12 flex justify-end">
+    <div class="mt-12 flex justify-end gap-4">
       <button @click="postData" class="btn btn-lg btn-secondary">Instellingen opslaan</button>
     </div>
   </div>

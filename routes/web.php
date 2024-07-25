@@ -6,7 +6,6 @@ if(env('APP_ENV') === 'local') {
     // Local routes
 }
 Route::get('/', function (\Illuminate\Support\Facades\Request $request) {
-    ray(request()->getHost() === env('MAIN_DOMAIN'));
     if(request()->getHost() === env('MAIN_DOMAIN')) {
         return redirect('/select');
     } else {

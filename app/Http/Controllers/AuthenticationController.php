@@ -32,12 +32,11 @@ class AuthenticationController extends ApiController
      */
     public function createToken(LoginRequest $request): JsonResponse
     {
-        ray($request->minutes);
         $validatedRequest = $request->validated();
         $user = User::where('email', strtolower($validatedRequest['email']))->first();
 
         if(!$user || !Hash::check($request->password, $user->password))
-            return $this->error([__('Wrong username or password')], 400);
+            return $this->error([__('Wrong email or password')], 400);
 
         if(!$user->email_verified_at)
             return $this->error(['email_verification' => __('Email not verified')], 400);
@@ -135,7 +134,7 @@ class AuthenticationController extends ApiController
             'email' => 'required|exists:users,email',
         ]);
 
-        $user = User::where('email', $validatedRequest)->firstOrFail();
+        $user = User::where('email', $validatedRequest['email'])->firstOrFail();
         if($user->email_verified_at) return $this->error();
 
         $user->email_verification_token = Str::random(64);

@@ -101,7 +101,7 @@
 
     </div>
 
-    <div class="flex justify-end">
+    <div class="flex justify-end gap-4">
       <button @click="$router.go(-1)" class="btn btn-secondary">Annuleren</button>
       <button @click="postData" class="btn btn-primary">Opslaan</button>
     </div>

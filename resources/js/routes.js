@@ -82,6 +82,16 @@ export const routes = [
         ]
     },
 
+    {
+        path: '/store/:venue/members',
+        component: Wrapper,
+        children: [
+            { path: '', component: () => import('./pages/Venues/Members/Index.vue'), name: 'venues.members.index' },
+            // { path: 'create', component: () => import('./pages/Venues/Products/Edit.vue'), name: 'venues.products.create' },
+            { path: ':member', component: () => import('./pages/Venues/Members/Edit.vue'), name: 'venues.members.edit' },
+        ]
+    },
+
 
     // Payments
     {

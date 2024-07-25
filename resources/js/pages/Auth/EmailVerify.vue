@@ -3,7 +3,7 @@
     <div class="space-y-8">
       <div class="text-3xl" v-if="loading && !error">Momentje...</div>
       <div class="text-3xl" v-if="!loading && error">Oeps...</div>
-      <div class="text-3xl" v-if="!loading && !error">Hallo...</div>
+      <div class="text-3xl" v-if="!loading && !error">Hallo!</div>
       <div v-if="loading && !error" class="flex gap-4">
         We verifieren je email... <i class="bx bx-loader-alt animate-spin"></i>
       </div>

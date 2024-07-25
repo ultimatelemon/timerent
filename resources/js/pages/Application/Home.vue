@@ -1,9 +1,7 @@
 <template>
   <div v-if="venue && activeSubscription">
 
-    <div class="mt-12">
-      <div class="text-xl font-semibold">{{ venue.name }}</div>
-    </div>
+    <TopBar></TopBar>
 
     <div class="bg-white p-12 mt-12 rounded-t-md space-y-12">
       <div>
@@ -21,7 +19,6 @@
           </div>
         </div>
       </div>
-
       <div>
         <h1 class='font-semibold border-b-4 pb-2 mb-4'>2. Welke tijd(en) wil je reserveren?</h1>
         <div v-if="!date" class="text-center text-lg py-5">Selecteer eerst een datum om verder te gaan.</div>
@@ -73,9 +70,9 @@
             <div class='mt-2'>
               <input v-model='name' type='text' name='name' autocomplete='name'
                      placeholder="Jan Petersen"
-                     :class='errors.errors?.name ? "ring-red-500" : ""'
+                     :class='errors?.name ? "ring-red-500" : ""'
                      class='block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6'>
-              <span class='text-red-500' v-if='errors?.errors?.name'>{{ errors?.errors?.name[0] }}</span>
+              <span class='text-red-500' v-if='errors?.name'>{{ errors?.name[0] }}</span>
             </div>
           </div>
 
@@ -84,9 +81,9 @@
             <div class='mt-2'>
               <input v-model='email' type='text' name='email' autocomplete='email'
                      placeholder="j.petersen@voorbeeld.com"
-                     :class='errors.errors?.email ? "ring-red-500" : ""'
+                     :class='errors?.email ? "ring-red-500" : ""'
                      class='block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6'>
-              <span class='text-red-500' v-if='errors?.errors?.email'>{{ errors?.errors?.email[0] }}</span>
+              <span class='text-red-500' v-if='errors?.email'>{{ errors?.email[0] }}</span>
             </div>
           </div>
 
@@ -95,9 +92,9 @@
             <div class='mt-2'>
               <input v-model='phone_number' type='text' name='phone_number' autocomplete='phone_number'
                      placeholder="0612345678"
-                     :class='errors.errors?.phone_number ? "ring-red-500" : ""'
+                     :class='errors?.phone_number ? "ring-red-500" : ""'
                      class='block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6'>
-              <span class='text-red-500' v-if='errors?.errors?.phone_number'>{{ errors?.errors?.phone_number[0] }}</span>
+              <span class='text-red-500' v-if='errors?.phone_number'>{{ errors?.phone_number[0] }}</span>
             </div>
           </div>
         </div>
@@ -105,7 +102,7 @@
         <p v-if="errors.error" class="mt-8 text-red-500">Foutmelding: {{errors.error}}</p>
 
         <div class="mt-8 flex justify-end">
-          <button @click="postData" class="btn btn-primary btn-lg"><i v-if="loading" class="fa fa-spinner mr-2 animate-spin"></i> Afronden</button>
+          <button @click="postData" class="btn btn-lg" :class="(this.loading || this.selected.length === 0 || this.name === '' || this.email === '' || this.phone_number === '' ? 'btn-secondary opacity-50 cursor-not-allowed' : 'btn-primary')"><i v-if="loading" class="fa fa-spinner mr-2 animate-spin"></i> Afronden</button>
         </div>
 
       </div>
@@ -168,10 +165,11 @@ import {CalendarDaysIcon} from "@heroicons/vue/24/outline/index.js";
 import flatpickr from "flatpickr";
 import {DateTime} from "luxon";
 import ButtonTimeReservation from "./Components/ButtonTimeReservation.vue";
+import TopBar from "./Components/TopBar.vue";
 
 export default {
   name: "Home",
-  components: {ButtonTimeReservation, flatPickr},
+  components: {TopBar, ButtonTimeReservation, flatPickr},
   data() {
     return {
       venue: null,

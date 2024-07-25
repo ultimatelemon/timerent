@@ -31,8 +31,8 @@
             :placeholder="to ?? 'Selecteer een datum'"
         />
       </div>
-      <div class="items-end flex justify-center">
-        <button class="btn btn-secondary" @click="fetchReports">Fetch</button>
+      <div class="items-end justify-end flex">
+        <button class="btn btn-primary" @click="fetchReports">Ophalen</button>
       </div>
     </div>
 

@@ -41,7 +41,7 @@ class UserController extends ApiController
      * @return array
      */
 
-    public function token(Request $request)
+    public function token(Request $request): array
     {
         return ['user' => new UserResource($request->user()), 'token' => new TokenResource($request->user()->currentAccessToken())];
     }

@@ -13,7 +13,8 @@ return Application::configure(basePath: dirname(__DIR__))
     )
     ->withMiddleware(function (Middleware $middleware) {
         $middleware->alias([
-            'hasPermissions' => \App\Http\Middleware\HasPermission::class
+            'hasPermissions' => \App\Http\Middleware\HasPermission::class,
+            'member' => \App\Http\Middleware\RetrieveMember::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {

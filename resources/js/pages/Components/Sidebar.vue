@@ -176,7 +176,7 @@ import {
   UserIcon,
   CircleStackIcon,
   ArchiveBoxIcon,
-  CalendarDaysIcon, ListBulletIcon, BriefcaseIcon, CogIcon, ChartBarIcon
+  CalendarDaysIcon, ListBulletIcon, BriefcaseIcon, CogIcon, ChartBarIcon, UsersIcon
 } from "@heroicons/vue/24/outline/index.js";
 // import {CircleStackIcon} from "@heroicons/vue/16/solid/index.js";
 
@@ -285,6 +285,12 @@ export default {
           'name': 'Medewerkers',
           'link': {name: 'venues.users.index', params: {venue: this.$store.state.venue.id}},
           'icon': UserIcon,
+          'permission': 'VIEW_USERS',
+        },
+        {
+          'name': 'Members',
+          'link': {name: 'venues.members.index', params: {venue: this.$store.state.venue.id}},
+          'icon': UsersIcon,
           'permission': 'VIEW_USERS',
         },
       ]

@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Management\PaymentProviderController;
 use App\Http\Controllers\Management\PlanController;
+use App\Http\Controllers\Member\MemberController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\ReservationController;
@@ -63,4 +64,5 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::resource('venues.reservations',      ReservationController::class)->except(['create', 'edit']);
     Route::resource('venues.reports',           ReportController::class)->except(['create', 'edit']);
     Route::resource('venues.users',             UserController::class)->except(['create', 'edit']);
+    Route::resource('venues.members',           MemberController::class)->except(['create', 'edit']);
 });

@@ -23,8 +23,8 @@
 
         <Disclosure>
           <DisclosureButton class="py-2 flex items-center gap-2">
-            Bekijk units
-            <component :is="ArrowRightIcon" class="h-5 w-5"></component>
+            <span>{{(units.length > 0 ? 'Bekijk units' : 'Maak eerst een unit aan')}}</span>
+            <component v-if="units.length > 0" :is="ArrowRightIcon" class="h-5 w-5"></component>
           </DisclosureButton>
           <DisclosurePanel class="text-gray-500">
             <div v-for="unit in units" class="space-y-2">

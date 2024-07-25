@@ -29,6 +29,7 @@ class ProductController extends ApiController
 
         return $this->success(
             ProductResource::collection($products),
+            collect($products)->only(['from', 'to', 'total', 'per_page', 'last_page', 'current_page'])->toArray(),
         );
     }
 

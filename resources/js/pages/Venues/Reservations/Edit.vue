@@ -59,7 +59,7 @@
         </div>
       </dl>
     </div>
-    <div class="flex justify-end">
+    <div class="flex justify-end gap-4">
       <button @click="$router.go(-1)" class="btn btn-secondary">Terug</button>
     </div>
   </div>

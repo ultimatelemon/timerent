@@ -2,14 +2,14 @@
   <main class="fixed top-0 left-0 right-0 bottom-0 bg-gray-100 flex flex-col">
     <div v-if="current_user" class="leading-tight flex items-center p-5 rounded">
       <router-link to="#" class="cursor-pointer flex items-center mr-auto">
-<!--        <img :src="current_user.avatar" :alt="current_user.name" class="w-12 h-12 rounded-full mr-5">-->
+<!--        <img :src="current_user?.avatar" alt="hallo" class="w-12 h-12 rounded-full mr-5">-->
         <div class="leading-none">
-          <h1 class="font-medium">{{ current_user.name }}</h1>
-          <p class="text-gray-500 text-sm">{{ current_user.email }}</p>
+          <h1 class="font-medium">{{ current_user?.name }}</h1>
+          <p class="text-gray-500 text-sm">{{ current_user?.email }}</p>
         </div>
       </router-link>
 
-      <button class="btn btn-primary" @click="logoutCurrentDevice">Logout</button>
+      <button class="btn btn-lg btn-danger" @click="logout">Afmelden</button>
     </div>
     <div class="px-5 flex flex-col items-center justify-center flex-1">
       <!--
@@ -77,27 +77,52 @@
       <!--
           Content
       -->
-      <div class="venue-wrap flex flex-wrap justify-center gap-4">
-        <loader v-if="loading"></loader>
-        <template v-for="user_venue in user_venues">
-          <a v-if="user_venue.venue.stripe_current_period_ends_at != null && (new Date(user_venue.venue.stripe_current_period_ends_at) > new Date())" @click="current_venue = user_venue.venue;" :href="'/store/' + user_venue.venue.id + '/home'" class="cursor-pointer">
-            <img v-if="user_venue.venue.avatar" class="w-32 h-32 rounded-md bg-gray-100 shadow border-8 border-white object-contain" :src="user_venue.venue.avatar.full_path" :alt="user_venue.venue.name"></img>
-            <p v-else class="w-32 h-32 rounded-md bg-gray-100 shadow border-8 border-white flex items-center justify-center text-center">{{ user_venue.venue.name }}</p>
-          </a>
 
-          <div v-else class="cursor-not-allowed relative">
-            <img v-if="user_venue.venue.avatar" class="w-32 h-32 rounded-md bg-gray-100 shadow border-8 border-white object-contain" :src="user_venue.venue.avatar.full_path" :alt="user_venue.venue.name"></img>
-            <p v-else class="w-32 h-32 rounded-md bg-gray-100 shadow border-8 border-white flex items-center justify-center text-center opacity-45"
-            >{{ user_venue.venue.name }}</p>
-            <div class="absolute top-1/3 left-3 -rotate-45 text-semibold text-3xl text-red-500">
-              Inactive
-            </div>
+      <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+        <div class="w-48 h-48 rounded-md shadow flex items-center justify-center text-center border-2 border-dashed border-indigo-500 cursor-pointer hover:shadow-lg hover:border-indigo-800">
+          <div class="block text-sm font-semibold text-gray-900">
+            <p class="text-3xl material-symbols-outlined">add</p>
+            <p>Nieuwe</p>
+            <p>Vestiging</p>
           </div>
-        </template>
-        <div class="w-32 h-32 rounded-md bg-gray-100 text-gray-500 shadow border-8 border-white font-bold cursor-pointer flex items-center justify-center text-center" @click="showNewVenue = true">
-          <span class="text-3xl material-symbols-outlined">add</span>
+        </div>
+
+        <div v-for="user_venue in user_venues">
+          <div class="w-48 h-48 rounded-md shadow flex flex-col gap-6 items-center justify-center text-center border-2 border-indigo-500 cursor-pointer hover:shadow-lg hover:border-indigo-800"
+             v-if="user_venue.venue.stripe_current_period_ends_at != null && (new Date(user_venue.venue.stripe_current_period_ends_at) > new Date())" @click="current_venue = user_venue.venue;">
+            <a class="text-sm font-semibold text-gray-900 flex justify-center items-center" :href="'/store/' + user_venue.venue.id + '/home'">
+              <span class="mr-2">{{ user_venue.venue.name }}</span>
+              <component :is="ArrowTopRightOnSquareIcon" class="text-gray-400 group-hover:text-indigo-600 h-6 w-6 shrink-0" aria-hidden="true"></component>
+            </a>
+<!--            <a :href="'/store/' + user_venue.venue.id + '/home'" class="btn btn-primary">Bezoeken</a>-->
+            <button @click="openCustomerPortal" class="btn btn-danger">Abonnement</button>
+          </div>
         </div>
       </div>
+
+<!--      <div class="venue-wrap flex flex-wrap justify-center gap-4">-->
+<!--        <loader v-if="loading"></loader>-->
+<!--        <div v-for="user_venue in user_venues" class="bg-white">-->
+<!--          <a v-if="user_venue.venue.stripe_current_period_ends_at != null && (new Date(user_venue.venue.stripe_current_period_ends_at) > new Date())" @click="current_venue = user_venue.venue;" :href="'/store/' + user_venue.venue.id + '/home'" class="cursor-pointer">-->
+<!--            <img v-if="user_venue.venue.avatar" class="w-32 h-32 rounded-md bg-gray-100 shadow border-8 border-white object-contain" :src="user_venue.venue.avatar.full_path" :alt="user_venue.venue.name"/>-->
+<!--            <p v-else class="w-32 h-32 rounded-md bg-gray-100 shadow border-8 border-white flex items-center justify-center text-center">{{ user_venue.venue.name }}</p>-->
+<!--            <p>Beheren</p>-->
+<!--          </a>-->
+
+<!--          <div v-else class="cursor-not-allowed relative">-->
+<!--            <img v-if="user_venue.venue.avatar" class="w-32 h-32 rounded-md bg-gray-100 shadow border-8 border-white object-contain" :src="user_venue.venue.avatar.full_path" :alt="user_venue.venue.name"/>-->
+<!--            <p v-else class="w-32 h-32 rounded-md bg-gray-100 shadow border-8 border-white flex items-center justify-center text-center opacity-45"-->
+<!--            >{{ user_venue.venue.name }}</p>-->
+<!--            <div class="absolute top-1/3 left-3 -rotate-45 text-semibold text-3xl text-red-500">-->
+<!--              Inactive-->
+<!--            </div>-->
+<!--          </div>-->
+<!--        </div>-->
+<!--        <div class="w-32 h-32 rounded-md bg-gray-100 text-gray-500 shadow border-8 border-white font-bold cursor-pointer flex items-center justify-center text-center" @click="showNewVenue = true">-->
+<!--          <span class="text-3xl material-symbols-outlined">add</span>-->
+<!--        </div>-->
+<!--      </div>-->
+
     </div>
   </main>
 </template>
@@ -107,6 +132,7 @@
 import Loader from "./Components/Loader.vue";
 import Modal from "./Components/Modal.vue";
 import {DateTime} from "luxon";
+import {ArrowTopRightOnSquareIcon} from "@heroicons/vue/24/outline/index.js";
 
 export default {
   name: "VenueSelector",
@@ -130,6 +156,7 @@ export default {
   },
 
   methods: {
+    ArrowTopRightOnSquareIcon,
     fetchUser() {
       axios.get('/users/current')
           .then(response => {
@@ -180,6 +207,18 @@ export default {
           .then(response => {
             this.plans = response.data.data;
           })
+    },
+
+    logout() {
+      axios.post('/sanctum/logout')
+          .then(() => {
+            window.localStorage.removeItem('tr_auth_token');
+            window.location.href = '/';
+          })
+    },
+
+    openCustomerPortal() {
+      alert('goed');
     }
   },
 
@@ -201,11 +240,11 @@ export default {
       }
     },
 
-    current_user: {
-      get() {
-        return this.$store.state.user;
-      }
-    }
+    // current_user: {
+    //   get() {
+    //     return this.$store.state.user;
+    //   }
+    // }
   }
 }
 </script>

@@ -24,7 +24,7 @@ class ReservationConfirmation extends Notification
      */
     public function __construct(Reservation $reservation)
     {
-        //
+        $this->reservation = $reservation;
     }
 
     /**
@@ -44,7 +44,8 @@ class ReservationConfirmation extends Notification
     {
         return (new MailMessage)
             ->subject('Bevestiging van je reservering via Timerent')
-            ->line('Je reservering is succesvol bevestigd!');
+            ->line('Je reservering met nummer #'.strtoupper(explode('-', $this->reservation->id)[0]).' is succesvol bevestigd!')
+            ->line('Bekijk hieronder je reserverings details.');
     }
 
     /**

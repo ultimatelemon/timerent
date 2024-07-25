@@ -30,6 +30,7 @@ class UnitController extends ApiController
 
         return $this->success(
             UnitResource::collection($units),
+            collect($units)->only(['from', 'to', 'total', 'per_page', 'last_page', 'current_page'])->toArray(),
         );
     }
 

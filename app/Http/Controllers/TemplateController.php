@@ -29,6 +29,7 @@ class TemplateController extends ApiController
 
         return $this->success(
             TemplateResource::collection($templates),
+            collect($templates)->only(['from', 'to', 'total', 'per_page', 'last_page', 'current_page'])->toArray(),
         );
     }
 

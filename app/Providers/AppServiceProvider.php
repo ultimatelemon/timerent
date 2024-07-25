@@ -24,7 +24,12 @@ class AppServiceProvider extends ServiceProvider
             $this->mapApiRoutes();
     }
 
-    public function mapWebRoutes()
+    /**
+     *  Map web routes based on the application/management panel
+     *
+     * @return void
+     */
+    public function mapWebRoutes(): void
     {
         Route::middleware('web')
             ->namespace('App\\Http\\Controllers\\')
@@ -40,7 +45,12 @@ class AppServiceProvider extends ServiceProvider
             });
     }
 
-    public function mapApiRoutes()
+    /**
+     * Map API routes based on the application/management panel
+     *
+     * @return void
+     */
+    public function mapApiRoutes(): void
     {
         Route::middleware('api')
             ->prefix('api')
@@ -48,6 +58,7 @@ class AppServiceProvider extends ServiceProvider
             ->group(function () {
                 $host = request()->getHost();
                 if($host !== env('MAIN_DOMAIN')) {
+                    ray('application');
                     require base_path('routes/application/api.php');
                 } else {
                     require base_path('routes/api.php');

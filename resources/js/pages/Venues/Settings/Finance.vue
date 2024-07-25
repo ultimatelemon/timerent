@@ -14,7 +14,7 @@
             <h1 class="text-xs text-center text-gray-500">{{psp.name}}</h1>
             <div class="absolute bottom-1 right-1 left-1">
               <div v-if="current_psp === psp.text_id" class="text-green-500 p-1 text-xs rounded-full text-center">
-                Huidige voorkeur
+                Huidige provider
               </div>
             </div>
           </div>
@@ -91,7 +91,7 @@
       </div>
     </Modal>
 
-    <div class="mt-12 flex justify-end">
+    <div class="mt-12 flex justify-end gap-4">
       <button :disabled="!venue.stripe_connect_id && formData.payment_provider === 'timerent'" @click="postData" class="btn btn-lg btn-primary">Instellingen opslaan</button>
     </div>
   </div>

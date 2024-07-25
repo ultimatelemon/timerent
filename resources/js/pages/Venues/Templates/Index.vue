@@ -34,6 +34,9 @@
             </tr>
             </tbody>
           </table>
+          <div v-if="pagination">
+            <pagination :pagination="pagination" @changed="fetchDataByPage"></pagination>
+          </div>
         </div>
       </div>
     </div>
@@ -41,25 +44,30 @@
 </template>
 
 <script>
+import Pagination from "../../Components/Pagination.vue";
+
 export default {
   name: "Index",
+  components: {Pagination},
   data() {
     return {
       templates: [],
+      pagination: null,
     }
   },
 
   methods: {
-    fetchData() {
-      axios.get('/venues/' + this.$route.params.venue + '/templates')
+    fetchDataByPage(page) {
+      axios.get('/venues/' + this.$route.params.venue + '/templates?page='+page)
           .then(response => {
             this.templates = response.data.data;
+            this.pagination = response.data.pagination;
           })
     }
   },
 
   mounted() {
-    this.fetchData();
+    this.fetchDataByPage(1);
   },
 }
 </script>

@@ -8,9 +8,15 @@ const app = createApp({});
 import axios from 'axios';
 window.axios = axios;
 window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
-window.axios.defaults.headers.common['Authorization'] = ' Bearer ' + window.localStorage.getItem('tr_auth_token');
+if(isApplication(window.location.href)) {
+    window.axios.defaults.baseURL = window.location.origin + '/api';
+    window.axios.defaults.headers.common['Authorization'] = ' Bearer ' + window.localStorage.getItem('tr_member_auth_token');
+} else {
+    window.axios.defaults.baseURL = import.meta.env.VITE_API_URL;
+    window.axios.defaults.headers.common['Authorization'] = ' Bearer ' + window.localStorage.getItem('tr_auth_token');
+
+}
 window.axios.defaults.headers.common['X-CSRF-TOKEN'] = window.Laravel.csrfToken;
-window.axios.defaults.baseURL = (isApplication ? window.location.origin + '/api' : import.meta.env.VITE_API_URL)
 
 axios.interceptors.response.use(function (response) {
     return response;

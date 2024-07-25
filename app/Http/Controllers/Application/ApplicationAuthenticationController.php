@@ -11,6 +11,8 @@ use App\Models\User;
 use App\Models\Venue;
 use App\Notifications\Application\ApplicationEmailVerification;
 use App\Notifications\Application\ApplicationEmailVerified;
+use App\Notifications\ApplicationPasswordResetRequest;
+use App\Notifications\ApplicationPasswordResetted;
 use App\Notifications\EmailVerified;
 use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
@@ -19,6 +21,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
+use Illuminate\Validation\Rules\Password;
 use Jenssegers\Agent\Agent;
 
 class ApplicationAuthenticationController extends ApiController
@@ -124,6 +127,55 @@ class ApplicationAuthenticationController extends ApiController
         $member->save();
 
         $member->notify(new ApplicationEmailVerified());
+
+        return $this->success();
+    }
+
+    public function createPasswordResetToken(Request $request): JsonResponse
+    {
+        $validatedRequest = $request->validate([
+            'email' => 'required|exists:members,email|email:rfc,dns',
+            'subdomain' => 'required|exists:venues,subdomain',
+        ]);
+
+        $venue = Venue::where('subdomain', $validatedRequest['subdomain'])->firstOrFail();
+
+        $member = Member::where('email', $validatedRequest['email'])->first();
+        if(!$member) return $this->success();
+
+        $token = Str::random(64);
+        $member->password_reset_token = Hash::make($token . $member->email);
+        $member->password_reset_token_expires_at = Carbon::now()->addHours(2);
+        $member->save();
+
+        $url = 'https://' . $venue->subdomain . '.' . env('MAIN_DOMAIN') . '/password-reset?member=' . $member->id . '&token=' . $token;
+
+        $member->notify(new ApplicationPasswordResetRequest($member, $url));
+
+        return $this->success();
+    }
+
+
+    public function resetPassword(Request $request)
+    {
+        $validatedRequest = $request->validate([
+            'token' => 'required',
+            'password' => 'required', 'string', Password::min(8)->mixedCase()->numbers()->symbols()->uncompromised(),
+            'email' => 'required|email:rfc,dns',
+        ]);
+
+        $member = Member::where('email', $validatedRequest['email'])->first();
+
+        if($member->password_reset_token_expires_at < Carbon::now()) return $this->error('Token is verlopen');
+
+        if(!$member || !Hash::check($validatedRequest['token'] . $validatedRequest['email'], $member->password_reset_token)) return $this->error(['Email of token onjuist']);
+
+        $member->password = Hash::make($validatedRequest['password']);
+        $member->password_reset_token = null;
+        $member->password_reset_token_expires_at = null;
+        $member->save();
+
+        $member->notify(new ApplicationPasswordResetted($member));
 
         return $this->success();
     }

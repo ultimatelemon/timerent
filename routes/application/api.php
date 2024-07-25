@@ -18,7 +18,10 @@ Route::post('/app/sanctum/token', [\App\Http\Controllers\Application\Application
 Route::post('/app/sanctum/register', [\App\Http\Controllers\Application\ApplicationAuthenticationController::class, 'storeMember']);
 Route::post('/app/sanctum/email/verify', [\App\Http\Controllers\Application\ApplicationAuthenticationController::class, 'verifyEmail']);
 Route::post('/app/sanctum/email/verify/resend', [\App\Http\Controllers\Application\ApplicationAuthenticationController::class, 'resendVerifyEmail']);
+Route::post('/app/sanctum/password/reset/request', [\App\Http\Controllers\Application\ApplicationAuthenticationController::class, 'createPasswordResetToken']);
+Route::post('/app/sanctum/password/reset', [\App\Http\Controllers\Application\ApplicationAuthenticationController::class, 'resetPassword']);
 //
 Route::middleware('member')->group(function () {
     Route::get('/app/members/current', [MemberController::class, 'current']);
 });
+

@@ -21,6 +21,8 @@ return new class extends Migration
             $table->string('email_verification_token')->nullable();
             $table->timestamp('email_verification_token_expires_at')->nullable();
             $table->string('password');
+            $table->string('password_reset_token')->nullable();
+            $table->timestamp('password_reset_token_expires_at')->nullable();
             $table->boolean('pay_on_invoice')->default(false);
             $table->integer('loyality_points')->default(0);
             $table->rememberToken();

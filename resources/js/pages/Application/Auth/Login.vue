@@ -35,9 +35,9 @@
 
         <div>
           <div class="flex items-center justify-between">
-            <label for="password" class="block text-sm font-medium leading-6 text-gray-900">Wachtwoord</label>
+            <label for="password" class="text-sm font-medium leading-6 text-gray-900 block">Wachtwoord</label>
             <div class="text-sm">
-              <!--              <router-link :to='{name: "password.reset.request"}' class="font-semibold text-indigo-600 hover:text-indigo-500">Wachtwoord vergeten?</router-link>-->
+              <router-link :to='{name: "application.password-forgot"}' class="font-semibold text-indigo-600 hover:text-indigo-500">Wachtwoord vergeten?</router-link>
             </div>
           </div>
           <div class="mt-2">
@@ -72,7 +72,7 @@
           </button>
         </div>
       </div>
-      <p class="mt-10 text-center text-sm text-gray-500">
+      <p class="mt-5 text-center text-sm text-gray-500">
         Nog geen account?
         <router-link :to="{name: 'application.register'}" class="font-semibold leading-6 text-indigo-600 hover:text-indigo-500">Maak hier een account aan</router-link>
       </p>

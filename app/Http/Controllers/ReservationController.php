@@ -78,4 +78,17 @@ class ReservationController extends ApiController
         Notification::route('email', ['info@timerent.nl' => 'Kevin Terpstra'])->notify(new ReservationConfirmation($reservation));
         return $this->success('Sent to ' . 'info@timerent.nl');
     }
+
+    public function update(Venue $venue, Reservation $reservation, Request $request): JsonResponse
+    {
+        $validatedRequest = $request->validate([
+            'email' => 'required|string|email:rfc,dns',
+            'comments' => 'nullable|sometimes|string|max:256',
+            'phone_number' => 'required|numeric|digits:10',
+        ]);
+
+        $reservation->update($validatedRequest);
+        return $this->success();
+    }
+
 }

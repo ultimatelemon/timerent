@@ -28,10 +28,11 @@ class ReservationResource extends JsonResource
             'name' => $this->name,
             'email' => $this->email,
             'phone_number' => $this->phone_number,
+            'comments' => $this->comments,
             'cancel_allowed' => Carbon::parse($this->date)->setHour(intval(explode(':', explode(' ', $this->timeblocks->first()->from)[1])[0]))->setMinute(0)->setSecond(0) >= Carbon::now()->addHours(intval($hours))  && !$this->canceled_at,
-            'user' => [
-                'id' => $this->user?->id,
-                'name' => $this->user?->name,
+            'member' => [
+                'id' => $this->member?->id,
+                'name' => $this->member?->name,
             ],
             'timeblocks' => ReservationTimeblockResource::collection($this->timeblocks),
             'unit' => [

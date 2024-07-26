@@ -2,21 +2,30 @@
   <div v-if="member">
     <div class="mb-12">
       <div class="font-semibold text-lg">Member: #{{ member.id.split('-')[0].toUpperCase() }}</div>
-      <div class="text-sm">Beheer hier de member geregistreerd op jouw platform</div>
+      <div class="text-sm">Beheer de huidige gebruiker</div>
+    </div>
+
+    <div class="flex gap-6 text-sm border-b border-gray-200 pb-8">
+      <div>
+        <router-link :to="{name: 'venues.members.edit', params: {venue: this.$route.params.venue, member: member.id}}" active-class="border-indigo-500" class="border-b-2 hover:border-indigo-500 pb-1">Gebruiker</router-link>
+      </div>
+      <div>
+        <router-link :to="{name: 'venues.members.reservations', params: {venue: this.$route.params.venue, member: member.id}}" active-class="border-indigo-500" class="border-b-2 hover:border-indigo-500 pb-1">Reserveringen</router-link>
+      </div>
     </div>
 
     <div class="mt-6">
       <dl class="grid grid-cols-1 sm:grid-cols-2">
-        <div class="border-t border-gray-100 px-4 py-6 sm:col-span-1 sm:px-0 mr-0 sm:mr-12">
+        <div class=" px-4 py-6 sm:col-span-1 sm:px-0 mr-0 sm:mr-12">
           <dt class="text-sm font-semibold leading-6 text-gray-900 pb-2">Naam</dt>
           <input v-on:keyup.enter="postData" class="text-sm" v-model="formData.name">
         </div>
-        <div class="border-t border-gray-100 px-4 py-6 sm:col-span-1 sm:px-0 mr-0 sm:mr-12">
+        <div class="border-t border-gray-100 md:border-none px-4 py-6 sm:col-span-1 sm:px-0 mr-0 sm:mr-12">
           <dt class="text-sm font-semibold leading-6 text-gray-900 pb-2">Email</dt>
           <input v-on:keyup.enter="postData" class="text-sm" v-model="formData.email">
         </div>
         <div class="border-t border-gray-100 px-4 py-6 sm:col-span-1 sm:px-0 mr-0 sm:mr-12">
-          <dt class="text-sm font-semibold leading-6 text-gray-900 pb-2">Loyality Points</dt>
+          <dt class="text-sm font-semibold leading-6 text-gray-900 pb-2">Loyality Points <span class="font-normal text-xs">* Not implemented yet</span></dt>
           <input v-on:keyup.enter="postData" type="number" class="text-sm" v-model="formData.loyality_points">
         </div>
         <div class="border-t border-gray-100 px-4 py-6 sm:col-span-1 sm:px-0 mr-0 sm:mr-12">
@@ -28,7 +37,7 @@
           <dd class="mt-1 text-sm leading-6 text-gray-700 sm:mt-2">{{ $filters.humanDate(member.created_at) }}</dd>
         </div>
         <div class="border-t border-gray-100 px-4 py-6 sm:col-span-1 sm:px-0">
-          <dt class="text-sm font-semibold leading-6 text-gray-900">Betalen op factuur</dt>
+          <dt class="text-sm font-semibold leading-6 text-gray-900">Betalen op factuur <span class="font-normal text-xs">* Not implemented yet</span></dt>
           <div class="relative mt-2">
             <Switch v-model="formData.pay_on_invoice" :class="[formData.pay_on_invoice ? 'bg-indigo-600' : 'bg-gray-200', 'relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-indigo-600 focus:ring-offset-2']">
               <span class="sr-only">Use setting</span>

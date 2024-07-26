@@ -55,6 +55,9 @@ Route::middleware('auth:sanctum')->group(function () {
     // Reservation
     Route::post('/venues/{venue}/reservations/{reservation}/resend/confirmation', [ReservationController::class, 'resendConfirmationMail']);
 
+    //  Member
+    Route::get('/venues/{venue}/members/{member}/reservations', [MemberController::class, 'reservations']);
+
     // Todo: Permission routes
     Route::resource('venues',                   VenueController::class)->except(['create', 'edit']);
     Route::resource('venues.units',             UnitController::class)->except(['create', 'edit']);

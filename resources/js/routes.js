@@ -73,14 +73,25 @@ export const routes = [
     },
 
     {
-        path: '/store/:venue/finance',
+        path: '/store/:venue/reports',
         component: Wrapper,
         children: [
-            { path: 'reports', component: () => import('./pages/Venues/Finance/Reports/Index.vue'), name: 'venues.finance.reports.index' },
-            // { path: 'create', component: () => import('./pages/Venues/Products/Edit.vue'), name: 'venues.products.create' },
+            { path: '', component: () => import('./pages/Venues/Finance/Reports/Index.vue'), name: 'venues.finance.reports.index' },
+            { path: 'invoices', component: () => import('./pages/Venues/Finance/Invoices/Index.vue'), name: 'venues.finance.invoices.index' },
             // { path: ':reservation', component: () => import('./pages/Venues/Reservations/Edit.vue'), name: 'venues.reservations.edit' },
         ]
     },
+
+    {
+        path: '/store/:venue/invoices',
+        component: Wrapper,
+        children: [
+            { path: '', component: () => import('./pages/Venues/Finance/Invoices/Index.vue'), name: 'venues.finance.invoices.index' },
+            // { path: ':reservation', component: () => import('./pages/Venues/Reservations/Edit.vue'), name: 'venues.reservations.edit' },
+        ]
+    },
+
+    // Members
 
     {
         path: '/store/:venue/members',
@@ -89,8 +100,10 @@ export const routes = [
             { path: '', component: () => import('./pages/Venues/Members/Index.vue'), name: 'venues.members.index' },
             // { path: 'create', component: () => import('./pages/Venues/Products/Edit.vue'), name: 'venues.products.create' },
             { path: ':member', component: () => import('./pages/Venues/Members/Edit.vue'), name: 'venues.members.edit' },
+            { path: ':member/reservations', component: () => import('./pages/Venues/Members/Reservations.vue'), name: 'venues.members.reservations' },
         ]
     },
+
 
 
     // Payments

@@ -1,12 +1,17 @@
 <template>
   <div v-if="reservation">
-    <div class="mb-12">
-      <div class="font-semibold text-lg">Reservering: #{{ reservation.number }}</div>
-      <div class="text-sm">Beheer hier de reservering</div>
+    <div class="mb-12 flex justify-between">
+      <div>
+        <div class="font-semibold text-lg">Reservering: #{{ reservation.number }}</div>
+        <div class="text-sm">Beheer hier de reservering</div>
+      </div>
+      <div v-if="reservation.member.id">
+        <button @click="this.$router.push({name: 'venues.members.edit', params: {venue: this.$route.params.venue, member: reservation.member.id}})" class="btn btn-primary">Bekijk gebruiker</button>
+      </div>
     </div>
 
     <div class="mt-6">
-      <dl class="grid grid-cols-1 sm:grid-cols-2">
+      <dl class="grid grid-cols-1 sm:grid-cols-2 gap-x-12">
         <div class="border-t border-gray-100 px-4 py-6 sm:col-span-1 sm:px-0">
           <dt class="text-sm font-semibold leading-6 text-gray-900">Naam</dt>
           <dd class="mt-1 text-sm leading-6 text-gray-700 sm:mt-2">{{ reservation.name }}</dd>
@@ -17,11 +22,15 @@
         </div>
         <div class="border-t border-gray-100 px-4 py-6 sm:col-span-1 sm:px-0">
           <dt class="text-sm font-semibold leading-6 text-gray-900">Email adres</dt>
-          <dd class="mt-1 text-sm leading-6 text-gray-700 sm:mt-2">{{ reservation.email }}</dd>
+          <input class="mt-1 text-sm leading-6 text-gray-700 sm:mt-2" v-model="formData.email">
         </div>
         <div class="border-t border-gray-100 px-4 py-6 sm:col-span-1 sm:px-0">
-          <dt class="text-sm font-semibold leading-6 text-gray-900">Commentaar/Notities</dt>
-          <dd class="mt-1 text-sm leading-6 text-gray-700 sm:mt-2">{{ reservation.comments ?? 'Er zijn geen notities' }}</dd>
+          <dt class="text-sm font-semibold leading-6 text-gray-900">Commentaar / Notities (zichtbaar voor klant)</dt>
+          <textarea class="mt-1 p-2 text-sm leading-6 text-gray-700 sm:mt-2 input" v-model="formData.comments"></textarea>
+        </div>
+        <div class="border-t border-gray-100 px-4 py-6 sm:col-span-1 sm:px-0">
+          <dt class="text-sm font-semibold leading-6 text-gray-900">Telefoonnummer</dt>
+          <input class="mt-1 text-sm leading-6 text-gray-700 sm:mt-2" v-model="formData.phone_number">
         </div>
         <div class="border-t border-gray-100 px-4 py-6 sm:col-span-2 sm:px-0">
           <dt class="text-sm font-semibold leading-6 text-gray-900">Unit(s)</dt>
@@ -66,13 +75,14 @@
     </div>
     <div class="flex justify-end gap-4">
       <button @click="$router.go(-1)" class="btn btn-secondary">Terug</button>
+      <button @click="postData" :class="loading ? 'btn btn-secondary opacity-50 cursor-not-allowed' : 'btn btn-primary'"><i v-if="loading" class="fa fa-spinner mr-2 animate-spin"></i> Aanpassingen opslaan</button>
     </div>
   </div>
 </template>
 
 <script>
 import {groupBy} from "lodash";
-import {EnvelopeIcon, PaperClipIcon} from "@heroicons/vue/24/outline/index.js";
+import {ArrowTopRightOnSquareIcon, EnvelopeIcon, PaperClipIcon} from "@heroicons/vue/24/outline/index.js";
 
 export default {
   name: "Edit",
@@ -85,13 +95,15 @@ export default {
       blocks: null,
 
       formData: {
-        name: "",
-        description: "",
+        phone_number: "",
+        email: "",
+        comments: "",
       },
     }
   },
 
   methods: {
+    ArrowTopRightOnSquareIcon,
     PaperClipIcon,
     EnvelopeIcon,
     fetchData() {
@@ -100,6 +112,9 @@ export default {
         axios.get('/venues/' + this.$route.params.venue + '/reservations/' + this.$route.params.reservation)
             .then(response => {
               this.reservation = response.data.data;
+              this.formData.phone_number = response.data.data.phone_number;
+              this.formData.email = response.data.data.email;
+              this.formData.comments = response.data.data.comments;
               this.group();
             })
             .finally(() => {
@@ -112,7 +127,7 @@ export default {
       if(this.loading) return;
       this.loading = true;
 
-      if (this.$route.params.unit != null) {
+      if (this.$route.params.reservation != null) {
         axios.put('/venues/' + this.$route.params.venue + '/reservations/' + this.$route.params.reservation, this.formData)
             .then(response => {
               this.$router.push({name: 'venues.reservations.index'});

@@ -18,7 +18,7 @@ class MemberResource extends JsonResource
             'id' => $this->id,
             'name' => $this->name,
             'email' => $this->email,
-//            'reservations' => ReservationResource::collection($this->reservations),
+            'reservations' => ReservationResource::collection($this->reservations),
             'pay_on_invoice' => $this->pay_on_invoice,
             'loyality_points' => $this->loyality_points,
             'email_verified_at' => $this->email_verified_at,

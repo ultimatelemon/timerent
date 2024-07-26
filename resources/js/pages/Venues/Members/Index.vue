@@ -5,9 +5,6 @@
         <div class="font-semibold text-lg">Members</div>
         <div class="text-sm">Beheer hier je klanten die geregistreerd zijn op jouw platform</div>
       </div>
-      <div>
-        <button class="btn btn-primary btn-lg"><i class="fa fa-plus"></i></button>
-      </div>
     </div>
     <div class="mb-12">
       <div class="font-semibold mb-2">Filteren</div>
@@ -21,8 +18,8 @@
             <tr>
               <th scope="col" class="whitespace-nowrap px-2 py-3.5 text-left text-sm font-semibold text-gray-900">Naam</th>
               <th scope="col" class="whitespace-nowrap px-2 py-3.5 text-left text-sm font-semibold text-gray-900">Email</th>
-              <th scope="col" class="whitespace-nowrap px-2 py-3.5 text-left text-sm font-semibold text-gray-900">Loyality points</th>
-              <th scope="col" class="whitespace-nowrap px-2 py-3.5 text-left text-sm font-semibold text-gray-900">Betaald op factuur</th>
+              <th scope="col" class="whitespace-nowrap px-2 py-3.5 text-left text-sm font-semibold text-gray-900">Loyality points <br><span class="font-normal text-xs">* Not implemented yet</span></th>
+              <th scope="col" class="whitespace-nowrap px-2 py-3.5 text-left text-sm font-semibold text-gray-900">Betaald op factuur <br><span class="font-normal text-xs">* Not implemented yet</span></th>
             </tr>
             </thead>
             <tbody class="divide-y divide-gray-200 bg-white">

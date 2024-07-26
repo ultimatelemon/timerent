@@ -8,6 +8,7 @@ use App\Http\Resources\ReservationResource;
 use App\Models\Member;
 use App\Models\Reservation;
 use App\Models\Venue;
+use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -81,5 +82,36 @@ class MemberController extends ApiController
             return $this->success(new MemberResource($request->member));
 
         return $this->success();
+    }
+
+    /**
+     * Display a listing of the resource
+     *
+     * @param Request $request
+     * @param Venue $venue
+     * @return JsonResponse
+     */
+    public function reservations(Request $request, Venue $venue, Member $member): JsonResponse
+    {
+        $reservations = $member->reservations();
+
+        if($request->has('q'))
+            $reservations = $reservations->where('id', 'ILIKE', "%{$request->q}%")
+                ->orWhere('email', 'ILIKE', "%{$request->q}%");
+
+        if($request->has('max'))
+            $reservations->max($request->max);
+
+        if($request->has('date') && $request->date === 'today')
+            $reservations->where('date', Carbon::today());
+
+        $reservations = $reservations->orderBy('date', 'asc');
+
+        $reservations = $reservations->paginate(env('POSTS_PER_PAGE'));
+
+        return $this->success(
+            ReservationResource::collection($reservations),
+            collect($reservations)->only(['from', 'to', 'total', 'per_page', 'last_page', 'current_page'])->toArray(),
+        );
     }
 }

@@ -36,6 +36,8 @@ class ReservationController extends ApiController
         if($request->has('date') && $request->date === 'today')
             $reservations->where('date', Carbon::today());
 
+        $reservations = $reservations->orderBy('date', 'asc');
+
         $reservations = $reservations->paginate(env('POSTS_PER_PAGE'));
 
         return $this->success(

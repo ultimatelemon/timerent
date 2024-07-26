@@ -28,6 +28,11 @@
           <dd v-for="block in blocks" class="mt-1 text-sm leading-6 text-gray-700 sm:mt-2">{{ block[0]['unit_name'] }} &mdash; {{ $filters.humanTime(block[0].from) }} - {{ $filters.humanTime(block[block.length - 1].to) }}</dd>
         </div>
         <div class="border-t border-gray-100 px-4 py-6 sm:col-span-2 sm:px-0">
+          <dt class="text-sm font-semibold leading-6 text-gray-900">Product(en)</dt>
+          <dd v-if="reservation.products.length > 0" v-for="product in reservation.products" class="mt-1 text-sm leading-6 text-gray-700 sm:mt-2">1x {{product.name}}</dd>
+          <dd v-else class="mt-1 text-sm leading-6 text-gray-700 sm:mt-2"> Er zijn geen producten bijgeboekt </dd>
+        </div>
+        <div class="border-t border-gray-100 px-4 py-6 sm:col-span-2 sm:px-0">
           <dt class="text-sm font-semibold leading-6 text-gray-900">Acties</dt>
           <dd class="mt-2 text-sm text-gray-900">
             <ul role="list" class="divide-y divide-gray-100 rounded-md border border-gray-200">

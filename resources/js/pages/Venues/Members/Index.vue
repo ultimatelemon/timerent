@@ -9,9 +9,10 @@
         <button class="btn btn-primary btn-lg"><i class="fa fa-plus"></i></button>
       </div>
     </div>
-<!--    <div class="mb-12">-->
-<!--      <div class="font-semibold">Filteren</div>-->
-<!--    </div>-->
+    <div class="mb-12">
+      <div class="font-semibold mb-2">Filteren</div>
+      <input v-model="searchQuery" type="text" placeholder="Zoek op naam of email">
+    </div>
     <div class="mt-8 flow-root">
       <div class="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
         <div class="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
@@ -50,6 +51,7 @@
 <script>
 
 import Pagination from "../../Components/Pagination.vue";
+import _ from "lodash";
 
 export default {
   name: "Index",
@@ -60,12 +62,19 @@ export default {
       members: [],
 
       pagination: null,
+
+      searchQuery: "",
+      searchMethod: _.debounce(() => {
+        this.fetchDataByPage(1);
+      }, 300),
     }
   },
 
   methods: {
     fetchDataByPage(page) {
-      axios.get('/venues/' + this.$route.params.venue + '/members?page=' + page)
+      axios.get('/venues/' + this.$route.params.venue + '/members?page=' + page
+          + (this.searchQuery ? '&q=' + this.searchQuery : '')
+      )
           .then(response => {
             this.members = response.data.data;
             // alert(response.data.data[0].name)
@@ -77,5 +86,11 @@ export default {
   mounted() {
     this.fetchDataByPage(1);
   },
+
+  watch: {
+    searchQuery: function () {
+      this.searchMethod();
+    }
+  }
 }
 </script>

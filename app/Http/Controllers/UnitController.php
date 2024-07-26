@@ -24,7 +24,8 @@ class UnitController extends ApiController
         $units = $venue->units();
 
         if($request->has('q'))
-            $units = $units->where('name', 'ILIKE', "%{$request->q}%");
+            $units = $units->where('name', 'ILIKE', "%{$request->q}%")
+                ->orWhere('description', 'ILIKE', "%{$request->q}%");
 
         $units = $units->paginate(env('POSTS_PER_PACE'));
 

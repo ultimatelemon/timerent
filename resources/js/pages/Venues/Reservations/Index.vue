@@ -9,9 +9,10 @@
 <!--        <button @click="$router.push({ name: 'venues.units.create' })" class="btn btn-primary">Nieuwe unit</button>-->
       </div>
     </div>
-<!--        <div class="mb-12">-->
-<!--          <div class="font-semibold">Filteren</div>-->
-<!--        </div>-->
+    <div class="mb-12">
+      <div class="font-semibold mb-2">Filteren</div>
+      <input v-model="searchQuery" type="text" placeholder="Zoek op ID of email">
+    </div>
     <div class="mt-8 flow-root">
       <div class="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
         <div class="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
@@ -35,6 +36,7 @@
               <td class="whitespace-nowrap px-2 py-2 text-sm font-medium text-gray-900">{{ $filters.humanDateTime(reservation.created_at) }}</td>
               <td class="whitespace-nowrap px-2 py-2 text-sm font-medium text-gray-900 label label-warning mt-2" v-if="reservation.payment_status === 'open'">Open</td>
               <td class="whitespace-nowrap px-2 py-2 text-sm font-medium text-gray-900 label label-success mt-2" v-if="reservation.payment_status === 'paid'">Betaald</td>
+              <td class="whitespace-nowrap px-2 py-2 text-sm font-medium text-gray-900 label label-danger mt-2" v-if="reservation.payment_status === 'refunded'">Geannuleerd</td>
             </tr>
             <tr v-else class="text-center">
               <td colspan="12" class="pt-12">Er zijn nog geen opkomende reserveringen gepland</td>
@@ -53,6 +55,7 @@
 
 <script>
 import Pagination from "../../Components/Pagination.vue";
+import _ from "lodash";
 
 export default {
   name: "Index",
@@ -61,12 +64,18 @@ export default {
     return {
       reservations: [],
       pagination: null,
+      searchQuery: "",
+      searchMethod: _.debounce(() => {
+        this.fetchDataByPage(1);
+      }, 300),
     }
   },
 
   methods: {
     fetchDataByPage(page) {
-      axios.get('/venues/' + this.$route.params.venue + '/reservations?page=' + page)
+      axios.get('/venues/' + this.$route.params.venue + '/reservations?page=' + page
+      + (this.searchQuery ? '&q=' + this.searchQuery : '')
+      )
           .then(response => {
             this.reservations = response.data.data;
             this.pagination = response.data.pagination;
@@ -77,5 +86,11 @@ export default {
   mounted() {
     this.fetchDataByPage(1);
   },
+
+  watch: {
+    searchQuery: function () {
+      this.searchMethod();
+    }
+  }
 }
 </script>

@@ -9,9 +9,10 @@
         <button @click="$router.push({ name: 'venues.units.create' })" class="btn btn-primary">Nieuwe unit</button>
       </div>
     </div>
-    <!--    <div class="mb-12">-->
-    <!--      <div class="font-semibold">Filteren</div>-->
-    <!--    </div>-->
+    <div class="mb-12">
+      <div class="font-semibold mb-2">Filteren</div>
+      <input v-model="searchQuery" type="text" placeholder="Zoek op naam of omschrijving">
+    </div>
     <div class="mt-8 flow-root">
       <div class="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
         <div class="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
@@ -30,7 +31,7 @@
               <td class="whitespace-nowrap px-2 py-2 text-sm font-medium text-gray-900">{{ unit.tax_percentage }}%</td>
             </tr>
             <tr v-else class="text-center">
-              <td colspan="3" class="pt-12">Er zijn nog geen units aangemaakt</td>
+              <td colspan="3" class="pt-12">Er zijn nog geen units aangemaakt of zoekopdracht niet gevonden</td>
             </tr>
             </tbody>
           </table>
@@ -45,6 +46,7 @@
 
 <script>
 import Pagination from "../../Components/Pagination.vue";
+import _ from "lodash";
 
 export default {
   name: "Index",
@@ -53,12 +55,19 @@ export default {
     return {
       units: [],
       pagination: null,
+
+      searchQuery: "",
+      searchMethod: _.debounce(() => {
+        this.fetchDataByPage(1);
+      }, 300),
     }
   },
 
   methods: {
     fetchDataByPage(page) {
-      axios.get('/venues/' + this.$route.params.venue + '/units?page=' + page)
+      axios.get('/venues/' + this.$route.params.venue + '/units?page=' + page
+          + (this.searchQuery ? '&q=' + this.searchQuery : '')
+      )
           .then(response => {
             this.units = response.data.data;
             this.pagination = response.data.pagination;
@@ -69,5 +78,11 @@ export default {
   mounted() {
     this.fetchDataByPage(1);
   },
+
+  watch: {
+    searchQuery: function () {
+      this.searchMethod();
+    }
+  }
 }
 </script>

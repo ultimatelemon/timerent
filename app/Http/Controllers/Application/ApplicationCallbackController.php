@@ -13,7 +13,6 @@ class ApplicationCallbackController extends Controller
 {
     public function success(Request $request)
     {
-        ray('test2')->red();
         $session_id = $request->session_id;
         $client = new StripeClient(env('STRIPE_SECRET'));
 

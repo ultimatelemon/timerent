@@ -29,7 +29,6 @@ class StripeSubscriptionController extends ApiController
      */
     public function create(Venue $venue, Plan $plan): ?string
     {
-        ray('mis');
         $session = $this->client->checkout->sessions->create([
             'customer' => $venue->stripe_customer_id,
             'payment_method_types' => ['ideal'],

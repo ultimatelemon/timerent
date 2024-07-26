@@ -20,10 +20,10 @@ class Member extends Model implements MustVerifyEmail
 
     protected $fillable = ['name', 'email', 'venue_id', 'loyality_points', 'pay_on_invoice'];
 
-    public function reservations(): HasMany|null
+    public function reservations()
     {
-        if (!$this->hasVerifiedEmail())
-            return null;
+        if (!$this->email_verified_at)
+            return ray($this->email_verified_at);
 
         return $this->hasMany(Reservation::class, 'email', 'email')->where([
             ['payment_status', '!=', PaymentStatus::Expired],

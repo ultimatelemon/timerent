@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use App\Models\Setting;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
@@ -15,6 +16,8 @@ class ReservationResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
+        $hours = Setting::where([['key', '=', 'cancellation_hours'], ['venue_id', '=', $this->venue->id]])->firstOrFail()->value;
+
         return [
             'id' => $this->id,
             'number' => $this->number ?? strtoupper(explode('-', $this->id)[0]),
@@ -25,6 +28,7 @@ class ReservationResource extends JsonResource
             'name' => $this->name,
             'email' => $this->email,
             'phone_number' => $this->phone_number,
+            'cancel_allowed' => Carbon::parse($this->date)->setHour(intval(explode(':', explode(' ', $this->timeblocks->first()->from)[1])[0]))->setMinute(0)->setSecond(0) >= Carbon::now()->addHours(intval($hours))  && !$this->canceled_at,
             'user' => [
                 'id' => $this->user?->id,
                 'name' => $this->user?->name,
@@ -34,8 +38,6 @@ class ReservationResource extends JsonResource
                 'id' => $this->unit_id,
                 'name' => $this->unit_name,
             ],
-            'cancel_allowed' => true,
-//            'cancel_allowed' => Carbon::parse($this->date)->setHour(explode(':', explode(' ', $this->timeblocks->first()->from)[1])[0])->setMinute(0)->setSecond(0) >= Carbon::now()->addHours(Setting::where('key', 'cancel_hours_before_reservation')->first()->value),
             'products' => ProductResource::collection($this->products),
             'created_at' => $this->created_at,
         ];

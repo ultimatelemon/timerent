@@ -6,22 +6,26 @@ use App\Helpers\PaymentHelper;
 use App\Helpers\ReservationHelper;
 use App\Http\Controllers\ApiController;
 use App\Http\Requests\Venue\StoreReservation;
+use App\Http\Resources\ReservationResource;
 use App\Models\Product;
 use App\Models\Reservation;
 use App\Models\ReservationTimeblock;
 use App\Models\Setting;
 use App\Models\Unit;
 use App\Models\Venue;
+use App\Notifications\Application\ApplicationReservationCancelled;
 use App\WebPayment\Mollie\MolliePaymentClient;
 use App\WebPayment\PaymentStatus;
 use App\WebPayment\Timerent\TimerentPaymentClient;
 use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Str;
 use Mollie\Api\Exceptions\IncompatiblePlatform;
 use Mollie\Api\Exceptions\UnrecognizedClientException;
 use Mollie\Api\MollieApiClient;
+use function Laravel\Prompts\error;
 
 class ApplicationReservationController extends ApiController
 {
@@ -137,5 +141,54 @@ class ApplicationReservationController extends ApiController
         }
 
         return $this->success($paymentUrl);
+    }
+
+    public function index(Request $request)
+    {
+        $reservations = $request->member->reservations();
+
+        if($request->has('q'))
+            $reservations = $reservations->where('id', 'ILIKE', "%{$request->q}%");
+
+        $reservations = $reservations->paginate(env('POSTS_PER_PAGE'));
+
+        return $this->success(
+            ReservationResource::collection($request->member->reservations),
+            collect($reservations)->only(['from', 'to', 'total', 'per_page', 'last_page', 'current_page'])->toArray(),
+        );
+    }
+
+    public function show(Reservation $reservation, Request $request): JsonResponse
+    {
+        $reservation = $request->member->reservations()->where('id', $reservation->id)->firstOrFail();
+        return $this->success(new ReservationResource($reservation));
+    }
+
+    public function cancel(Reservation $reservation, Request $request)
+    {
+        $reservation = $request->member->reservations()->where('id', $reservation->id)->firstOrFail();
+        $hours = Setting::where([['key', '=', 'cancellation_hours'], ['venue_id', '=', $reservation->venue->id]])->firstOrFail()->value;
+        $cancelAllowed = Carbon::parse($reservation->date)->setHour(intval(explode(':', explode(' ', $reservation->timeblocks->first()->from)[1])[0]))->setMinute(0)->setSecond(0) >= Carbon::now()->addHours(intval($hours));
+        if(!$cancelAllowed) return $this->error(['message' => "Annulering is niet meer mogelijk, het is langer dan $hours uur voor de reservering."]);
+
+        $psp = Setting::where([['key', '=', 'payment_provider'], ['venue_id', '=', $reservation->venue->id]])->firstOrFail()->value;
+        if($psp !== $reservation->payment_provider) $this->error(['message' => "Annulering niet mogelijk, betalingsmethode is gewijzigd. Neem contact met ons op."]);
+
+        switch($psp) {
+            case 'mollie':
+                ray('Niet mogelijk');
+                break;
+
+            case 'timerent':
+                $client = new TimerentPaymentClient(env('STRIPE_SECRET'));
+                $refunded = $client->refundPayment($reservation->payment_id);
+                $reservation->payment_status = PaymentStatus::Refunded;
+                $reservation->canceled_at = Carbon::now();
+                $reservation->save();
+                $request->member->notify(new ApplicationReservationCancelled($reservation));
+                return $this->success();
+        }
+
+        return $this->error();
     }
 }

@@ -23,6 +23,7 @@ use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rules\Password;
 use Jenssegers\Agent\Agent;
+use Laravel\Sanctum\PersonalAccessToken;
 
 class ApplicationAuthenticationController extends ApiController
 {
@@ -41,7 +42,7 @@ class ApplicationAuthenticationController extends ApiController
         $member->venue_id = $venue->id;
         $member->name = $validatedRequest["name"];
         $member->email = $validatedRequest["email"];
-        $member->password  = Hash::make($validatedRequest["password"]);
+        $member->password = Hash::make($validatedRequest["password"]);
         $member->role_id = '509ab95a-9dbc-4857-a142-c3a1fa9a9812';
         $member->email_verification_token = Str::random(64);
         $member->email_verification_token_expires_at = Carbon::now()->addHours(2);
@@ -65,14 +66,14 @@ class ApplicationAuthenticationController extends ApiController
         $validatedRequest = $request->validated();
         $member = Member::where('email', strtolower($validatedRequest['email']))->first();
 
-        if(!$member || !Hash::check($request->password, $member->password))
+        if (!$member || !Hash::check($request->password, $member->password))
             return $this->error([__('Wrong email or password')], 400);
 
-        if(!$member->email_verified_at)
+        if (!$member->email_verified_at)
             return $this->error(['email_verification' => __('Email not verified')], 400);
 
         $agent = new Agent();
-        $sa = $agent->device().', '.$agent->platform().' ('.$agent->browser().')';
+        $sa = $agent->device() . ', ' . $agent->platform() . ' (' . $agent->browser() . ')';
         $device_name = $request->get('device_name', $sa);
 
         $token = $member->createToken($device_name);
@@ -80,6 +81,25 @@ class ApplicationAuthenticationController extends ApiController
         $token->accessToken->save();
 
         return $this->success(['token' => $token->plainTextToken]);
+    }
+
+    /**
+     * Revoke specific or current token
+     *
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function revokeToken(Request $request): JsonResponse
+    {
+        if ($request->has('id') && $request->get('id') != null) {
+            $token = $request->member->tokens()->where('id', $request->get('id'))->firstOrFail();
+            $token->delete();
+        } else {
+            $token = explode('|', $request->bearerToken())[1];
+            $tokkie = PersonalAccessToken::where('token', hash('sha256', $token))->first();
+            $tokkie->delete();
+        }
+        return $this->success();
     }
 
     /**
@@ -95,7 +115,7 @@ class ApplicationAuthenticationController extends ApiController
         ]);
 
         $member = Member::where('email', $validatedRequest['email'])->firstOrFail();
-        if($member->email_verified_at) return $this->error();
+        if ($member->email_verified_at) return $this->error();
 
         $member->email_verification_token = Str::random(64);
         $member->email_verification_token_expires_at = Carbon::now()->addHours(2);
@@ -117,8 +137,8 @@ class ApplicationAuthenticationController extends ApiController
         ]);
 
         $member = Member::findOrFail($validatedRequest['member']);
-        if($member->email_verified_at) return $this->error();
-        if($member->email_verification_token_expires_at < Carbon::now()) return $this->error();
+        if ($member->email_verified_at) return $this->error();
+        if ($member->email_verification_token_expires_at < Carbon::now()) return $this->error();
 
         Hash::check($member->email . $member->email_verification_token, $validatedRequest['token']);
         $member->email_verified_at = Carbon::now();
@@ -141,7 +161,7 @@ class ApplicationAuthenticationController extends ApiController
         $venue = Venue::where('subdomain', $validatedRequest['subdomain'])->firstOrFail();
 
         $member = Member::where('email', $validatedRequest['email'])->first();
-        if(!$member) return $this->success();
+        if (!$member) return $this->success();
 
         $token = Str::random(64);
         $member->password_reset_token = Hash::make($token . $member->email);
@@ -166,9 +186,9 @@ class ApplicationAuthenticationController extends ApiController
 
         $member = Member::where('email', $validatedRequest['email'])->first();
 
-        if($member->password_reset_token_expires_at < Carbon::now()) return $this->error('Token is verlopen');
+        if ($member->password_reset_token_expires_at < Carbon::now()) return $this->error('Token is verlopen');
 
-        if(!$member || !Hash::check($validatedRequest['token'] . $validatedRequest['email'], $member->password_reset_token)) return $this->error(['Email of token onjuist']);
+        if (!$member || !Hash::check($validatedRequest['token'] . $validatedRequest['email'], $member->password_reset_token)) return $this->error(['Email of token onjuist']);
 
         $member->password = Hash::make($validatedRequest['password']);
         $member->password_reset_token = null;

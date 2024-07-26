@@ -42,9 +42,9 @@ class Reservation extends Model
         return $this->belongsTo(Venue::class);
     }
 
-    public function user()
+    public function member()
     {
-        return $this->belongsTo(User::class, 'email', 'email');
+        return $this->belongsTo(Member::class, 'email', 'email');
     }
 
     public function timeblocks()

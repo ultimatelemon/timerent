@@ -23,6 +23,6 @@ class RetrieveMember
             return $next($request);
         }
 
-        return $next($request);
+        return abort(401);
     }
 }

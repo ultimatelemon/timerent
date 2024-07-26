@@ -22,6 +22,10 @@ Route::post('/app/sanctum/password/reset/request', [\App\Http\Controllers\Applic
 Route::post('/app/sanctum/password/reset', [\App\Http\Controllers\Application\ApplicationAuthenticationController::class, 'resetPassword']);
 //
 Route::middleware('member')->group(function () {
+    Route::post('/app/sanctum/logout', [\App\Http\Controllers\Application\ApplicationAuthenticationController::class, 'revokeToken']);
     Route::get('/app/members/current', [MemberController::class, 'current']);
+    Route::get('/app/members/current/reservations', [ApplicationReservationController::class, 'index']);
+    Route::get('/app/members/current/reservations/{reservation}', [ApplicationReservationController::class, 'show']);
+    Route::post('/app/members/current/reservations/{reservation}/cancel', [ApplicationReservationController::class, 'cancel']);
 });
 

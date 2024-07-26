@@ -4,7 +4,9 @@ namespace App\Http\Controllers\Member;
 
 use App\Http\Controllers\ApiController;
 use App\Http\Resources\MemberResource;
+use App\Http\Resources\ReservationResource;
 use App\Models\Member;
+use App\Models\Reservation;
 use App\Models\Venue;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;

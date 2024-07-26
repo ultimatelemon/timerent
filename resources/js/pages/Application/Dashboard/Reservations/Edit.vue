@@ -46,11 +46,11 @@
                   <component :is="PaperClipIcon" class="h-5 w-5"></component>
                   <div class="ml-4 flex min-w-0 flex-1 gap-2">
                     <span class="truncate font-medium">Factuur-9C435DE2.pdf</span>
-                    <span class="flex-shrink-0 text-gray-400">2.4mb</span>
+                    <span class="flex-shrink-0 text-gray-400"></span>
                   </div>
                 </div>
                 <div class="ml-4 flex-shrink-0">
-                  <a href="#" class="font-medium text-indigo-600 hover:text-indigo-500">Factuur downloaden</a>
+                  <button @click="downloadInvoice" class="font-medium text-indigo-600 hover:text-indigo-500">Factuur downloaden</button>
                 </div>
               </li>
               <li class="flex items-center justify-between py-4 pl-4 pr-5 text-sm leading-6">
@@ -97,6 +97,7 @@
 import {groupBy} from "lodash";
 import {EnvelopeIcon, PaperClipIcon} from "@heroicons/vue/24/outline/index.js";
 import Modal from "../../../Components/Modal.vue";
+import html2pdf from "html2pdf.js";
 
 export default {
   name: "Edit",
@@ -158,6 +159,17 @@ export default {
     group() {
       this.blocks = groupBy(this.reservation.timeblocks, 'unit_id');
     },
+
+    downloadInvoice() {
+      axios.post('/app/members/current/invoices/'+ this.reservation.invoice.id + '/download')
+          .then(response => {
+            html2pdf(response.data.data, {
+              filename: 'Factuur.pdf',
+              margin: 1,
+            })
+            // console.log(response.data.data);
+          })
+    }
 
   },
 

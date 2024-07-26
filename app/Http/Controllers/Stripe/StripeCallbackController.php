@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Stripe;
 
 use App\Http\Controllers\Controller;
+use App\Models\Invoice;
 use App\Models\Reservation;
 use App\Models\Venue;
 use App\Notifications\ReservationConfirmation;
@@ -49,6 +50,10 @@ class StripeCallbackController extends Controller
                 $reservation = Reservation::where('payment_id', $session->id)->firstOrFail();
                 $reservation->payment_status = PaymentStatus::Paid;
                 $reservation->save();
+
+                $invoice = Invoice::where('reservation_id', $reservation->id)->firstOrFail();
+                $invoice->paid_at = Carbon::now();
+                $invoice->save();
 
                 // TODO: Mail confirmation
                 $emailNotifiable = new EmailNotifiable($reservation->email);

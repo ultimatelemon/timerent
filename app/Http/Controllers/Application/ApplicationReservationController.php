@@ -7,6 +7,7 @@ use App\Helpers\ReservationHelper;
 use App\Http\Controllers\ApiController;
 use App\Http\Requests\Venue\StoreReservation;
 use App\Http\Resources\ReservationResource;
+use App\Models\Invoice;
 use App\Models\Product;
 use App\Models\Reservation;
 use App\Models\ReservationTimeblock;
@@ -121,6 +122,22 @@ class ApplicationReservationController extends ApiController
         }
 
         ReservationTimeblock::insert($timeblocks);
+
+        $invoice = new Invoice;
+        $invoice->name = $reservation->name;
+        $invoice->email = $reservation->email;
+        $invoice->phone_number = $reservation->phone_number;
+        $invoice->payment_amount = $reservation->payment_amount;
+        $invoice->tax_low = $reservation->tax_low;
+        $invoice->tax_high = $reservation->tax_high;
+        $invoice->payment_status = $reservation->payment_status;
+        $invoice->sent_at = Carbon::now();
+        $invoice->reservation_id = $reservation->id;
+        $invoice->venue_id = $reservation->venue_id;
+        $invoice->save();
+
+        $reservation->invoice_id = $invoice->id;
+        $reservation->save();
 
         // Todo; PSP modules,
         $paymentUrl = '';

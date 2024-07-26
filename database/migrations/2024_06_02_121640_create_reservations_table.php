@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('reservations', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->foreignUuid('venue_id')->constrained()->cascadeOnDelete();
+            $table->foreignUuid('invoice_id')->nullable()->constrained()->cascadeOnDelete();
 
             $table->string('name');
             $table->string('phone_number');

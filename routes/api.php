@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\InvoiceController;
 use App\Http\Controllers\Management\PaymentProviderController;
 use App\Http\Controllers\Management\PlanController;
 use App\Http\Controllers\Member\MemberController;
@@ -15,9 +16,14 @@ use App\Http\Controllers\User\UserController;
 use App\Http\Controllers\User\UserVenueController;
 use App\Http\Controllers\VenueController;
 use App\Http\Controllers\WeekController;
+use App\Models\Reservation;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
+Route::get('/invoicetest', function () {
+    $reservation = Reservation::findOrFail('9c9d65ff-ffe0-4c56-8ca1-70a81f3711a0');
+    (new InvoiceController())->store($reservation);
+});
 Route::get('/hash', function (Request $request) {return response()->json(\Illuminate\Support\Facades\Hash::make('joejoe123'));});
 Route::post('/sanctum/token', [\App\Http\Controllers\AuthenticationController::class, 'createToken']);
 Route::post('/sanctum/register', [\App\Http\Controllers\AuthenticationController::class, 'createUser']);
@@ -58,6 +64,9 @@ Route::middleware('auth:sanctum')->group(function () {
     //  Member
     Route::get('/venues/{venue}/members/{member}/reservations', [MemberController::class, 'reservations']);
 
+    // Invoice
+    Route::post('/venues/{venue}/invoices/{invoice}/download', [InvoiceController::class, 'download']);
+
     // Todo: Permission routes
     Route::resource('venues',                   VenueController::class)->except(['create', 'edit']);
     Route::resource('venues.units',             UnitController::class)->except(['create', 'edit']);
@@ -68,4 +77,5 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::resource('venues.reports',           ReportController::class)->except(['create', 'edit']);
     Route::resource('venues.users',             UserController::class)->except(['create', 'edit']);
     Route::resource('venues.members',           MemberController::class)->except(['create', 'edit']);
+    Route::resource('venues.invoices',          InvoiceController::class)->except(['create', 'edit']);
 });

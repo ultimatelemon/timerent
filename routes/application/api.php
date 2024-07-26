@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Application\ApplicationInvoiceController;
 use App\Http\Controllers\Application\ApplicationReservationController;
 use App\Http\Controllers\Application\ApplicationTenantController;
 use App\Http\Controllers\Member\MemberController;
@@ -25,6 +26,7 @@ Route::middleware('member')->group(function () {
     Route::post('/app/sanctum/logout', [\App\Http\Controllers\Application\ApplicationAuthenticationController::class, 'revokeToken']);
     Route::get('/app/members/current', [MemberController::class, 'current']);
     Route::get('/app/members/current/reservations', [ApplicationReservationController::class, 'index']);
+    Route::post('/app/members/current/invoices/{invoice}/download', [ApplicationInvoiceController::class, 'download']);
     Route::get('/app/members/current/reservations/{reservation}', [ApplicationReservationController::class, 'show']);
     Route::post('/app/members/current/reservations/{reservation}/cancel', [ApplicationReservationController::class, 'cancel']);
 });

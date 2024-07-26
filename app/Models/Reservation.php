@@ -47,6 +47,12 @@ class Reservation extends Model
         return $this->belongsTo(Member::class, 'email', 'email');
     }
 
+    public function invoice()
+    {
+        return $this->belongsTo(Invoice::class);
+    }
+
+
     public function timeblocks()
     {
         return $this->hasMany(ReservationTimeblock::class);

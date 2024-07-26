@@ -39,6 +39,7 @@ class ReservationResource extends JsonResource
                 'id' => $this->unit_id,
                 'name' => $this->unit_name,
             ],
+            'invoice' => new InvoiceResource($this->invoice),
             'products' => ProductResource::collection($this->products),
             'created_at' => $this->created_at,
         ];

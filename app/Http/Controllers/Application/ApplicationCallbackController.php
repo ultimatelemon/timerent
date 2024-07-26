@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Application;
 
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\InvoiceController;
 use App\Models\Reservation;
 use App\WebPayment\PaymentStatus;
 use App\WebPayment\Timerent\MolliePaymentClient;
@@ -21,7 +22,6 @@ class ApplicationCallbackController extends Controller
             $reservation = Reservation::where('payment_id', $session->id)->firstOrFail();
             $reservation->payment_status = PaymentStatus::Paid;
             $reservation->save();
-
             // TODO: Mail confirmation
 
             return view('application.callback.success');

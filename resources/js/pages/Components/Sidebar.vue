@@ -176,7 +176,7 @@ import {
   UserIcon,
   CircleStackIcon,
   ArchiveBoxIcon,
-  CalendarDaysIcon, ListBulletIcon, BriefcaseIcon, CogIcon, ChartBarIcon, UsersIcon
+  CalendarDaysIcon, ListBulletIcon, BriefcaseIcon, CogIcon, ChartBarIcon, UsersIcon, DocumentIcon
 } from "@heroicons/vue/24/outline/index.js";
 // import {CircleStackIcon} from "@heroicons/vue/16/solid/index.js";
 
@@ -274,6 +274,12 @@ export default {
           'name': 'Rapportage',
           'link': {name: 'venues.finance.reports.index', params: {venue: this.$store.state.venue.id}},
           'icon': ChartBarIcon,
+          'permission': 'VIEW_UNITS',
+        },
+        {
+          'name': 'Facturatie',
+          'link': {name: 'venues.finance.invoices.index', params: {venue: this.$store.state.venue.id}},
+          'icon': DocumentIcon,
           'permission': 'VIEW_UNITS',
         },
         {

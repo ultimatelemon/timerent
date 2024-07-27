@@ -20,6 +20,7 @@ Route::get('/email/verify', function () { return view('layouts.authentication');
 Route::get('/timerentpayments/success', function() {return view('layouts.authentication');})->name('timerent.payments.success');
 
 Route::get('/callback/success', [\App\Http\Controllers\Stripe\StripeCallbackController::class, 'success'])->name('callback.success');
+Route::get('/mollie/callback/success/{reservation}', [\App\Http\Controllers\Mollie\MollieWebhookController::class, 'updatePayment'])->name('mollie.callback.success');
 Route::get('/confirmation/{any}', function() { return view('layouts.blank-page'); })->name('confirmation');
 
 Route::get('/forgot-password', function () { return view('auth.authentication'); })->name('forgot');

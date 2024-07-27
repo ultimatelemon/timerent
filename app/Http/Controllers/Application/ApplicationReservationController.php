@@ -149,7 +149,7 @@ class ApplicationReservationController extends ApiController
             case 'mollie':
                 $api_key = Setting::where([['key', '=', 'payment_api_key'], ['venue_id', '=', $venue->id]])->firstOrFail()->value;
                 $client = new MolliePaymentClient(Crypt::decrypt($api_key));
-                $payment = $client->startPayment('Reservering via Timerent.nl', $total, env('APP_URL') . '/confirmation/' . $reservation->id, env('MOLLIE_WEBHOOK'), $validatedRequest['email'], $venue);
+                $payment = $client->startPayment('Reservering via Timerent.nl', $total, env('APP_URL') . '//' . $reservation->id, env('MOLLIE_WEBHOOK'), $validatedRequest['email'], $venue);
                 $reservation->update(['payment_id' => $payment->id]);
                 $paymentUrl = $payment->getPaymentUrl();
         }

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Resources\ReservationResource;
+use App\Models\Invoice;
 use App\Models\Reservation;
 use App\Models\Setting;
 use App\Models\User;
@@ -78,6 +79,13 @@ class ReservationController extends ApiController
                 $payment = new MolliePaymentClient(Crypt::decrypt($setting));
                 $payment = $payment->getPayment($reservation->payment_id);
                 if($payment->isPaid()) $reservation->update(['payment_status' => PaymentStatus::Paid->value]);
+
+                $invoice = Invoice::where('reservation_id', $reservation->id)->firstOrFail();
+                $invoice->paid_at = Carbon::now();
+                $invoice->save();
+
+                $emailNotifiable = new EmailNotifiable($reservation->email);
+                $emailNotifiable->notify(new ReservationConfirmation($reservation));
         }
 
         return $this->success($reservation->payment_status === PaymentStatus::Paid->value);

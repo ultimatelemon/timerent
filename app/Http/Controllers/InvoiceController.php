@@ -66,7 +66,7 @@ class InvoiceController extends ApiController
 
     public function download(Venue $venue, Invoice $invoice): JsonResponse
     {
-        $keys = ['name', 'address', 'phone_number_support'];
+        $keys = ['name', 'address', 'postal_code', 'city', 'phone_number_support', 'coc_number', 'tax_number'];
         $business = Setting::whereIn('key', $keys)->where('venue_id', $invoice->venue_id)->get()->pluck('value', 'key')->toArray();
         $pdf = Pdf::loadView('application.pdf.invoice', compact('invoice', 'business'));
 

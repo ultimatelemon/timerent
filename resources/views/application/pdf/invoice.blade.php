@@ -35,14 +35,12 @@
             font-family: 'Poppins', sans-serif;
         }
 
-        /
-        /
+
         @font-face {
-        //    font-family: 'Poppins';
-        //    src: url({{ storage_path('fonts\Poppins-Regular.ttf') }}) format("truetype");
-        //  font-weight: 400;
-        //  font-style: normal;
-        //
+            font-family: 'Poppins';
+            src: url({{ storage_path('fonts\Poppins-Regular.ttf') }}) format("truetype");
+            font-weight: 400;
+            font-style: normal;
         }
 
     </style>
@@ -83,6 +81,7 @@
                                     <div style="margin-bottom: 1rem">Van</div>
                                     {{ $business['name'] }}<br/>
                                     {{ $business['address'] }}<br/>
+                                    {{ $business['postal_code']  }}, {{ $business['city'] }}<br/>
                                 </th>
                             </tr>
                             </thead>
@@ -193,9 +192,9 @@
                             </tbody>
                         </table>
 
-                        <div style="color: rgb(17 24 39); margin-top: 4rem; width: 100%;">
+                        <div style="color: #4b5563; margin-top: 4rem; width: 100%; text-align: center;">
                               <span style="width: 100%; font-size: 0.875rem; text-align: center;">
-{{--                                The amount will be on your bank account within 3-5 business days. The amount is including tax. If you do not receive the profit sharing amount within 5 business days, please contact business support.--}}
+                                KVK: {{ $business['coc_number'] }} - BTW: {{ $business['tax_number'] }}
                               </span>
                         </div>
                     </div>

@@ -78,7 +78,7 @@
           Content
       -->
 
-      <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+      <div @click="showNewVenue = true" class="grid grid-cols-2 lg:grid-cols-4 gap-4">
         <div class="w-48 h-48 rounded-md shadow flex items-center justify-center text-center border-2 border-dashed border-indigo-500 cursor-pointer hover:shadow-lg hover:border-indigo-800">
           <div class="block text-sm font-semibold text-gray-900">
             <p class="text-3xl material-symbols-outlined">add</p>

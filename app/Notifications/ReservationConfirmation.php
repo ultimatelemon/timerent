@@ -3,10 +3,13 @@
 namespace App\Notifications;
 
 use App\Models\Reservation;
+use Carbon\Carbon;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
+use Illuminate\Support\HtmlString;
+use Nette\Utils\Html;
 
 class ReservationConfirmation extends Notification
 {
@@ -42,10 +45,26 @@ class ReservationConfirmation extends Notification
      */
     public function toMail(object $notifiable): MailMessage
     {
-        return (new MailMessage)
+        $groupedBlocks = $this->reservation->timeblocks->groupBy('unit_name');
+        $products = collect($this->reservation->products);
+        $mappedProducts = $products->map(function($product) {
+           return $product->name;
+        });
+
+        $mailMessage = (new MailMessage)
             ->subject('Bevestiging van je reservering via Timerent')
-            ->line('Je reservering met nummer #'.strtoupper(explode('-', $this->reservation->id)[0]).' is succesvol bevestigd!')
-            ->line('Bekijk hieronder je reserverings details.');
+            ->line(new HtmlString('Je reservering met nummer <b>#'.strtoupper(explode('-', $this->reservation->id)[0]).'</b> is succesvol bevestigd!'))
+            ->line('Bekijk hieronder je reserverings details.')
+            ->line(new HtmlString('<b>Datum</b>: ' . Carbon::parse($this->reservation->date)->format('d-m-Y')));
+
+            foreach ($groupedBlocks as $unitName => $timeblocks) {
+                $length = count($timeblocks) - 1;
+                $mailMessage->line(new HtmlString('<b>' . $unitName . '</b>' . ' — ' . Carbon::parse($timeblocks[0]['from'])->format('H:i') . ' - ' . Carbon::parse($timeblocks[$length]['to'])->format('H:i')));
+            }
+
+            $mailMessage->line(new HtmlString('<b>Product(en): </b>' . $mappedProducts->implode(', ')));
+
+        return $mailMessage;
     }
 
     /**

@@ -26,7 +26,7 @@
           <div v-if="units.length <= 0" class="text-center text-lg pt-6">Er is op deze datum (nog) niks beschikbaar. Probeer een andere datum</div>
           <div v-else class="divide-y-2">
             <div v-for="unit in units" class=" lg:p-4">
-              <div class="font-semibold text-md mb-1">{{ unit.unit.name }} - <span class="text-xs text-gray-700 font-semibold">Een leuke fantastische unit baan</span></div>
+              <div class="font-semibold text-md mb-1">{{ unit.unit.name }} - <span class="text-xs text-gray-700 font-semibold">{{ unit.unit.description }}</span></div>
               <div class="text-xs text-gray-700 mb-4 font-semibold">{{ $filters.currency(unit.price) }} per {{ unit.interval }} minuten</div>
               <div v-if="unit.timeblocks.length <= 0">Deze unit heeft geen tijden beschikbaar voor deze dag</div>
               <div v-else class="inline-block">

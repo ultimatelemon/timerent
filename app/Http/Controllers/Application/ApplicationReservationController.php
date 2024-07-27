@@ -23,6 +23,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Str;
+use Mollie\Api\Exceptions\ApiException;
 use Mollie\Api\Exceptions\IncompatiblePlatform;
 use Mollie\Api\Exceptions\UnrecognizedClientException;
 use Mollie\Api\MollieApiClient;
@@ -178,6 +179,11 @@ class ApplicationReservationController extends ApiController
         return $this->success(new ReservationResource($reservation));
     }
 
+    /**
+     * @throws ApiException
+     * @throws UnrecognizedClientException
+     * @throws IncompatiblePlatform
+     */
     public function cancel(Reservation $reservation, Request $request)
     {
         $reservation = $request->member->reservations()->where('id', $reservation->id)->firstOrFail();
@@ -190,8 +196,13 @@ class ApplicationReservationController extends ApiController
 
         switch($psp) {
             case 'mollie':
-                ray('Niet mogelijk');
-                break;
+                $key = Setting::where([['key', '=', 'payment_api_key'], ['venue_id', '=', $reservation->venue->id]])->firstOrFail()->value;
+                $client = new MolliePaymentClient(Crypt::decrypt($key));
+                $refunded = $client->refundPayment($reservation->payment_id);
+                $reservation->payment_status = PaymentStatus::Refunded;
+                $reservation->canceled_at = Carbon::now();
+                $request->member->notify(new ApplicationReservationCancelled($reservation));
+                return $this->success();
 
             case 'timerent':
                 $client = new TimerentPaymentClient(env('STRIPE_SECRET'));

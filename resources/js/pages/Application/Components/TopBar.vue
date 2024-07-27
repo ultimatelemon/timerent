@@ -27,10 +27,12 @@ export default {
     },
 
     fetchUser() {
-      axios.get('/app/members/current')
-          .then(response => {
-            if(response.data.data) this.member = response.data.data;
-          })
+     if(window.localStorage.getItem("tr_member_auth_token")){
+       axios.get('/app/members/current')
+           .then(response => {
+             if(response.data.data) this.member = response.data.data;
+           })
+     }
     }
   },
 

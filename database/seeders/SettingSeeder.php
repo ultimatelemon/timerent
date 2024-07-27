@@ -74,7 +74,7 @@ class SettingSeeder extends Seeder
                 'key' => 'coc_number',
                 'value' => null,
                 'category' => 'general',
-                'type' => 'number',
+                'type' => 'text',
                 'display_name' => 'KVK nummer',
                 'required' => true,
                 'venue_id' => $venueId,

@@ -2,6 +2,7 @@
 
 namespace App\WebPayment\Mollie;
 
+use App\Models\Reservation;
 use App\Models\Venue;
 use App\WebPayment\Payment;
 use App\WebPayment\PaymentProviderInterface;
@@ -53,11 +54,12 @@ class MolliePaymentClient implements PaymentProviderInterface
 
     public function refundPayment($id): string|bool
     {
+        $cents = Reservation::where('payment_id', $id)->firstOrFail()->payment_amount;
         $payment = $this->mollie->payments->get($id);
         $refund = $payment->refund([
            "amount" => [
                "currency" => "EUR",
-               'value' => $payment->amount,
+               'value' => number_format($cents/100, 2, '.', ''),
            ]
         ]);
 

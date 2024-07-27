@@ -4,14 +4,17 @@ namespace App\Http\Controllers;
 
 use App\Http\Resources\ReservationResource;
 use App\Models\Reservation;
+use App\Models\Setting;
 use App\Models\User;
 use App\Models\Venue;
 use App\Notifications\ReservationConfirmation;
 use App\Notifications\Traits\EmailNotifiable;
+use App\WebPayment\Mollie\MolliePaymentClient;
 use App\WebPayment\PaymentStatus;
 use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Notification;
 
 class ReservationController extends ApiController
@@ -67,6 +70,14 @@ class ReservationController extends ApiController
      */
     public function isPaid(Reservation $reservation): JsonResponse
     {
+        switch($reservation->payment_provider) {
+            case 'mollie':
+                $setting = Setting::where([['key', '=', 'payment_api_key'], ['venue_id', '=', $reservation->venue->id]])->firstOrFail()->value;
+                $payment = new MolliePaymentClient(Crypt::decrypt($setting));
+                $payment = $payment->getPayment($reservation->payment_id);
+                if($payment->isPaid()) $reservation->update(['payment_status' => PaymentStatus::Paid]);
+        }
+
         return $this->success($reservation->payment_status === PaymentStatus::Paid->value);
     }
 

@@ -70,12 +70,14 @@ class ReservationController extends ApiController
      */
     public function isPaid(Reservation $reservation): JsonResponse
     {
+
         switch($reservation->payment_provider) {
             case 'mollie':
+                if($reservation->payment_status === PaymentStatus::Paid)
                 $setting = Setting::where([['key', '=', 'payment_api_key'], ['venue_id', '=', $reservation->venue->id]])->firstOrFail()->value;
                 $payment = new MolliePaymentClient(Crypt::decrypt($setting));
                 $payment = $payment->getPayment($reservation->payment_id);
-                if($payment->isPaid()) $reservation->update(['payment_status' => PaymentStatus::Paid]);
+                if($payment->isPaid()) $reservation->update(['payment_status' => PaymentStatus::Paid->value]);
         }
 
         return $this->success($reservation->payment_status === PaymentStatus::Paid->value);

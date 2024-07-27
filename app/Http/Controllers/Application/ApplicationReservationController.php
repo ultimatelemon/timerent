@@ -201,6 +201,7 @@ class ApplicationReservationController extends ApiController
                 $refunded = $client->refundPayment($reservation->payment_id);
                 $reservation->payment_status = PaymentStatus::Refunded;
                 $reservation->canceled_at = Carbon::now();
+                $reservation->save();
                 $request->member->notify(new ApplicationReservationCancelled($reservation));
                 return $this->success();
 

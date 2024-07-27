@@ -63,7 +63,7 @@ class MolliePaymentClient implements PaymentProviderInterface
            ]
         ]);
 
-        return $refund->id;
+        return $refund->status === 'pending';
     }
 
     private function parsePaymentStatus(string $status) : \App\WebPayment\PaymentStatus

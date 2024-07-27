@@ -53,7 +53,15 @@ class MolliePaymentClient implements PaymentProviderInterface
 
     public function refundPayment($id): string|bool
     {
-        // TODO: Implement refundPayment() method.
+        $payment = $this->mollie->payments->get($id);
+        $refund = $payment->refund([
+           "amount" => [
+               "currency" => "EUR",
+               'value' => $payment->amount,
+           ]
+        ]);
+
+        return $refund->id;
     }
 
     private function parsePaymentStatus(string $status) : \App\WebPayment\PaymentStatus

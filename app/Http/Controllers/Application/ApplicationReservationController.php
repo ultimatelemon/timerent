@@ -136,9 +136,6 @@ class ApplicationReservationController extends ApiController
         $invoice->venue_id = $reservation->venue_id;
         $invoice->save();
 
-        $reservation->invoice_id = $invoice->id;
-        $reservation->save();
-
         // Todo; PSP modules,
         $paymentUrl = '';
         switch($payment_provider) {

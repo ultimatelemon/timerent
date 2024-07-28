@@ -158,6 +158,7 @@ export default {
     },
 
     setupTimerentPayments() {
+      if(this.loading) return;
       this.loading = true;
       axios.post('/venue/' + this.$route.params.venue + '/payments/setup')
           .then(response => {

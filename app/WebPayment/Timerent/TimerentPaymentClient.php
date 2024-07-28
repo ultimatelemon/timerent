@@ -6,6 +6,7 @@ use App\Models\Venue;
 use App\WebPayment\Payment;
 use App\WebPayment\PaymentProviderInterface;
 use App\WebPayment\PaymentStatus;
+use Carbon\Carbon;
 use Stripe\StripeClient;
 
 class TimerentPaymentClient implements PaymentProviderInterface
@@ -38,6 +39,7 @@ class TimerentPaymentClient implements PaymentProviderInterface
                 'transfer_data' => ['destination' => $venue->stripe_connect_id]
             ],
             'mode' => 'payment',
+            'expires_at' => Carbon::now()->addMinute()->timestamp,
             'customer_email' => ($email),
             'success_url' => $return_url,
 //            'cancel_url' => env('STRIPE_CANCEL_URL'),

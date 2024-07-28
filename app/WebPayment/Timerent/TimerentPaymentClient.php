@@ -39,7 +39,7 @@ class TimerentPaymentClient implements PaymentProviderInterface
                 'transfer_data' => ['destination' => $venue->stripe_connect_id]
             ],
             'mode' => 'payment',
-            'expires_at' => Carbon::now()->addMinute()->timestamp,
+            'expires_at' => Carbon::now()->addMinutes(30)->timestamp,
             'customer_email' => ($email),
             'success_url' => $return_url,
 //            'cancel_url' => env('STRIPE_CANCEL_URL'),

@@ -70,5 +70,6 @@ class MollieWebhookController extends ApiController
             captureMessage($e->getMessage());
             return $this->error();
         }
+        return $this->success();
     }
 }

@@ -16,6 +16,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\View\View;
 use Mollie\Api\MollieApiClient;
+use function Sentry\captureMessage;
 
 class MollieWebhookController extends ApiController
 {
@@ -39,9 +40,14 @@ class MollieWebhookController extends ApiController
 //
 //    }
 
-    public function updatePayment(Reservation $reservation): JsonResponse|View
+    public function updatePayment(Request $request): JsonResponse
     {
+        captureMessage('Mollie webhook started');
+
         try {
+            if(!$request->has('id')) return $this->error('404');
+
+            $reservation = Reservation::where('payment_id', $request->get('id'))->firstOrFail();
             $venue = $reservation->venue;
 
             $mollie_key = Setting::where([['venue_id', '=', $venue->id], ['key', '=', 'payment_api_key']])->firstOrFail()->value;
@@ -60,9 +66,8 @@ class MollieWebhookController extends ApiController
             $emailNotifiable = new EmailNotifiable($reservation->email);
             $emailNotifiable->notify(new ReservationConfirmation($reservation));
 
-            return view('application.callback.success');
-
         } catch (\Exception $e) {
+            captureMessage($e->getMessage());
             return $this->error();
         }
     }

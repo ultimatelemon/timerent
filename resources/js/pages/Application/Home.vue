@@ -214,9 +214,22 @@ export default {
             this.venue = response.data.data;
             if(new Date(response.data.data.stripe_current_period_ends_at) <= new Date()) this.activeSubscription = false;
             this.fetchProducts();
+            this.fetchMemberData();
       })
     },
 
+    fetchMemberData() {
+      if(!window.localStorage.getItem('tr_member_auth_token')) return;
+
+      axios.get('/app/members/current')
+          .then(response => {
+            if(response.data.data) {
+              this.name = response.data.data.name;
+              this.email = response.data.data.email;
+              this.phone_number = response.data.data.phone_number;
+            }
+          })
+    },
 
     fetchUnits() {
       axios.get('/venue/' + this.venue.id + '/units', {
@@ -287,7 +300,6 @@ export default {
 
   mounted() {
     this.fetchVenue();
-    console.log('test object')
     // this.fetchProducts();
   },
 

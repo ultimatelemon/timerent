@@ -10,6 +10,7 @@ use App\Http\Controllers\ReservationController;
 use App\Http\Controllers\SettingController;
 use App\Http\Controllers\StatisticsController;
 use App\Http\Controllers\Stripe\StripeConnectController;
+use App\Http\Controllers\Stripe\StripeWebhookController;
 use App\Http\Controllers\TemplateController;
 use App\Http\Controllers\UnitController;
 use App\Http\Controllers\User\UserController;
@@ -20,10 +21,8 @@ use App\Models\Reservation;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/invoicetest', function () {
-    $reservation = Reservation::findOrFail('9c9d65ff-ffe0-4c56-8ca1-70a81f3711a0');
-    (new InvoiceController())->store($reservation);
-});
+Route::post('/webhooks/stripe', [StripeWebhookController::class, 'handle']);
+
 Route::get('/hash', function (Request $request) {return response()->json(\Illuminate\Support\Facades\Hash::make('joejoe123'));});
 Route::post('/sanctum/token', [\App\Http\Controllers\AuthenticationController::class, 'createToken']);
 Route::post('/sanctum/register', [\App\Http\Controllers\AuthenticationController::class, 'createUser']);

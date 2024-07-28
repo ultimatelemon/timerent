@@ -20,6 +20,11 @@ use function Sentry\captureMessage;
 
 class MollieWebhookController extends ApiController
 {
+
+    public function __construct()
+    {
+        //
+    }
 //    public function updatePayments(Request $request)
 //    {
 //        if (!$request->has('id')) return $this->error('404');
@@ -40,12 +45,12 @@ class MollieWebhookController extends ApiController
 //
 //    }
 
-    public function updatePayment(Request $request): JsonResponse
+    public function updatePayment(Request $request)
     {
         captureMessage('Mollie webhook started');
+        if(!$request->has('id')) return null;
 
         try {
-            if(!$request->has('id')) return $this->error('404');
 
             $reservation = Reservation::where('payment_id', $request->get('id'))->firstOrFail();
             $venue = $reservation->venue;
@@ -53,7 +58,7 @@ class MollieWebhookController extends ApiController
             $mollie_key = Setting::where([['venue_id', '=', $venue->id], ['key', '=', 'payment_api_key']])->firstOrFail()->value;
             $client = new MolliePaymentClient(Crypt::decrypt($mollie_key));
 
-            $payment = $client->getPayment($reservation->payment_id);
+            $payment = $client->getPayment($request->id);
 
             $reservation->payment_status = $payment->getStatus()->value;
             $reservation->save();

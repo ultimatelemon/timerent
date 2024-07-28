@@ -50,7 +50,7 @@
             <br>
             <p class="font-semibold">Belangrijk is dat je je persoonlijke- en bedrijfsgegevens bij de hand houd en de verificatie in één keer afmaakt.</p>
           </div>
-          <button @click="setupTimerentPayments" class="btn text-white bg-green-500 my-12">Start verificatie</button>
+          <button @click="setupTimerentPayments" class="btn text-white bg-green-500 my-12"><i v-if="loading" class="fa fa-spinner mr-2 animate-spin"></i> Start verificatie</button>
         </div>
       </div>
     </div>
@@ -109,6 +109,7 @@ export default {
       errors: [],
       settings: [],
       venue: null,
+      loading: false,
 
       psps: [],
       current_psp: '',
@@ -157,8 +158,7 @@ export default {
     },
 
     setupTimerentPayments() {
-      // TODO: Start loading button
-
+      this.loading = true;
       axios.post('/venue/' + this.$route.params.venue + '/payments/setup')
           .then(response => {
             this.openPaymentsSetupModal = true;
@@ -168,7 +168,7 @@ export default {
             console.log("ERR", e.response.data);
           })
           .finally(() => {
-            // TODO: Stop loading button
+            this.loading = false;
           })
     }
   },

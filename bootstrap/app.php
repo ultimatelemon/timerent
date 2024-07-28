@@ -16,6 +16,8 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->alias([
             'hasPermissions' => \App\Http\Middleware\HasPermission::class,
             'member' => \App\Http\Middleware\RetrieveMember::class,
+            'venueSubscription' => \App\Http\Middleware\VenueSubscription::class,
+            'unitLimit' => \App\Http\Middleware\UnitLimit::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {

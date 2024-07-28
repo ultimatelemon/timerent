@@ -11,7 +11,7 @@ Route::get('/', function (\Illuminate\Support\Facades\Request $request) {
     } else {
         return view('application.blank');
     }
-});
+})->name('index');
 
 Route::get('/login', function () { return view('layouts.authentication'); })->name('login');
 Route::get('/register', function () { return view('layouts.authentication'); })->name('register');
@@ -26,4 +26,9 @@ Route::get('/confirmation/{any}', function() { return view('layouts.blank-page')
 Route::get('/forgot-password', function () { return view('auth.authentication'); })->name('forgot');
 Route::get('/reset-password/{any}', function () { return view('auth.authentication'); })->name('reset')->where('any', '^(?!api).*$');
 Route::get('/select', function () { return view('layouts.blank-page'); })->name('select');
+
+Route::middleware('venueSubscription')->group(function () {
+    Route::get('/store/{any}', function () { return view('layouts.main-application'); })->where('any', '^(?!api).*$');
+});
+
 Route::get('{any}', function () { return view('layouts.main-application'); })->where('any', '^(?!api).*$');

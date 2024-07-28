@@ -87,8 +87,6 @@ class StripeConnectController extends ApiController
             'return_url' => env('APP_URL') . '/timerentpayments/success?v=' . $venue->id,
             'type' => 'account_onboarding',
         ]);
-
-        ray($accountLink->url);
         return $accountLink->url;
     }
 

@@ -1,8 +1,9 @@
 <template>
-  <div>
+  <div v-if="venue">
     <div class="mb-12">
       <div class="font-semibold text-lg">{{ unit ? unit.name : 'Nieuwe unit' }}</div>
       <div class="text-sm">Beheer hier de unit</div>
+      <p v-if="this.$route.params.unit == null && venue.unit_count >= venue.plan.unit_limit" class="text-red-500 pt-2"><b>Let op:</b> Je hebt op dit moment <b>{{venue.unit_count}}</b> units aangemaakt. Het limiet voor dit abonnement is <b>{{venue.plan.unit_limit}}</b>. Bij het aanmaken van een nieuwe unit worden er kosten in rekening gebracht.</p>
     </div>
 
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 mb-12">
@@ -54,22 +55,44 @@
       </div>
     </div>
 
+    <modal v-if="showModal" @close="showModal = false">
+      <div class="px-1 border-b border-gray-200 flex items-center justify-between">
+        <p class="font-medium p-4">Nieuwe unit</p>
+        <button class="p-4" @click="showModal = false"><i class="far fa-times"></i></button>
+      </div>
+      <div class="p-5">
+        <div class="text-red-500">
+          Letop: Er worden extra kosten in rekening gebracht. Weet je zeker dat je een nieuwe unit wilt aanmaken?
+        </div>
+      </div>
+      <div class="flex justify-end bg-gray-50 px-5 py-3">
+        <button :class="loading ? 'btn btn-secondary opacity-50 cursor-not-allowed btn-lg' : 'btn btn-lg btn-primary'" @click="postData"><i v-if="loading" class="fa fa-spinner mr-2 animate-spin"></i>Aanmaken</button>
+      </div>
+    </modal>
+
     <div class="flex justify-end gap-4">
       <button @click="$router.go(-1)" class="btn btn-secondary">Annuleren</button>
-      <button @click="postData" class="btn btn-primary">Opslaan</button>
+      <button v-if="this.$route.params.unit != null || venue.unit_count < venue.plan.unit_limit" :class="loading ? 'btn btn-secondary opacity-50 cursor-not-allowed btn-lg' : 'btn btn-lg btn-primary'" @click="postData"><i v-if="loading" class="fa fa-spinner mr-2 animate-spin"></i>Aanmaken</button>
+      <button v-else @click="showModal = true;" class="btn btn-primary">Opslaan</button>
     </div>
+
   </div>
 </template>
 
 <script>
+import Modal from "../../Components/Modal.vue";
+
 export default {
   name: "Edit",
+  components: {Modal},
   data() {
     return {
       // unit_id: this.$route.params.unit,
       loading: false,
       unit: null,
       errors: [],
+      venue: null,
+      showModal: false,
 
       formData: {
         name: "",
@@ -80,6 +103,13 @@ export default {
   },
 
   methods: {
+    fetchVenue() {
+      axios.get('/venues/' + this.$route.params.venue)
+          .then(response => {
+            this.venue = response.data.data;
+          })
+    },
+
     fetchData() {
       if (this.$route.params.unit != null) {
         this.loading = true;
@@ -123,7 +153,22 @@ export default {
   },
 
   mounted() {
+    this.fetchVenue();
     this.fetchData();
   },
+
+  computed: {
+    current_venue: {
+      get() {
+        return this.$store.state.venue;
+      }
+    },
+
+    current_user: {
+      get() {
+        return this.$store.state.user;
+      }
+    }
+  }
 }
 </script>

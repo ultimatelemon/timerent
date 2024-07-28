@@ -32,6 +32,11 @@ class Venue extends Model
         return $this->belongsToMany(User::class, 'user_venues');
     }
 
+    public function plan()
+    {
+        return $this->belongsto(Plan::class);
+    }
+
     public function units(): HasMany
     {
         return $this->hasMany(Unit::class)->orderBy('name');

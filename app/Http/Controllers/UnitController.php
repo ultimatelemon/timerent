@@ -8,9 +8,20 @@ use App\Models\Unit;
 use App\Models\Venue;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Routing\Controllers\HasMiddleware;
+use Illuminate\Routing\Controllers\Middleware;
+use Stripe\Exception\ApiErrorException;
+use Stripe\StripeClient;
 
-class UnitController extends ApiController
+class UnitController extends ApiController implements HasMiddleware
 {
+
+    public static function middleware(): array
+    {
+        return [
+                new Middleware('unitLimit', only: ['store']),
+        ];
+    }
 
     /**
      * Display a listing of the resource
@@ -41,11 +52,22 @@ class UnitController extends ApiController
      * @param StoreUnit $request
      * @param Venue $venue
      * @return JsonResponse
+     * @throws ApiErrorException
      */
     public function store(StoreUnit $request, Venue $venue): JsonResponse
     {
         //Todo: Check venue unit limits
         $unit = $venue->units()->create($request->validated());
+
+        if($venue->units()->count() > $venue->plan->unit_limit) {
+            $client = new StripeClient(env('STRIPE_SECRET'));
+            $item = $client->invoiceItems->create([
+                'customer' => $venue->stripe_customer_id,
+                'price' => env('EXTRA_UNIT_PRICE_ID'),
+                'currency' => 'eur',
+                'description' => 'Extra unit buiten abonnement',
+            ]);
+        }
 
         return $this->success(['message' => 'Stored successfully']);
     }

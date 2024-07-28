@@ -26,19 +26,21 @@ export default {
           })
     },
 
-    fetchUser() {
+    fetchMember() {
      if(window.localStorage.getItem("tr_member_auth_token")){
        axios.get('/app/members/current')
            .then(response => {
              if(response.data.data) this.member = response.data.data;
-           })
+           }).catch(() => {
+             window.localStorage.removeItem("tr_member_auth_token");
+       })
      }
     }
   },
 
   mounted() {
     this.fetchVenue();
-    this.fetchUser();
+    this.fetchMember();
   },
 
   computed: {

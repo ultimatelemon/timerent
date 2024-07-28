@@ -2,8 +2,8 @@
   <div>
     <div class="mb-12 flex justify-between">
       <div>
-        <div class="font-semibold text-lg">Reserveringen</div>
-        <div class="text-sm">Beheer hier alle reserveringen</div>
+        <div class="font-semibold text-lg">Instellingen</div>
+        <div class="text-sm">Beheer hier je persoonlijke instellingen</div>
       </div>
       <div>
 <!--        <button @click="$router.push({ name: 'venues.units.create' })" class="btn btn-primary">Nieuwe unit</button>-->
@@ -13,40 +13,45 @@
 <!--          <div class="font-semibold">Filteren</div>-->
 <!--        </div>-->
     <div class="mt-8 flow-root">
-      <div class="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
-        <div class="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
-          <table class="min-w-full divide-y divide-gray-300">
-            <thead>
-            <tr>
-              <th scope="col" class="whitespace-nowrap py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-0">#ID</th>
-              <th scope="col" class="whitespace-nowrap px-2 py-3.5 text-left text-sm font-semibold text-gray-900">Datum</th>
-              <th scope="col" class="whitespace-nowrap px-2 py-3.5 text-left text-sm font-semibold text-gray-900">Email</th>
-              <th scope="col" class="whitespace-nowrap px-2 py-3.5 text-left text-sm font-semibold text-gray-900">Totaalbedrag</th>
-              <th scope="col" class="whitespace-nowrap px-2 py-3.5 text-left text-sm font-semibold text-gray-900">Aangemaakt op</th>
-              <th scope="col" class="whitespace-nowrap px-2 py-3.5 text-left text-sm font-semibold text-gray-900">Betaalstatus</th>
-            </tr>
-            </thead>
-            <tbody class="divide-y divide-gray-200 bg-white">
-            <tr v-if="reservations.length > 0" v-for="reservation in reservations" :key="reservation.id" class="even:bg-gray-50 hover:bg-gray-100 hover:cursor-pointer" @click="this.$router.push({name: 'venues.reservations.edit', params: {venue: this.$route.params.venue, reservation: reservation.id}})">
-              <td class="whitespace-nowrap py-2 pl-4 pr-3 text-sm text-gray-500 sm:pl-0">#{{ reservation.number }}</td>
-              <td class="whitespace-nowrap px-2 py-2 text-sm font-medium text-gray-900">{{ $filters.humanDate(reservation.date) }}</td>
-              <td class="whitespace-nowrap px-2 py-2 text-sm font-medium text-gray-900">{{ reservation.email }}</td>
-              <td class="whitespace-nowrap px-2 py-2 text-sm font-medium text-gray-900">{{ $filters.currency(reservation.payment_amount) }}</td>
-              <td class="whitespace-nowrap px-2 py-2 text-sm font-medium text-gray-900">{{ $filters.humanDateTime(reservation.created_at) }}</td>
-              <td class="whitespace-nowrap px-2 py-2 text-sm font-medium text-gray-900 label label-warning mt-2" v-if="reservation.payment_status === 'open'">Open</td>
-              <td class="whitespace-nowrap px-2 py-2 text-sm font-medium text-gray-900 label label-success mt-2" v-if="reservation.payment_status === 'paid'">Betaald</td>
-            </tr>
-            <tr v-else class="text-center">
-              <td colspan="12" class="pt-12">Er zijn nog geen opkomende reserveringen gepland</td>
-            </tr>
-            </tbody>
-          </table>
-          <div v-if="pagination">
-            <pagination :pagination="pagination" @changed="fetchDataByPage"></pagination>
+      <div class="space-y-8">
+        <div>
+          <label for='name'>Volledige naam <span class='text-red-500'>*</span></label>
+          <div class='mt-2'>
+            <input v-model='formData.name' type='text' name='name' autocomplete='name'
+                   placeholder="Jan Petersen"
+                   :class='errors?.name ? "ring-red-500" : ""'
+                   class='block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6'>
+            <span class='text-red-500' v-if='errors?.name'>{{ errors?.name[0] }}</span>
           </div>
+        </div>
 
+        <div>
+          <label for='email'>Email <span class='text-red-500'>*</span></label>
+          <div class='mt-2'>
+            <input v-model='formData.email' type='text' name='email' autocomplete='email'
+                   placeholder="j.petersen@voorbeeld.com"
+                   :class='errors?.email ? "ring-red-500" : ""'
+                   class='block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6'>
+            <span class='text-red-500' v-if='errors?.email'>{{ errors?.email[0] }}</span>
+          </div>
+        </div>
+
+        <div>
+          <label for='phone_number'>Telefoonnummer <span class='text-red-500'>*</span></label>
+          <div class='mt-2'>
+            <input v-model='formData.phone_number' type='text' name='phone_number' autocomplete='phone_number'
+                   placeholder="0612345678"
+                   :class='errors?.phone_number ? "ring-red-500" : ""'
+                   class='block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6'>
+            <span class='text-red-500' v-if='errors?.phone_number'>{{ errors?.phone_number[0] }}</span>
+          </div>
         </div>
       </div>
+
+      <div class="mt-8 flex justify-end">
+        <button @click="postData" class="btn btn-lg" :class="(this.loading || !this.formData.name || !this.formData.email || !this.formData.phone_number  ? 'btn-secondary opacity-50 cursor-not-allowed' : 'btn-primary')"><i v-if="loading" class="fa fa-spinner mr-2 animate-spin"></i> Opslaan</button>
+      </div>
+
     </div>
   </div>
 </template>
@@ -61,21 +66,49 @@ export default {
     return {
       reservations: [],
       pagination: null,
+      loading: false,
+
+      formData: {
+        name: null,
+        email: null,
+        phone_number: null,
+      }
     }
   },
 
   methods: {
-    fetchDataByPage(page) {
-      axios.get('/venues/' + this.$route.params.venue + '/reservations?page=' + page)
+    fetchMember() {
+      if(window.localStorage.getItem("tr_member_auth_token")){
+        axios.get('/app/members/current')
+            .then(response => {
+              this.formData.name = response.data.data.name;
+              this.formData.email = response.data.data.email;
+              this.formData.phone_number = response.data.data.phone_number;
+            }).catch(() => {
+          window.localStorage.removeItem("tr_member_auth_token");
+        })
+      }
+    },
+
+    postData() {
+      if(this.loading) return;
+      this.loading = true;
+
+      axios.get('/app/members/current', this.formData)
           .then(response => {
-            this.reservations = response.data.data;
-            this.pagination = response.data.pagination;
+
           })
     }
   },
 
   mounted() {
-    this.fetchDataByPage(1);
+    this.fetchMember();
+  },
+
+  computed: {
+    subdomain: function() {
+      return window.location.hostname.split('.')[0]
+    },
   },
 }
 </script>

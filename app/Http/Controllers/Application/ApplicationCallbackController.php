@@ -18,13 +18,16 @@ class ApplicationCallbackController extends Controller
         $client = new StripeClient(env('STRIPE_SECRET'));
 
         $session = $client->checkout->sessions->retrieve($session_id);
+        $reservation = Reservation::where('payment_id', $session->id)->firstOrFail();
         if($session->payment_status === 'paid') {
-            $reservation = Reservation::where('payment_id', $session->id)->firstOrFail();
             $reservation->payment_status = PaymentStatus::Paid;
             $reservation->save();
             // TODO: Mail confirmation
 
             return view('application.callback.success');
+        } else {
+            $reservation->payment_status = $session->payment_status;
+            $reservation->save();
         }
     }
 }

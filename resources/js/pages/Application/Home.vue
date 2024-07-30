@@ -49,9 +49,9 @@
         <h1 class="font-semibold border-b-4 pb-2 mb-4">3. Wil je ook producten bijboeken tijdens je reservering?</h1>
         <div v-if="products.length === 0" class="text-center text-lg py-5">Er zijn geen producten beschikbaar</div>
         <div v-else class="divide-y">
-          <div v-for="product in products" class="grid grid-cols-3 items-center w-full py-4">
+          <div v-for="product in products" class="grid grid-cols-2 lg:grid-cols-3 items-center w-full py-4">
+            <div class="col-span-3 font-semibold">{{ product.name }} <p class="text-sm font-normal text-red-500 pb-4" v-if="product.units.length > 0">- Let op: dit product is alleen te boeken bij unit(s): <span class="font-semibold">{{product.units.map(u => u.name).join(', ')}}</span></p></div>
             <div>
-              <div class="font-semibold">{{ product.name }}</div>
               <div class="text-sm">{{ product.description ?? "Dit product heeft (nog) geen omschrijving" }}</div>
             </div>
             <div class="text-center">{{ $filters.currency(product.price) }}</div>
@@ -272,6 +272,8 @@ export default {
       if(this.loading || this.selected.length === 0 || this.name === '' || this.email === '' || this.phone_number === '') return;
 
       this.loading = true;
+      this.errors = [];
+
       axios.post('/reservations/store', {
         subdomain: this.subdomain,
         name: this.name,
@@ -285,7 +287,6 @@ export default {
           .then(response => {
             this.url = response.data.data;
             this.showModal = true;
-            // this.selectedProducts = [];
             this.selected = [];
             this.fetchUnits()
           })

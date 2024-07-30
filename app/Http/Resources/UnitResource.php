@@ -19,6 +19,7 @@ class UnitResource extends JsonResource
             'name' => $this->name,
             'description' => $this->description,
             'tax_percentage' => $this->tax_percentage,
+            'products' => ProductResource::collection($this->products),
         ];
     }
 }

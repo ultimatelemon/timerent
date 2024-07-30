@@ -27,6 +27,8 @@ class StoreProduct extends FormRequest
             'price' => 'integer|required',
             'is_active' => 'required|boolean',
             'tax_percentage' => 'required|integer|in:0,9,21',
+            'max_per_day' => 'required|integer|min:0',
+            'price_per_timeblock' => 'required|boolean',
         ];
     }
 }

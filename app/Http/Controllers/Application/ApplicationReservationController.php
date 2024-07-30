@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Application;
 
 use App\Helpers\PaymentHelper;
+use App\Helpers\ProductHelper;
 use App\Helpers\ReservationHelper;
 use App\Http\Controllers\ApiController;
 use App\Http\Requests\Venue\StoreReservation;
@@ -40,6 +41,7 @@ class ApplicationReservationController extends ApiController
      */
     public function store(StoreReservation $request): JsonResponse
     {
+        ray($request->all());
         $validatedRequest = $request->validated();
         $venue = Venue::where('subdomain', $validatedRequest['subdomain'])->firstOrFail();
         if(!PaymentHelper::hasPaymentsEnabled($venue)) return $this->error(['error' => 'Er is nog geen betaalprovider gekoppeld.']);
@@ -52,14 +54,14 @@ class ApplicationReservationController extends ApiController
         $taxLow = 0;
         $taxHigh = 0;
 
-        $date = Carbon::now()->setDateFrom($validatedRequest['date']);
+        $date = Carbon::now()->setDateFrom($validatedRequest['date'])->toDateString();
 
         $reservation = Reservation::create([
             'name' => $validatedRequest['name'],
             'phone_number' => $validatedRequest['phone_number'],
             'email' => strtolower($validatedRequest['email']),
             'comments' => $validatedRequest['comments'],
-            'date' => $validatedRequest['date'],
+            'date' => $date,
 
             'venue_id' => $venue->id,
 
@@ -70,10 +72,32 @@ class ApplicationReservationController extends ApiController
             'payment_status' => PaymentStatus::Open,
         ]);
 
+        $timeblockUnitIds = array_map(function($timeblock) {
+            return $timeblock['unit_id'];
+        }, $validatedRequest['timeblocks']);
+
         foreach($validatedRequest['products'] as $p) {
             $prod = Product::findOrFail($p);
+            if(ProductHelper::checkIfProductMaxIsBookedToday($prod, $date, $reservation)) {
+                $reservation->forceDelete();
+                return $this->error(['error' => "Product '$prod->name' is maximaal gereserveerd voor vandaag"]);
+            }
+
+            if($prod->units) {
+                foreach ($prod->units as $unit) {
+                    if(!in_array($unit->id, $timeblockUnitIds)) {
+                        $reservation->forceDelete();
+                        return $this->error(['error' => "Product '$prod->name' is alleen te reserveren bij bijhorende unit(s)"]);
+                    }
+                }
+            }
+
             $reservation->products()->save($prod);
-            $total += $prod->price;
+            if($prod->price_per_timeblock) {
+                $total += $prod->price * count($validatedRequest['timeblocks']);
+            } else {
+                $total += $prod->price;
+            }
 
             if($prod->tax_percentage === 21) {
                 $taxHigh += round(($prod->price - ($prod->price / 1.21)));

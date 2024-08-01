@@ -21,16 +21,20 @@
             <tr>
               <th scope="col" class="whitespace-nowrap py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-0">Naam</th>
               <th scope="col" class="whitespace-nowrap px-2 py-3.5 text-left text-sm font-semibold text-gray-900">Omschrijving</th>
-              <th scope="col" class="whitespace-nowrap px-2 py-3.5 text-left text-sm font-semibold text-gray-900">Prijs per reservering</th>
-              <th scope="col" class="whitespace-nowrap px-2 py-3.5 text-left text-sm font-semibold text-gray-900">Beschikbaar</th>
+              <th scope="col" class="whitespace-nowrap px-2 py-3.5 text-left text-sm font-semibold text-gray-900">Prijs</th>
+              <th scope="col" class="whitespace-nowrap px-2 py-3.5 text-left text-sm font-semibold text-gray-900">Unit(s) gekoppeld</th>
+              <th scope="col" class="whitespace-nowrap px-2 py-3.5 text-left text-sm font-semibold text-gray-900">Max. per dag</th>
+              <th scope="col" class="whitespace-nowrap px-2 py-3.5 text-left text-sm font-semibold text-gray-900">Actief</th>
             </tr>
             </thead>
             <tbody class="divide-y divide-gray-200 bg-white">
             <tr v-if="products.length >= 1" v-for="product in products" :key="product.id" class="even:bg-gray-50 hover:bg-gray-100 hover:cursor-pointer" @click="this.$router.push({name: 'venues.products.edit', params: {venue: this.$route.params.venue, product: product.id}})">
               <td class="whitespace-nowrap py-2 pl-4 pr-3 text-sm text-gray-500 sm:pl-0">{{ product.name }}</td>
               <td class="whitespace-nowrap px-2 py-2 text-sm font-medium text-gray-900">{{ product.description ?? '-' }}</td>
-              <td class="whitespace-nowrap px-2 py-2 text-sm font-medium text-gray-900">{{ $filters.currency(product.price) }}</td>
-              <td class="whitespace-nowrap px-2 py-2 text-sm font-medium text-gray-900">{{ product.is_active ? 'Ja' : 'Nee' }}</td>
+              <td class="whitespace-nowrap px-2 py-2 text-sm font-medium text-gray-900">{{ $filters.currency(product.price) }} / {{product.price_per_timeblock ? 'tijdblock' : 'reservering'}}</td>
+              <td class="whitespace-nowrap px-2 py-2 text-sm font-medium text-gray-900">{{ product.units.length > 0 ?  product.units.map(u => u.name).join(', ') : 'Nee' }}</td>
+              <td class="whitespace-nowrap px-2 py-2 text-sm font-medium text-gray-900">{{ product.max_per_day === 0 ? 'Nee' : product.max_per_day }}</td>
+              <td class="whitespace-nowrap px-2 py-2 text-sm font-medium text-gray-900" :class="product.is_active ? 'text-green-500' : 'text-red-500'">{{ product.is_active ? 'Ja' : 'Nee' }}</td>
             </tr>
             <tr v-else class="text-center">
               <td colspan="4" class="pt-12">Er zijn nog geen producten aangemaakt of zoekopdracht niet gevonden</td>

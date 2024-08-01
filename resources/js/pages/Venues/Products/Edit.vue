@@ -204,7 +204,6 @@ export default {
               this.formData.max_per_day = this.product.max_per_day;
               this.formData.price_per_timeblock = this.product.price_per_timeblock;
               this.formData.units = this.product.units;
-              console.log("P",this.product.units)
 
               this.fetchUnits();
             })
@@ -248,7 +247,6 @@ export default {
 
     updateSelectedUnits(value) {
       this.formData.units = value.map(u => u.id);
-      console.log(this.formData.units)
     },
 
   },

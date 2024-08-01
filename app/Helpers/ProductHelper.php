@@ -21,7 +21,7 @@ class ProductHelper {
 
         if($reservation) $count = $count->whereNot('id', $reservation->id);
 
-            $count->count();
+        $count = $count->count();
 
         return $count >= $product->max_per_day;
     }

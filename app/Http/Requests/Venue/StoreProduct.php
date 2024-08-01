@@ -29,6 +29,8 @@ class StoreProduct extends FormRequest
             'tax_percentage' => 'required|integer|in:0,9,21',
             'max_per_day' => 'required|integer|min:0',
             'price_per_timeblock' => 'required|boolean',
+            'units' => 'nullable',
+            'units.*' => 'string|distinct|exists:units,id',
         ];
     }
 }

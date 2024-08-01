@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\Venue\StoreProduct;
 use App\Http\Resources\ProductResource;
 use App\Models\Product;
+use App\Models\Unit;
 use App\Models\Venue;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -68,7 +69,8 @@ class ProductController extends ApiController
      */
     public function update(StoreProduct $request, Venue $venue, Product $product): JsonResponse
     {
-        $product->update($request->validated());
+        $product->update($request->except('units'));
+        $product->units()->sync($request->units);
         return $this->success(['message' => 'Product updated successfully.']);
     }
 }

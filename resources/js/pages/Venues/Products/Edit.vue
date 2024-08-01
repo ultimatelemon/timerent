@@ -6,7 +6,6 @@
     </div>
 
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 mb-12">
-
       <div>
         <label for="name" class="block text-sm font-medium leading-6 text-gray-900">Naam <span
             class="required-star">*</span></label>
@@ -53,6 +52,11 @@
           <option :value="9">9%</option>
           <option :value="21">21%</option>
         </select>
+      </div>
+
+      <div v-if="units">
+        <label for="tax_percentage" class="block text-sm font-medium leading-6 text-gray-900">Product voor specifieke units?</label>
+        <MultipleSelectUnits :selectedUnitsIds="formData.units.map(u => u.id)" :units="units" @selectionChange="updateSelectedUnits"></MultipleSelectUnits>
       </div>
 
       <div>
@@ -160,15 +164,17 @@
 <script>
 import {Switch} from "@headlessui/vue";
 import CurrencyInput from "../../Components/CurrencyInput.vue";
+import MultipleSelectUnits from "../../Application/Components/MultipleSelectUnits.vue";
 
 export default {
   name: "Edit",
-  components: {CurrencyInput, Switch},
+  components: {MultipleSelectUnits, CurrencyInput, Switch},
   data() {
     return {
       loading: false,
       product: null,
       errors: [],
+      units: null,
 
       formData: {
         name: "",
@@ -178,6 +184,7 @@ export default {
         is_active: false,
         max_per_day: 0,
         price_per_timeblock: false,
+        units: [],
       },
     }
   },
@@ -196,6 +203,10 @@ export default {
               this.formData.is_active = this.product.is_active;
               this.formData.max_per_day = this.product.max_per_day;
               this.formData.price_per_timeblock = this.product.price_per_timeblock;
+              this.formData.units = this.product.units;
+              console.log("P",this.product.units)
+
+              this.fetchUnits();
             })
             .finally(() => {
               this.loading = false;
@@ -226,7 +237,20 @@ export default {
           this.loading = false;
         })
       }
-    }
+    },
+
+    fetchUnits() {
+      axios.get('/venues/' + this.$route.params.venue + '/units')
+          .then(response => {
+            this.units = response.data.data;
+          })
+    },
+
+    updateSelectedUnits(value) {
+      this.formData.units = value.map(u => u.id);
+      console.log(this.formData.units)
+    },
+
   },
 
   mounted() {

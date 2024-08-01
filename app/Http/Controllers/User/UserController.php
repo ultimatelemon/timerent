@@ -6,7 +6,9 @@ use App\Http\Controllers\ApiController;
 use App\Http\Resources\TokenResource;
 use App\Http\Resources\UserResource;
 use App\Models\User;
+use App\Models\UserVenue;
 use App\Models\Venue;
+use App\Rules\CaseInsensitiveExists;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controllers\HasMiddleware;
@@ -67,5 +69,27 @@ class UserController extends ApiController
             UserResource::collection($users),
             collect($users)->only(['from', 'to', 'total', 'per_page', 'last_page', 'current_page'])->toArray(),
         );
+    }
+
+    public function store(Request $request, Venue $venue): JsonResponse
+    {
+        $validated = $request->validate([
+            'email' => ['required', 'email:rfc,dns', new CaseInsensitiveExists('users', 'email')],
+        ]);
+
+        $user = User::where('email', strtolower($validated['email']))->firstOrFail();
+
+        if(UserVenue::where(['user_id' => $user->id, 'venue_id' => $venue->id])->exists()) return $this->error(['exists' => 'Gebruiker is al gekoppeld']);
+
+        UserVenue::create(['user_id' => $user->id, 'venue_id' => $venue->id, 'accepted' => true]);
+
+        return $this->success();
+    }
+
+    public function destroy(Venue $venue, User $user): JsonResponse
+    {
+        $user = UserVenue::where(['user_id' => $user->id, 'venue_id' => $venue->id])->firstOrFail();
+        $user->delete();
+        return $this->success();
     }
 }

@@ -106,6 +106,7 @@ export default {
       axios.post('/sanctum/token', this.formData)
           .then(response => {
             this.errors = [];
+            this.current_token = response.data.data.token;
             window.localStorage.setItem('tr_auth_token', response.data.data.token);
             window.location = '/select';
           })
@@ -138,7 +139,16 @@ export default {
 
   mounted() {
     this.check()
-  }
+  },
+
+  current_token: {
+    get() {
+      return this.$store.state.token;
+    },
+    set (value) {
+      this.$store.commit('setToken', value);
+    }
+  },
 }
 
 </script>

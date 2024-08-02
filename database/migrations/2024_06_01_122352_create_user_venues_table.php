@@ -16,7 +16,7 @@ return new class extends Migration
 
             $table->foreignUuid('user_id');
             $table->foreignUuid('venue_id');
-            $table->foreignUuid('role_id')->default('')->nullable();
+            $table->foreignUuid('role_id');
 
             $table->timestamps();
         });

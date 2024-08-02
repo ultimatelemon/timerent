@@ -2,8 +2,8 @@
   <div>
     <div class="mb-12 flex justify-between">
       <div>
-        <div class="font-semibold text-lg">Units</div>
-        <div class="text-sm">Beheer hier de units voor je onderneming</div>
+        <div class="font-semibold text-lg">Medewerkers</div>
+        <div class="text-sm">Beheer hier de medewerkers voor je onderneming</div>
       </div>
       <div>
         <button class="btn btn-primary" @click="newEmployeeModal = true;">Medewerker toevoegen</button>

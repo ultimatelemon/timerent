@@ -33,6 +33,7 @@ class UserController extends ApiController
      */
     public function current(Request $request): JsonResponse
     {
+        return $this->success(UserVenue::where('user_id', $request->user()->id)->first());
         return $this->success(new UserResource($request->user()));
     }
 

@@ -6,12 +6,12 @@
         <div class="text-sm">Beheer hier je persoonlijke instellingen</div>
       </div>
       <div>
-<!--        <button @click="$router.push({ name: 'venues.units.create' })" class="btn btn-primary">Nieuwe unit</button>-->
+        <!--        <button @click="$router.push({ name: 'venues.units.create' })" class="btn btn-primary">Nieuwe unit</button>-->
       </div>
     </div>
-<!--        <div class="mb-12">-->
-<!--          <div class="font-semibold">Filteren</div>-->
-<!--        </div>-->
+    <div class="mb-12" v-if="saved">
+      <div class="text-green-500">Je instellingen zijn opgeslagen! <i @click="saved = false" class="cursor-pointer fa fa-close text-black ml-3"></i></div>
+    </div>
     <div class="mt-8 flow-root">
       <div class="space-y-8">
         <div>
@@ -49,7 +49,10 @@
       </div>
 
       <div class="mt-8 flex justify-end">
-        <button @click="postData" class="btn btn-lg" :class="(this.loading || !this.formData.name || !this.formData.email || !this.formData.phone_number  ? 'btn-secondary opacity-50 cursor-not-allowed' : 'btn-primary')"><i v-if="loading" class="fa fa-spinner mr-2 animate-spin"></i> Opslaan</button>
+        <button @click="postData" class="btn btn-lg"
+                :class="(this.loading || !this.formData.name || !this.formData.email || !this.formData.phone_number  ? 'btn-secondary opacity-50 cursor-not-allowed' : 'btn-primary')">
+          <i v-if="loading" class="fa fa-spinner mr-2 animate-spin"></i> Opslaan
+        </button>
       </div>
 
     </div>
@@ -67,6 +70,8 @@ export default {
       reservations: [],
       pagination: null,
       loading: false,
+      errors: [],
+      saved: false,
 
       formData: {
         name: null,
@@ -78,7 +83,7 @@ export default {
 
   methods: {
     fetchMember() {
-      if(window.localStorage.getItem("tr_member_auth_token")){
+      if (window.localStorage.getItem("tr_member_auth_token")) {
         axios.get('/app/members/current')
             .then(response => {
               this.formData.name = response.data.data.name;
@@ -91,12 +96,19 @@ export default {
     },
 
     postData() {
-      if(this.loading) return;
+      if (this.loading || !this.formData.name || !this.formData.email || !this.formData.phone_number) return;
       this.loading = true;
 
-      axios.get('/app/members/current', this.formData)
-          .then(response => {
-
+      axios.post('/app/members/current/update', this.formData)
+          .then(() => {
+            this.saved = true;
+            this.errors = [];
+          })
+          .catch(e => {
+            this.errors = e.response.data.errors;
+          })
+          .finally(() => {
+            this.loading = false;
           })
     }
   },
@@ -106,7 +118,7 @@ export default {
   },
 
   computed: {
-    subdomain: function() {
+    subdomain: function () {
       return window.location.hostname.split('.')[0]
     },
   },

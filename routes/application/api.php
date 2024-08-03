@@ -25,6 +25,7 @@ Route::post('/app/sanctum/password/reset', [\App\Http\Controllers\Application\Ap
 Route::middleware('member')->group(function () {
     Route::post('/app/sanctum/logout', [\App\Http\Controllers\Application\ApplicationAuthenticationController::class, 'revokeToken']);
     Route::get('/app/members/current', [MemberController::class, 'current']);
+    Route::post('/app/members/current/update', [MemberController::class, 'currentUpdate']);
     Route::post('/app/members/current', [MemberController::class, 'update']);
     Route::get('/app/members/current/reservations', [ApplicationReservationController::class, 'index']);
     Route::post('/app/members/current/invoices/{invoice}/download', [ApplicationInvoiceController::class, 'download']);

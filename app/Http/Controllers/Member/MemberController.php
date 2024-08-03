@@ -13,6 +13,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
 use Illuminate\Validation\ValidationException;
 
 class MemberController extends ApiController
@@ -90,6 +91,7 @@ class MemberController extends ApiController
      *
      * @param Request $request
      * @param Venue $venue
+     * @param Member $member
      * @return JsonResponse
      */
     public function reservations(Request $request, Venue $venue, Member $member): JsonResponse
@@ -114,5 +116,23 @@ class MemberController extends ApiController
             ReservationResource::collection($reservations),
             collect($reservations)->only(['from', 'to', 'total', 'per_page', 'last_page', 'current_page'])->toArray(),
         );
+    }
+
+    public function currentUpdate(Request $request, Venue $venue): JsonResponse
+    {
+        $validatedRequest = $request->validate([
+            'name' => 'required|string|min:2|max:48',
+            'email' => ['required', 'email:rfc,dns',
+                Rule::unique('members')->where(function ($query) use ($request, $venue) {
+                    return $query->where('venue_id', $venue->id);
+                })->ignore($request->member->id)
+            ],
+            'phone_number' => 'required|numeric|max_digits:10',
+        ]);
+
+        $member = Member::findOrFail($request->member->id);
+        $member->update($validatedRequest);
+
+        return $this->success();
     }
 }

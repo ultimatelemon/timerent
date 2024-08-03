@@ -17,6 +17,7 @@ return new class extends Migration
             $table->foreignUuid('group_id')->nullable()->constrained();
             $table->string('name');
             $table->string('email');
+            $table->string('phone_number')->nullable();
             $table->foreignUuid('role_id')->constrained();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('email_verification_token')->nullable();

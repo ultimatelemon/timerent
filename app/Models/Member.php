@@ -19,7 +19,7 @@ class Member extends Model implements MustVerifyEmail
 
     use HasFactory, HasUuids, Notifiable, HasApiTokens, SoftDeletes;
 
-    protected $fillable = ['name', 'email', 'venue_id', 'loyality_points', 'pay_on_invoice', 'group_id'];
+    protected $fillable = ['name', 'email', 'venue_id', 'loyality_points', 'pay_on_invoice', 'group_id', 'phone_number'];
 
     public function reservations()
     {

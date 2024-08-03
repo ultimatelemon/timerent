@@ -1,8 +1,8 @@
 <template>
   <div>
 
-    <h1 class="font-semibold text-xl">{{ greeting }}</h1>
-    <h3 class="text-base leading-6 text-gray-900">Beheer hier je account en je reserveringen</h3>
+    <h1 class="font-semibold text-lg">{{ greeting }}</h1>
+    <div class="text-sm">Beheer hier je account en je reserveringen</div>
 
     <div class="mt-6">
         <h1 class="font-semibold mt-12 mb-4">Opkomende reserveringen</h1>

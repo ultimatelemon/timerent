@@ -2,8 +2,8 @@
   <div>
     <div class="mb-12 flex justify-between">
       <div>
-        <div class="font-semibold text-xl">Reserveringen</div>
-        <div class="text-base leading-6 text-gray-900">Beheer hier alle reserveringen</div>
+        <div class="font-semibold text-lg">Reserveringen</div>
+        <div class="text-sm">Beheer hier alle reserveringen</div>
       </div>
       <div>
 <!--        <button @click="$router.push({ name: 'venues.units.create' })" class="btn btn-primary">Nieuwe unit</button>-->

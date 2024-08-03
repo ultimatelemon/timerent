@@ -48,6 +48,8 @@ class ApplicationAuthenticationController extends ApiController
         $member->email_verification_token_expires_at = Carbon::now()->addHours(2);
         $member->save();
 
+        $venue->members()->save($member);
+
         $url = 'https://' . $venue->subdomain . '.' . env('MAIN_DOMAIN') . '/email/verify?member=' . $member->id . '&token=' . Hash::make($member->email . $member->email_verification_token);
 
         $member->notify(new ApplicationEmailVerification($url, $member, $venue));

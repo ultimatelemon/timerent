@@ -18,6 +18,7 @@ class MemberResource extends JsonResource
             'id' => $this->id,
             'name' => $this->name,
             'email' => $this->email,
+            'phone_number' => $this->phone_number,
             'group' => new GroupResource($this->group),
             'reservations' => ReservationResource::collection($this->reservations),
             'pay_on_invoice' => $this->pay_on_invoice,

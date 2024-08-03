@@ -20,6 +20,12 @@ class UnitResource extends JsonResource
             'description' => $this->description,
             'tax_percentage' => $this->tax_percentage,
             'products' => ProductResource::collection($this->products),
+            'groups' => $this->groups->map(function ($group) {
+                return [
+                    'id' => $group->id,
+                    'name' => $group->name,
+                ];
+            })
         ];
     }
 }

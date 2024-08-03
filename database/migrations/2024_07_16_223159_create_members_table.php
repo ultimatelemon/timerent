@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('members', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->foreignUuid('venue_id')->constrained();
+            $table->foreignUuid('group_id')->nullable()->constrained();
             $table->string('name');
             $table->string('email');
             $table->foreignUuid('role_id')->constrained();

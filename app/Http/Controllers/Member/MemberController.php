@@ -68,6 +68,7 @@ class MemberController extends ApiController
             'email' => 'required|string|email|email:rfc,dns|unique:members,email,'.$member->id,
             'pay_on_invoice' => 'required|boolean',
             'loyality_points' => 'required|numeric|integer',
+            'group_id' => 'nullable|sometimes|uuid|exists:groups,id',
         ]);
 
         $member = $venue->members()->findOrFail($member->id);

@@ -24,6 +24,16 @@
           <dt class="text-sm font-semibold leading-6 text-gray-900 pb-2">Email</dt>
           <input v-on:keyup.enter="postData" class="text-sm" v-model="formData.email">
         </div>
+        <div class="border-t border-gray-100 md:border-none px-4 py-6 sm:col-span-1 sm:px-0 mr-0 sm:mr-12">
+          <dt class="text-sm font-semibold leading-6 text-gray-900 pb-2">Groep</dt>
+          <select class="input" name="" id="" v-model="formData.group_id">
+            <option :value="group.id" v-for="group in groups">{{group.name}}</option>
+          </select>
+        </div>
+        <div class="invisible border-t border-gray-100 md:border-none px-4 py-6 sm:col-span-1 sm:px-0 mr-0 sm:mr-12">
+<!--          <dt class="text-sm font-semibold leading-6 text-gray-900 pb-2">Email</dt>-->
+<!--          <input v-on:keyup.enter="postData" class="text-sm" v-model="formData.email">-->
+        </div>
         <div class="border-t border-gray-100 px-4 py-6 sm:col-span-1 sm:px-0 mr-0 sm:mr-12">
           <dt class="text-sm font-semibold leading-6 text-gray-900 pb-2">Loyality Points <span class="font-normal text-xs">* Not implemented yet</span></dt>
           <input v-on:keyup.enter="postData" type="number" class="text-sm" v-model="formData.loyality_points">
@@ -119,6 +129,7 @@ export default {
       loading: true,
       member: null,
       errors: [],
+      groups: [],
       blocks: null,
 
       formData: {
@@ -127,6 +138,7 @@ export default {
         notes: null,
         loyality_points: 0,
         pay_on_invoice: false,
+        group_id: null,
       },
     }
   },
@@ -145,6 +157,7 @@ export default {
               this.formData.notes = response.data.data.notes;
               this.formData.loyality_points = response.data.data.loyality_points;
               this.formData.pay_on_invoice = response.data.data.pay_on_invoice;
+              this.formData.group_id = response.data.data.group.id;
             })
             .finally(() => {
               this.loading = false;
@@ -175,6 +188,13 @@ export default {
           })
     },
 
+    fetchGroups() {
+      axios.get('/venues/' + this.$route.params.venue + '/groups')
+          .then(response => {
+            this.groups = response.data.data;
+          })
+    },
+
     group() {
       this.blocks = groupBy(this.reservation.timeblocks, 'unit_id');
     }
@@ -182,6 +202,7 @@ export default {
 
   mounted() {
     this.fetchData();
+    this.fetchGroups();
   },
 }
 </script>

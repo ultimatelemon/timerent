@@ -96,7 +96,8 @@ class UnitController extends ApiController implements HasMiddleware
      */
     public function update(StoreUnit $request, Venue $venue, Unit $unit): JsonResponse
     {
-        $unit->update($request->validated());
+        $unit->update($request->except('groups'));
+        $unit->groups()->sync($request->groups);
         return $this->success(['message' => 'Updated successfully']);
     }
 }

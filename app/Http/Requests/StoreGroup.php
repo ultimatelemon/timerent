@@ -1,13 +1,11 @@
 <?php
 
-namespace App\Http\Requests\Venue;
+namespace App\Http\Requests;
 
-use App\Enums\TaxPercentage;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\Rule;
 
-class StoreUnit extends FormRequest
+class StoreGroup extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -26,10 +24,7 @@ class StoreUnit extends FormRequest
     {
         return [
             'name' => 'required|string',
-            'description' => 'nullable|string',
-            'tax_percentage' => [Rule::enum(TaxPercentage::class)],
-            'groups' => 'nullable',
-            'groups.*' => 'string|distinct|exists:groups,id',
+            'venue_id' => 'required|exists:venues,id',
         ];
     }
 }

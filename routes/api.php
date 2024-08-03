@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\GroupController;
 use App\Http\Controllers\InvoiceController;
 use App\Http\Controllers\Management\PaymentProviderController;
 use App\Http\Controllers\Management\PlanController;
@@ -78,5 +79,6 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::resource('venues.users',             UserController::class)->except(['create', 'edit']);
     Route::resource('venues.members',           MemberController::class)->except(['create', 'edit']);
     Route::resource('venues.invoices',          InvoiceController::class)->except(['create', 'edit']);
-    Route::resource('venues.roles',          RoleController::class)->except(['create', 'edit']);
+    Route::resource('venues.roles',             RoleController::class)->except(['create', 'edit']);
+    Route::resource('venues.groups',             GroupController::class)->except(['create', 'edit']);
 });

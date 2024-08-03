@@ -35,7 +35,6 @@ class UserController extends ApiController
      */
     public function current(Request $request): JsonResponse
     {
-        ray($request->venue);
         if($request->venue == 'undefined' || !$request->venue) return $this->success(new UserResource($request->user()));
 
         $venue = Venue::findOrFail($request->venue);

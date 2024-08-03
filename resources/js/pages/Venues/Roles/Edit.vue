@@ -64,7 +64,7 @@
     <div class="flex justify-end gap-4">
       <button @click="$router.go(-1)" class="btn btn-secondary">Annuleren</button>
       <button :class="loading ? 'btn btn-secondary opacity-50 cursor-not-allowed btn-lg' : 'btn btn-lg btn-primary'"
-              @click="postData"><i v-if="loading" class="fa fa-spinner mr-2 animate-spin"></i>Aanmaken
+              @click="postData"><i v-if="loading" class="fa fa-spinner mr-2 animate-spin"></i>Opslaan
       </button>
     </div>
 
@@ -114,7 +114,9 @@ export default {
         view_members: {flag: 'View members', state: false, binary: 1 << 19},
         manage_members: {flag: 'Manage members', state: false, binary: 1 << 20},
         view_roles: {flag: 'View roles', state: false, binary: 1 << 21},
-        manage_roles: {flag: 'Manage roles', state: false, binary: 1 << 21},
+        manage_roles: {flag: 'Manage roles', state: false, binary: 1 << 22},
+        view_groups: {flag: 'View groups', state: false, binary: 1 << 23},
+        manage_Groups: {flag: 'Manage groups', state: false, binary: 1 << 24},
       }
     }
   },

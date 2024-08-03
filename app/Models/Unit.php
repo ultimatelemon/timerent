@@ -23,4 +23,9 @@ class Unit extends Model
     {
         return $this->belongsToMany(Product::class);
     }
+
+    public function groups(): BelongsToMany
+    {
+        return $this->belongsToMany(Group::class);
+    }
 }

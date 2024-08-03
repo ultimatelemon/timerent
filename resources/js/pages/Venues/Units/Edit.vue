@@ -45,6 +45,11 @@
         <p v-if="errors.description" class="mt-2 text-sm text-red-600" id="description-error">{{ errors.description[0] }}</p>
       </div>
 
+      <div v-if="groups">
+        <label for="tax_percentage" class="block text-sm font-medium leading-6 text-gray-900">Belasting tarief <span class="required-star">*</span></label>
+        <MultipleSelectGroups :selectedGroupsIds="formData.groups.map(g => g.id)" :groups="groups" @selectionChange="updateSelectedGroups"></MultipleSelectGroups>
+      </div>
+
       <div>
         <label for="tax_percentage" class="block text-sm font-medium leading-6 text-gray-900">Belasting tarief <span class="required-star">*</span></label>
         <select v-model="formData.tax_percentage" id="location" name="location" class="mt-2 block w-full rounded-md border-0 py-1.5 pl-3 pr-10 text-gray-900 ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600 sm:text-sm sm:leading-6">
@@ -66,13 +71,13 @@
         </div>
       </div>
       <div class="flex justify-end bg-gray-50 px-5 py-3">
-        <button :class="loading ? 'btn btn-secondary opacity-50 cursor-not-allowed btn-lg' : 'btn btn-lg btn-primary'" @click="postData"><i v-if="loading" class="fa fa-spinner mr-2 animate-spin"></i>Aanmaken</button>
+        <button :class="loading ? 'btn btn-secondary opacity-50 cursor-not-allowed btn-lg' : 'btn btn-lg btn-primary'" @click="postData"><i v-if="loading" class="fa fa-spinner mr-2 animate-spin"></i>Opslaan</button>
       </div>
     </modal>
 
     <div class="flex justify-end gap-4">
       <button @click="$router.go(-1)" class="btn btn-secondary">Annuleren</button>
-      <button v-if="this.$route.params.unit != null || venue.unit_count < venue.plan.unit_limit" :class="loading ? 'btn btn-secondary opacity-50 cursor-not-allowed btn-lg' : 'btn btn-lg btn-primary'" @click="postData"><i v-if="loading" class="fa fa-spinner mr-2 animate-spin"></i>Aanmaken</button>
+      <button v-if="this.$route.params.unit != null || venue.unit_count < venue.plan.unit_limit" :class="loading ? 'btn btn-secondary opacity-50 cursor-not-allowed btn-lg' : 'btn btn-lg btn-primary'" @click="postData"><i v-if="loading" class="fa fa-spinner mr-2 animate-spin"></i>Opslaan</button>
       <button v-else @click="showModal = true;" class="btn btn-primary">Opslaan</button>
     </div>
 
@@ -81,16 +86,18 @@
 
 <script>
 import Modal from "../../Components/Modal.vue";
+import MultipleSelectGroups from "../../Components/MultipleSelectGroups.vue";
 
 export default {
   name: "Edit",
-  components: {Modal},
+  components: {MultipleSelectGroups, Modal},
   data() {
     return {
       // unit_id: this.$route.params.unit,
       loading: false,
       unit: null,
       errors: [],
+      groups: null,
       venue: null,
       showModal: false,
 
@@ -98,6 +105,7 @@ export default {
         name: "",
         description: "",
         tax_percentage: 0,
+        groups: [],
       },
     }
   },
@@ -119,11 +127,21 @@ export default {
               this.formData.name = this.unit.name;
               this.formData.description = this.unit.description;
               this.formData.tax_percentage = this.unit.tax_percentage;
+              this.formData.groups = this.unit.groups;
+
+              this.fetchGroups();
             })
             .finally(() => {
               this.loading = false;
             })
       }
+    },
+
+    fetchGroups() {
+      axios.get('/venues/' + this.$route.params.venue + '/groups')
+          .then(response => {
+            this.groups = response.data.data;
+          })
     },
 
     postData() {
@@ -149,6 +167,10 @@ export default {
           this.loading = false;
         })
       }
+    },
+
+    updateSelectedGroups(value) {
+      this.formData.groups = value.map(g => g.id);
     }
   },
 

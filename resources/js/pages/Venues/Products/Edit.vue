@@ -164,7 +164,7 @@
 <script>
 import {Switch} from "@headlessui/vue";
 import CurrencyInput from "../../Components/CurrencyInput.vue";
-import MultipleSelectUnits from "../../Application/Components/MultipleSelectUnits.vue";
+import MultipleSelectUnits from "../../Components/MultipleSelectUnits.vue";
 
 export default {
   name: "Edit",

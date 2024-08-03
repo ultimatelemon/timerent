@@ -117,6 +117,18 @@ export const routes = [
         ]
     },
 
+    // Member groups
+
+    {
+        path: '/store/:venue/groups',
+        component: Wrapper,
+        children: [
+            { path: '', component: () => import('./pages/Venues/Groups/Index.vue'), name: 'venues.groups.index' },
+            { path: 'create', component: () => import('./pages/Venues/Groups/Edit.vue'), name: 'venues.groups.create' },
+            { path: ':group', component: () => import('./pages/Venues/Groups/Edit.vue'), name: 'venues.groups.edit' },
+        ]
+    },
+
 
 
     // Payments

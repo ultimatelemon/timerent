@@ -6,7 +6,7 @@ class Permissions extends BitField
     public static array $flags = [
         'ADMINISTRATOR' => 1 << 0, // 1
         'VIEW_UNITS' => 1 << 1, // 2
-        'MANGE_UNITS' => 1 << 2, // 4
+        'MANAGE_UNITS' => 1 << 2, // 4
         'VIEW_TEMPLATES' => 1 << 3, // 8
         'MANAGE_TEMPLATES' => 1 << 4, // 16
         'VIEW_AGENDA' => 1 << 5, // 32
@@ -27,8 +27,8 @@ class Permissions extends BitField
         'MANAGE_MEMBERS' => 1 << 20, // 1048576
         'VIEW_ROLES' => 1 << 21, // 2097152
         'MANAGE_ROLES' => 1 << 22, // 4194304
-//        'VIEW_COUPONS' => 1 << 23, // 8388608
-//        'MANAGE_COUPONS' => 1 << 24, // 16777216
+        'VIEW_GROUPS' => 1 << 23, // 8388608
+        'MANAGE_GROUPS' => 1 << 24, // 16777216
 //        'VIEW_PLANS' => 1 << 3, // 8
 //        'MANAGE_PLANS' => 1 << 4, // 16
 //        'VIEW_TICKETS' => 1 << 7, // 128

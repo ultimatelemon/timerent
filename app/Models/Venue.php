@@ -81,4 +81,9 @@ class Venue extends Model
     {
         return $this->hasMany(Role::class);
     }
+
+    public function groups(): HasMany
+    {
+        return $this->hasMany(Group::class);
+    }
 }

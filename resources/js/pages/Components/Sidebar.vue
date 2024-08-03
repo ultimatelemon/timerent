@@ -320,6 +320,12 @@ export default {
           'icon': UsersIcon,
           'permission': ['VIEW_MEMBERS'],
         },
+        {
+          'name': 'Member groepen',
+          'link': {name: 'venues.groups.index', params: {venue: this.$store.state.venue.id}},
+          'icon': UserCircleIcon,
+          'permission': ['VIEW_GROUPS'],
+        },
       ]
     },
 

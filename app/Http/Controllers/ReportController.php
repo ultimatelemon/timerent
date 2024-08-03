@@ -7,9 +7,18 @@ use Carbon\Carbon;
 use Carbon\CarbonInterface;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Routing\Controllers\HasMiddleware;
+use Illuminate\Routing\Controllers\Middleware;
 
-class ReportController extends ApiController
+class ReportController extends ApiController implements HasMiddleware
 {
+    public static function middleware(): array
+    {
+        return [
+            new Middleware('hasPermissions:VIEW_REPORTS', only: ['index']),
+        ];
+    }
+
     /**
      * Display the report index
      *

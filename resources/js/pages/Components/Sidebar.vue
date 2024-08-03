@@ -35,7 +35,7 @@
                     <li>
                       <ul role="list" class="-mx-2 space-y-1">
                         <li v-for="item in navigation" :key="item.name">
-                          <div v-if="item.type === 'category' && (item.permission.length > 0 ? hasCommon(item.permission, user.role.permissions) : true)" class="mb-1 mt-3 text-sm flex items-center">
+                          <div v-if="item.type === 'category' && (item.permission.length > 0 ? hasCommon(item.permission, user.role.permissions) : false)" class="mb-1 mt-3 text-sm flex items-center">
                     <span class="font-bold text-xs pr-1">
                       {{item.name}}
                     </span>
@@ -86,15 +86,15 @@
             <li>
               <ul role="list" class="-mx-2 space-y-1">
                 <li v-for="item in navigation" :key="item.name">
-                  <div v-if="item.type === 'category' && (item.permission.length > 0 ? hasCommon(item.permission, user.role.permissions) : true)" class="mb-1 mt-3 text-sm flex items-center">
+                  <div v-if="item.type === 'category' && (item.permission.length > 0 ? (user.owner ? true : hasCommon(item.permission, role.flags)) : true)" class="mb-1 mt-3 text-sm flex items-center">
                     <span class="font-bold text-xs pr-1">
                       {{item.name}}
                     </span>
                   </div>
-                  <router-link v-else :to="item.link" active-class="bg-gray-50 text-indigo-600" class="text-gray-700 hover:text-indigo-600 hover:bg-gray-50 group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold">
+                  <router-link v-else v-if="item.permission.length > 0 ? (user.owner ? true : hasCommon(item.permission, role.flags)) : true" :to="item.link" active-class="bg-gray-50 text-indigo-600" class="text-gray-700 hover:text-indigo-600 hover:bg-gray-50 group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold">
                     <component :is="item.icon" class="text-gray-400 group-hover:text-indigo-600 h-6 w-6 shrink-0" aria-hidden="true"></component>
                     <!--                    <i :class="'bx bx-' + item.icon"></i>-->
-                    {{ item.name }}
+                    {{item.name}}
                   </router-link>
                 </li>
               </ul>
@@ -115,8 +115,8 @@
 <!--                <img class="h-8 w-8 rounded-full bg-gray-50" src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="" />-->
                 <div class="flex flex-col">
                   <span class="sr-only">Your profile</span>
-                  <span aria-hidden="true">{{ user.name }}</span>
-                  <span aria-hidden="true" class="font-light text-xs">{{ user.email }}</span>
+                  <span aria-hidden="true">{{ user.user.name }}</span>
+                  <span aria-hidden="true" class="font-light text-xs">{{ user.user.email }}</span>
                 </div>
                 <div>
                   <i><component :is="ArrowRightEndOnRectangleIcon" class="h-6 w-6 text-red-500"></component></i>
@@ -176,7 +176,7 @@ import {
   UserIcon,
   CircleStackIcon,
   ArchiveBoxIcon,
-  CalendarDaysIcon, ListBulletIcon, BriefcaseIcon, CogIcon, ChartBarIcon, UsersIcon, DocumentIcon
+  CalendarDaysIcon, ListBulletIcon, BriefcaseIcon, CogIcon, ChartBarIcon, UsersIcon, DocumentIcon, UserCircleIcon
 } from "@heroicons/vue/24/outline/index.js";
 // import {CircleStackIcon} from "@heroicons/vue/16/solid/index.js";
 
@@ -185,16 +185,31 @@ export default {
   data() {
     return {
       user: null,
+      role: null,
       navigation: [],
       venue: null,
     }
   },
 
   methods: {
-    fetchUser() {
-      axios.get('/users/current')
+
+    // fetchUser() {
+    //   axios.get('/users/current')
+    //       .then(response => {
+    //         this.user = response.data.data;
+    //         // this.role = response.data.data.role;
+    //         this.fetchNavigation();
+    //       })
+    //       .catch(e => {
+    //         console.log(e.message)
+    //       })
+    // },
+
+    fetchUser(venue) {
+      axios.get('/users/current?venue=' + venue)
           .then(response => {
-            this.user = response.data.data;
+            this.user = response.data.data.user;
+            this.role = response.data.data.role;
             this.fetchNavigation();
           })
           .catch(e => {
@@ -202,8 +217,8 @@ export default {
           })
     },
 
-    hasCommon(arr1, arr2) {
-      return arr1.some(item1 => arr2.some(item2 => item1 === item2));
+    hasCommon(permission, flags) {
+      return flags.some(item1 => permission.some(item2 => item1 === item2));
     },
 
     fetchNavigation() {
@@ -217,87 +232,93 @@ export default {
           'name': 'Dashboard',
           'link': {name: 'venues.home', params: {venue: this.$store.state.venue.id}},
           'icon': HomeIcon,
-          'permission': null,
+          'permission': [],
         },
         {
           'type': 'category',
           'name': 'Applicatie',
-          'permission': [],
+          'permission': ['VIEW_UNITS', 'VIEW_TEMPLATES', 'VIEW_AGENDA', 'VIEW_PRODUCTS', 'VIEW_RESERVATIONS'],
         },
         {
           'name': 'Units',
           'link': {name: 'venues.units.index', params: {venue: this.$store.state.venue.id}},
           'icon': CircleStackIcon,
-          'permission': 'VIEW_UNITS',
+          'permission': ['VIEW_UNITS'],
         },
         {
           'name': 'Templates',
           'link': {name: 'venues.templates.index', params: {venue: this.$store.state.venue.id}},
           'icon': ListBulletIcon,
-          'permission': 'VIEW_UNITS',
+          'permission': ['VIEW_TEMPLATES'],
         },
         {
           'name': 'Agenda',
           'link': {name: 'venues.calendar.index', params: {venue: this.$store.state.venue.id}},
           'icon': CalendarDaysIcon,
-          'permission': 'VIEW_UNITS',
+          'permission': ['VIEW_AGENDA'],
         },
         {
           'name': 'Producten',
           'link': {name: 'venues.products.index', params: {venue: this.$store.state.venue.id}},
           'icon': ArchiveBoxIcon,
-          'permission': 'VIEW_UNITS',
+          'permission': ['VIEW_PRODUCTS'],
         },
         {
           'name': 'Reserveringen',
           'link': {name: 'venues.reservations.index', params: {venue: this.$store.state.venue.id}},
           'icon': BriefcaseIcon,
-          'permission': 'VIEW_UNITS',
+          'permission': ['VIEW_RESERVATIONS'],
         },
         {
           'type': 'category',
           'name': 'Beheer',
-          'permission': []
+          'permission': ['VIEW_SETTINGS']
         },
         {
           'name': 'Instellingen',
           'link': {name: 'venues.settings.index', params: {venue: this.$store.state.venue.id}},
           'icon': CogIcon,
-          'permission': 'VIEW_UNITS',
+          'permission': ['VIEW_SETTINGS'],
         },
         {
           'type': 'category',
           'name': 'Finance',
-          'permission': []
+          'permission': ['VIEW_REPORTS', 'VIEW_INVOICES']
         },
         {
           'name': 'Rapportage',
           'link': {name: 'venues.finance.reports.index', params: {venue: this.$store.state.venue.id}},
           'icon': ChartBarIcon,
-          'permission': 'VIEW_UNITS',
+          'permission': ['VIEW_REPORTS'],
         },
         {
           'name': 'Facturatie',
           'link': {name: 'venues.finance.invoices.index', params: {venue: this.$store.state.venue.id}},
           'icon': DocumentIcon,
-          'permission': 'VIEW_UNITS',
+          'permission': ['VIEW_INVOICES'],
         },
         {
           'type': 'category',
           'name': 'Gebruikers',
-          'permission': []
+          'permission': ['VIEW_EMPLOYEES', 'VIEW_ROLES', 'VIEW_MEMBERS']
         },
         {
           'name': 'Medewerkers',
           'link': {name: 'venues.users.index', params: {venue: this.$store.state.venue.id}},
           'icon': UserIcon,
-          'permission': 'VIEW_USERS',
+          'permission': ['VIEW_EMPLOYEES'],
+        },
+        {
+          'name': 'Medewerkers rollen',
+          'link': {name: 'venues.roles.index', params: {venue: this.$store.state.venue.id}},
+          'icon': UserCircleIcon,
+          'permission': ['VIEW_ROLES'],
         },
         {
           'name': 'Members',
           'link': {name: 'venues.members.index', params: {venue: this.$store.state.venue.id}},
           'icon': UsersIcon,
-          'permission': 'VIEW_USERS',
+          'permission': ['VIEW_MEMBERS'],
         },
       ]
     },
@@ -311,7 +332,8 @@ export default {
   },
 
   mounted() {
-    this.fetchUser();
+    console.log(this.$store.state.venue.id)
+    this.fetchUser(this.$store.state.venue.id);
   },
 
   // TODO: Fix user store in Vuex to remove the api call to fetch user.

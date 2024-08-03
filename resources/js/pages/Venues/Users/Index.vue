@@ -26,9 +26,9 @@
             </thead>
             <tbody class="divide-y divide-gray-200 bg-white">
             <tr v-for="user in users" :key="user.id" class="even:bg-gray-50 hover:bg-gray-100 hover:cursor-pointer">
-              <td class="whitespace-nowrap px-2 py-2 text-sm font-medium text-gray-900">{{ user.name }}</td>
-              <td class="whitespace-nowrap px-2 py-2 text-sm font-medium text-gray-900">{{ user.email }}</td>
-              <td class="whitespace-nowrap px-2 py-2 text-sm font-medium text-gray-900">{{ user.role.name }}</td>
+              <td class="whitespace-nowrap px-2 py-2 text-sm font-medium text-gray-900">{{ user.user.name }}</td>
+              <td class="whitespace-nowrap px-2 py-2 text-sm font-medium text-gray-900">{{ user.user.email }}</td>
+              <td class="whitespace-nowrap px-2 py-2 text-sm font-medium text-gray-900">{{ user.owner ? 'Eigenaar' : user.role.name }}</td>
               <td class="whitespace-nowrap px-2 py-2 text-sm font-medium text-gray-900">
                 <DeleteButton v-if="current_user.id !== user.id" @delete="deleteData" :id="user.id"><i class="fa fa-trash"></i></DeleteButton>
                 <span v-else>-</span>
@@ -45,9 +45,16 @@
         <div class="border-b font-semibold pb-2">Een medewerker toevoegen</div>
         <div class="mb-6">
           <label for="email">Email</label>
-          <input v-model="email" type="text" id="email" name="email" placeholder="info@timerent.nl" v-on:keyup.enter="addEmployee" />
+          <input v-model="formData.email" type="text" id="email" name="email" placeholder="info@timerent.nl" v-on:keyup.enter="addEmployee" />
           <p v-if="errors?.errors?.email" class="text-red-500 pt-3">Dit email adres is nog niet geregistreerd op timerentapp.nl</p>
           <p v-if="errors?.errors?.exists" class="text-red-500 pt-3">{{ errors.errors.exists }}</p>
+        </div>
+        <div class="mb-6">
+          <label for="role_id">Medewerkers rol</label>
+          <select class="input" name="role_id" id="role_id" v-model="formData.role_id">
+            <option v-for="role in roles" :value="role.id">{{ role.name }}</option>
+          </select>
+          <p v-if="errors?.errors?.email" class="text-red-500 pt-3">{{ errors.errors.role_id }}</p>
         </div>
         <div class="flex justify-end gap-5">
           <button class="btn btn-secondary" @click="newEmployeeModal = false;">Annuleren</button>
@@ -70,10 +77,16 @@ export default {
   data() {
     return {
       users: [],
+      roles: [],
       loading: false,
 
-      email: null,
+      formData: {
+        email: null,
+        role_id: null,
+      },
+
       current_user: null,
+      current_user_role: null,
 
       errors: null,
 
@@ -83,19 +96,28 @@ export default {
   },
 
   methods: {
-    fetchUser() {
-      axios.get('/users/current')
+    fetchUser(venue) {
+      axios.get('/users/current?venue=' + venue)
           .then(response => {
-            this.current_user = response.data.data;
-            this.fetchData();
+            console.log("USER", response.data.data.user);
+            this.current_user = response.data.data.user;
+            this.current_user_role = response.data.data.role;
           })
     },
 
     fetchData() {
       axios.get('/venues/' + this.$route.params.venue + '/users')
           .then(response => {
+            console.log("U", response.data.data)
             this.users = response.data.data;
             this.pagination = response.data.pagination;
+          })
+    },
+
+    fetchRoles() {
+      axios.get('/venues/' + this.$route.params.venue + '/roles')
+          .then(response => {
+            this.roles = response.data.data;
           })
     },
 
@@ -104,9 +126,7 @@ export default {
       this.loading = true;
       this.errors = null;
 
-      axios.post('/venues/' + this.$route.params.venue + '/users', {
-        email: this.email
-      })
+      axios.post('/venues/' + this.$route.params.venue + '/users', this.formData)
           .then(response => {
             this.email = null;
             this.newEmployeeModal = false;
@@ -129,7 +149,8 @@ export default {
   },
 
   mounted() {
-    this.fetchUser();
+    this.fetchRoles();
+    this.fetchUser(this.$route.params.venue);
     this.fetchData();
   },
 

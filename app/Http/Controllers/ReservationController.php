@@ -15,11 +15,21 @@ use App\WebPayment\PaymentStatus;
 use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Routing\Controllers\HasMiddleware;
+use Illuminate\Routing\Controllers\Middleware;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Notification;
 
-class ReservationController extends ApiController
+class ReservationController extends ApiController implements HasMiddleware
 {
+    public static function middleware(): array
+    {
+        return [
+            new Middleware('hasPermissions:VIEW_RESERVATIONS', only: ['index', 'show']),
+            new Middleware('hasPermissions:MANAGE_RESERVATIONS', only: ['update']),
+        ];
+    }
+
     /**
      * Display a listing of the resource
      *

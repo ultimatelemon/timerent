@@ -147,6 +147,7 @@ export default {
       errorMessage: "",
       loading: false,
       current_user: null,
+      current_user_role: null,
       subscription_url: null,
 
       name: "",
@@ -161,6 +162,7 @@ export default {
       axios.get('/users/current')
           .then(response => {
             this.current_user = response.data.data;
+            this.current_user_role = response.data.role;
             this.fetchData();
           })
     },

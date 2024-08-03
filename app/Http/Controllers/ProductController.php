@@ -9,9 +9,20 @@ use App\Models\Unit;
 use App\Models\Venue;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Routing\Controllers\HasMiddleware;
+use Illuminate\Routing\Controllers\Middleware;
 
-class ProductController extends ApiController
+class ProductController extends ApiController implements HasMiddleware
 {
+
+    public static function middleware(): array
+    {
+        return [
+            new Middleware('hasPermissions:VIEW_PRODUCTS', only: ['index', 'show']),
+            new Middleware('hasPermissions:VIEW_INVOICES', only: ['store', 'update', 'destroy']),
+        ];
+    }
+
     /**
      * Display a listing of the resource
      *
@@ -26,7 +37,7 @@ class ProductController extends ApiController
         if($request->has('q'))
             $products = $products->where('name', 'ILIKE', "%{$request->q}%");
 
-        $products = $products->paginate(env('POSTS_PER_PACE'));
+        $products = $products->paginate(env('POSTS_PER_PAGE'));
 
         return $this->success(
             ProductResource::collection($products),

@@ -19,11 +19,6 @@ class UserResource extends JsonResource
             'short_id' => strtoupper(explode('-', $this->id)[0]),
             'name' => $this->name,
             'email' => $this->email,
-            'role' => [
-                'id' => $this->role->id,
-                'name' => $this->role->name,
-                'permissions' => $this->role->permissionFlags(),
-            ],
         ];
     }
 }

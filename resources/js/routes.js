@@ -91,6 +91,19 @@ export const routes = [
         ]
     },
 
+    // Roles
+
+    {
+        path: '/store/:venue/roles',
+        component: Wrapper,
+        children: [
+            { path: '', component: () => import('./pages/Venues/Roles/Index.vue'), name: 'venues.roles.index' },
+            { path: 'create', component: () => import('./pages/Venues/Roles/Edit.vue'), name: 'venues.roles.create' },
+            { path: ':role', component: () => import('./pages/Venues/Roles/Edit.vue'), name: 'venues.roles.edit' },
+            // { path: ':member/reservations', component: () => import('./pages/Venues/Members/Reservations.vue'), name: 'venues.members.reservations' },
+        ]
+    },
+
     // Members
 
     {

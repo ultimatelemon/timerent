@@ -13,11 +13,11 @@ class HasPermission
     /**
      * Handle an incoming request.
      *
-     * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
+     * @param  \Closure(Request): (Response)  $next
      */
     public function handle(Request $request, Closure $next, ... $permissions): Response
     {
-        $user = Auth::user();
+        $user = $request->user();
         foreach($permissions as $permission) {
             if((new Permissions($user->role->bitfield))->has($permission)) {
                 return $next($request);

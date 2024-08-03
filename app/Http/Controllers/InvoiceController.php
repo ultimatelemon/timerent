@@ -12,9 +12,20 @@ use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Routing\Controllers\HasMiddleware;
+use Illuminate\Routing\Controllers\Middleware;
 
-class InvoiceController extends ApiController
+class InvoiceController extends ApiController implements HasMiddleware
 {
+
+    public static function middleware(): array
+    {
+        return [
+            new Middleware('hasPermissions:VIEW_INVOICES', only: ['index']),
+//            new Middleware('hasPermissions:VIEW_INVOICES', only: ['index']),
+        ];
+    }
+
     /**
      * Display a listing of the resource
      *

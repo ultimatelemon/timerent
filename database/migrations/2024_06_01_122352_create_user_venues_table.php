@@ -14,9 +14,10 @@ return new class extends Migration
         Schema::create('user_venues', function (Blueprint $table) {
             $table->uuid('id')->primary();
 
-            $table->foreignUuid('user_id');
-            $table->foreignUuid('venue_id');
-            $table->foreignUuid('role_id');
+            $table->foreignUuid('user_id')->constrained();
+            $table->foreignUuid('venue_id')->constrained();
+            $table->foreignUuid('role_id')->nullable()->constrained();
+            $table->boolean('owner')->default(false);
 
             $table->timestamps();
         });

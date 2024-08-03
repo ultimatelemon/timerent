@@ -8,9 +8,19 @@ use App\Models\Template;
 use App\Models\Venue;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Routing\Controllers\HasMiddleware;
+use Illuminate\Routing\Controllers\Middleware;
 
-class TemplateController extends ApiController
+class TemplateController extends ApiController implements HasMiddleware
 {
+    public static function middleware(): array
+    {
+        return [
+            new Middleware('hasPermissions:VIEW_TEMPLATES', only: ['index', 'show']),
+            new Middleware('hasPermissions:MANAGE_TEMPLATES', only: ['store', 'update', 'destroy']),
+        ];
+    }
+
     /**
      * Display a listing of the resource
      *
@@ -25,7 +35,7 @@ class TemplateController extends ApiController
         if($request->has('q'))
             $templates = $templates->where('name', 'ILIKE', "%{$request->q}%");
 
-        $templates = $templates->paginate(env('POSTS_PER_PACE'));
+        $templates = $templates->paginate(env('POSTS_PER_PAGE'));
 
         return $this->success(
             TemplateResource::collection($templates),

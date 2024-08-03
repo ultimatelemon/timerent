@@ -8,9 +8,19 @@ use App\Models\Unit;
 use App\Models\Venue;
 use App\Models\Week;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Routing\Controllers\HasMiddleware;
+use Illuminate\Routing\Controllers\Middleware;
 
-class WeekController extends ApiController
+class WeekController extends ApiController implements HasMiddleware
 {
+    public static function middleware(): array
+    {
+        return [
+            new Middleware('hasPermissions:VIEW_AGENDA', only: ['index']),
+            new Middleware('hasPermissions:VIEW_INVOICES', only: ['updateOrCreate']),
+        ];
+    }
+
     /**
      * Display a listing of the resource
      *

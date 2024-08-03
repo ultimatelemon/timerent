@@ -10,7 +10,7 @@ class UserVenue extends Model
 {
     use HasUuids;
 
-    protected $fillable = ['user_id', 'venue_id'];
+    protected $fillable = ['user_id', 'venue_id', 'owner', 'role_id'];
 
     public function venue()
     {

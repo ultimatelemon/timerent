@@ -7,6 +7,7 @@ use App\Http\Controllers\Member\MemberController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\ReservationController;
+use App\Http\Controllers\RoleController;
 use App\Http\Controllers\SettingController;
 use App\Http\Controllers\StatisticsController;
 use App\Http\Controllers\Stripe\StripeConnectController;
@@ -77,4 +78,5 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::resource('venues.users',             UserController::class)->except(['create', 'edit']);
     Route::resource('venues.members',           MemberController::class)->except(['create', 'edit']);
     Route::resource('venues.invoices',          InvoiceController::class)->except(['create', 'edit']);
+    Route::resource('venues.roles',          RoleController::class)->except(['create', 'edit']);
 });

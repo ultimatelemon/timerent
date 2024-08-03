@@ -2,10 +2,11 @@
 
 namespace App\Http\Resources;
 
+use App\Utils\Permissions;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class UserVenueResource extends JsonResource
+class RoleResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -16,11 +17,9 @@ class UserVenueResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'owner' => $this->owner,
-            'venue' => new VenueResource($this->whenLoaded('venue')),
-            'role' => new RoleResource($this->role),
-            'user' => new UserResource($this->user),
-            'created_at' => $this->created_at,
+            'name' => $this->name,
+            'bitfield' => $this->bitfield,
+            'flags' => (new Permissions($this->bitfield))->available(),
         ];
     }
 }

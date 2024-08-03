@@ -6,10 +6,20 @@ use App\Models\Setting;
 use App\Models\Venue;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Routing\Controllers\HasMiddleware;
+use Illuminate\Routing\Controllers\Middleware;
 use Illuminate\Support\Facades\Crypt;
 
-class SettingController extends ApiController
+class SettingController extends ApiController implements HasMiddleware
 {
+    public static function middleware(): array
+    {
+        return [
+            new Middleware('hasPermissions:VIEW_SETTINGS', only: ['getSettingByCategory']),
+            new Middleware('hasPermissions:MANAGE_SETTINGS', only: ['updateSettings', 'getPaymentSettings', 'updatePaymentSettings']),
+        ];
+    }
+
     /**
      * Get settings of the venue by category
      *
@@ -47,7 +57,7 @@ class SettingController extends ApiController
      * @param Venue $venue
      * @return JsonResponse
      */
-    public function getPaymentSettings(Venue $venue)
+    public function getPaymentSettings(Venue $venue): JsonResponse
     {
         $settings = $venue->settings()->where('category', 'finance')->get();
         return $this->success(

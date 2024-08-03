@@ -12,12 +12,14 @@ class Role extends Model
 {
     use HasFactory, HasUuids, SoftDeletes;
 
+    protected $fillable = ['name', 'bitfield'];
+
     public function venue()
     {
         return $this->belongsTo(Venue::class);
     }
 
-    public function permissionFlags()
+    public function flags()
     {
         return (new Permissions($this->bitfield))->available();
     }

@@ -76,4 +76,9 @@ class Venue extends Model
     {
         return $this->hasMany(Invoice::class);
     }
+
+    public function roles(): HasMany
+    {
+        return $this->hasMany(Role::class);
+    }
 }

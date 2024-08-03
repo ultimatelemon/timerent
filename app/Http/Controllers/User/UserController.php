@@ -3,8 +3,10 @@
 namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\ApiController;
+use App\Http\Resources\RoleResource;
 use App\Http\Resources\TokenResource;
 use App\Http\Resources\UserResource;
+use App\Http\Resources\UserVenueResource;
 use App\Models\User;
 use App\Models\UserVenue;
 use App\Models\Venue;
@@ -33,8 +35,42 @@ class UserController extends ApiController
      */
     public function current(Request $request): JsonResponse
     {
-        return $this->success(UserVenue::where('user_id', $request->user()->id)->first());
-        return $this->success(new UserResource($request->user()));
+        ray($request->venue);
+        if($request->venue == 'undefined' || !$request->venue) return $this->success(new UserResource($request->user()));
+
+        $venue = Venue::findOrFail($request->venue);
+
+        $userVenue = UserVenue::where('user_id', $request->user()->id)
+            ->where('venue_id', $venue->id)->firstOrFail();
+
+        return $this->success(
+            [
+                'user' => new UserVenueResource($userVenue),
+                'role' => new RoleResource($userVenue->role),
+            ]
+        );
+    }
+
+    /**
+     * Return the current user venue object
+     *
+     * @param Request $request
+     * @param Venue $venue
+     * @return JsonResponse
+     */
+    public function currentUserVenue(Request $request, $venue): JsonResponse
+    {
+        $userVenue = UserVenue::where('user_id', $request->user()->id)
+            ->where('venue_id', $venue->id);
+
+
+        return $this->success(
+            [
+                'user' => new UserResource($userVenue->user),
+                'role' => new RoleResource($userVenue->role),
+            ]
+        );
+//        return $this->success(new UserResource($request->user()));
     }
 
     /**
@@ -58,7 +94,7 @@ class UserController extends ApiController
      */
     public function index(Request $request, Venue $venue): JsonResponse
     {
-        $users = $venue->users();
+        $users = UserVenue::where('venue_id', $venue->id);
 
         if($request->has('q'))
             $users = $users->where('name', 'ILIKE', "%{$request->q}%")
@@ -67,7 +103,7 @@ class UserController extends ApiController
         $users = $users->paginate(env('POSTS_PER_PAGE'));
 
         return $this->success(
-            UserResource::collection($users),
+            UserVenueResource::collection($users),
             collect($users)->only(['from', 'to', 'total', 'per_page', 'last_page', 'current_page'])->toArray(),
         );
     }
@@ -76,13 +112,14 @@ class UserController extends ApiController
     {
         $validated = $request->validate([
             'email' => ['required', 'email:rfc,dns', new CaseInsensitiveExists('users', 'email')],
+            'role_id' => 'required|exists:roles,id',
         ]);
 
         $user = User::where('email', strtolower($validated['email']))->firstOrFail();
 
         if(UserVenue::where(['user_id' => $user->id, 'venue_id' => $venue->id])->exists()) return $this->error(['exists' => 'Gebruiker is al gekoppeld']);
 
-        UserVenue::create(['user_id' => $user->id, 'venue_id' => $venue->id, 'accepted' => true]);
+        UserVenue::create(['user_id' => $user->id, 'venue_id' => $venue->id, 'role_id' => $validated['role_id']]);
 
         return $this->success();
     }

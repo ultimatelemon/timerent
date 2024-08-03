@@ -20,6 +20,8 @@ class UnitController extends ApiController implements HasMiddleware
     {
         return [
                 new Middleware('unitLimit', only: ['store']),
+                new Middleware('hasPermissions:VIEW_UNITS', only: ['index', 'show']),
+                new Middleware('hasPermissions:MANAGE_UNITS', only: ['store', 'update', 'destroy']),
         ];
     }
 
@@ -38,7 +40,7 @@ class UnitController extends ApiController implements HasMiddleware
             $units = $units->where('name', 'ILIKE', "%{$request->q}%")
                 ->orWhere('description', 'ILIKE', "%{$request->q}%");
 
-        $units = $units->paginate(env('POSTS_PER_PACE'));
+        $units = $units->paginate(env('POSTS_PER_PAGE'));
 
         return $this->success(
             UnitResource::collection($units),

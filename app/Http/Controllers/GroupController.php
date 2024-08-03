@@ -48,4 +48,15 @@ class GroupController extends ApiController
         $group = Group::create($request->validated());
         return $this->success(new GroupResource($group));
     }
+
+    public function show(Venue $venue, Group $group): JsonResponse
+    {
+        return $this->success(new GroupResource($group));
+    }
+
+    public function update(StoreGroup $request, Venue $venue, Group $group): JsonResponse
+    {
+        $group->update($request->validated());
+        return $this->success(new GroupResource($group));
+    }
 }

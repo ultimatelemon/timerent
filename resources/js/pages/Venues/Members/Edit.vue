@@ -27,6 +27,7 @@
         <div class="border-t border-gray-100 md:border-none px-4 py-6 sm:col-span-1 sm:px-0 mr-0 sm:mr-12">
           <dt class="text-sm font-semibold leading-6 text-gray-900 pb-2">Groep</dt>
           <select class="input" name="" id="" v-model="formData.group_id">
+            <option :value="null">Geen groep</option>
             <option :value="group.id" v-for="group in groups">{{group.name}}</option>
           </select>
         </div>

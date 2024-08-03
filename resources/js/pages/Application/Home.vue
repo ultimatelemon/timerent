@@ -253,7 +253,7 @@ export default {
 
     canViewUnit(unit) {
       if(unit.groups.length === 0) return true;
-      if(!this.current_member) return false;
+      if(!this.current_member?.group_id) return false;
       let groupIds = unit.groups.map(g => g.id);
       return groupIds.includes(this.current_member.group.id);
     },

@@ -46,7 +46,7 @@
       </div>
 
       <div v-if="groups">
-        <label for="tax_percentage" class="block text-sm font-medium leading-6 text-gray-900">Belasting tarief <span class="required-star">*</span></label>
+        <label for="tax_percentage" class="block text-sm font-medium leading-6 text-gray-900">Member groepen</label>
         <MultipleSelectGroups :selectedGroupsIds="formData.groups.map(g => g.id)" :groups="groups" @selectionChange="updateSelectedGroups"></MultipleSelectGroups>
       </div>
 

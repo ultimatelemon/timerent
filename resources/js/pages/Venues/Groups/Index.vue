@@ -25,7 +25,7 @@
             </tr>
             </thead>
             <tbody class="divide-y divide-gray-200 bg-white">
-            <tr v-if="groups.length >= 1" v-for="group in groups" :key="group.id" class="even:bg-gray-50 hover:bg-gray-100 hover:cursor-pointer" @click="this.$router.push({name: 'venues.roles.edit', params: {venue: this.$route.params.venue, role: role.id}})">
+            <tr v-if="groups.length >= 1" v-for="group in groups" :key="group.id" class="even:bg-gray-50 hover:bg-gray-100 hover:cursor-pointer" @click="this.$router.push({name: 'venues.groups.edit', params: {venue: this.$route.params.venue, group: group.id}})">
               <td class="whitespace-nowrap py-2 pl-4 pr-3 text-sm text-gray-500 sm:pl-0">{{ group.name }}</td>
 <!--              <td class="whitespace-nowrap px-2 py-2 text-sm font-medium text-gray-900">{{ unit.tax_percentage }}%</td>-->
             </tr>

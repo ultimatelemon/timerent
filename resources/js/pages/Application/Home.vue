@@ -24,21 +24,25 @@
         <div v-if="!date" class="text-center text-lg py-5">Selecteer eerst een datum om verder te gaan.</div>
         <div v-else>
           <div v-if="units.length <= 0" class="text-center text-lg pt-6">Er is op deze datum (nog) niks beschikbaar. Probeer een andere datum</div>
-          <div v-else class="divide-y-2">
-            <div v-for="unit in units" class=" lg:p-4">
-              <div class="font-semibold text-md mb-1">{{ unit.unit.name }} - <span class="text-xs text-gray-700 font-semibold">{{ unit.unit.description }}</span></div>
-              <div class="text-xs text-gray-700 mb-4 font-semibold">{{ $filters.currency(unit.price) }} per {{ unit.interval }} minuten</div>
-              <div v-if="unit.timeblocks.length <= 0">Deze unit heeft geen tijden beschikbaar voor deze dag</div>
-              <div v-else class="inline-block">
-                <button-time-reservation
-                    v-if="unit.timeblocks"
-                    v-for="timeblock in unit.timeblocks"
-                    :key="timeblock"
-                    :timeblock="timeblock"
-                    :unit="unit.unit"
-                    :selected="selected"
-                    @updateList="updateSelectedTimeblocks"
-                />
+          <div v-else class="">
+            <div v-for="unit in units">
+              <div v-if="canViewUnit(unit.unit)"  class="lg:p-4">
+                <div class="font-semibold text-md mb-1">{{ unit.unit.name }} <span class="text-xs text-gray-700 font-semibold">- {{ unit.unit.description ?? 'Geen omschrijving' }}</span></div>
+                <div v-if="unit.unit.groups.length > 0" class="text-xs text-red-700 font-semibold">Alleen te reserveren voor groep(en): {{ unit.unit.groups.map(g => g.name).join(', ') }}</div>
+                <div class="text-xs text-gray-700 mb-4 font-semibold">{{ $filters.currency(unit.price) }} per {{ unit.interval }} minuten</div>
+                <div v-if="unit.timeblocks.length <= 0">Deze unit heeft geen tijden beschikbaar voor deze dag</div>
+                <div v-else class="inline-block">
+                  <button-time-reservation
+                      v-if="unit.timeblocks"
+                      v-for="timeblock in unit.timeblocks"
+                      :key="timeblock"
+                      :timeblock="timeblock"
+                      :unit="unit.unit"
+                      :selected="selected"
+                      @updateList="updateSelectedTimeblocks"
+                  />
+                </div>
+                <hr class="my-2">
               </div>
             </div>
           </div>
@@ -177,6 +181,7 @@ export default {
       showModal: false,
       url: "",
       activeSubscription: true,
+      current_member: null,
 
       date: null,
       year: null,
@@ -224,6 +229,7 @@ export default {
       axios.get('/app/members/current')
           .then(response => {
             if(response.data.data) {
+              this.current_member = response.data.data;
               this.name = response.data.data.name;
               this.email = response.data.data.email;
               this.phone_number = response.data.data.phone_number;
@@ -243,6 +249,13 @@ export default {
           .then(response => {
             this.units = response.data.data;
           })
+    },
+
+    canViewUnit(unit) {
+      if(unit.groups.length === 0) return true;
+      if(!this.current_member) return false;
+      let groupIds = unit.groups.map(g => g.id);
+      return groupIds.includes(this.current_member.group.id);
     },
 
     fetchProducts() {

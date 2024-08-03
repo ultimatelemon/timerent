@@ -48,6 +48,12 @@ class ApplicationTenantController extends ApiController
                     'id' => $week->unit->id,
                     'name' => $week->unit->name,
                     'description' => $week->unit->description,
+                    'groups' => $week->unit->groups->map(function ($group) {
+                        return [
+                            'id' => $group->id,
+                            'name' => $group->name,
+                        ];
+                    })
                 ],
                 'price' => $week->template->price,
                 'interval' => $week->template->interval,

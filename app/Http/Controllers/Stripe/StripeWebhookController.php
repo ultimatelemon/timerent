@@ -10,6 +10,7 @@ use App\Models\Venue;
 use App\WebPayment\PaymentStatus;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Stripe\StripeClient;
 use function Sentry\captureMessage;
 
 class StripeWebhookController extends ApiController
@@ -22,6 +23,7 @@ class StripeWebhookController extends ApiController
         switch($payload['type']) {
             case "customer.subscription.updated":
                 captureMessage('Customer subscription updated');
+                captureMessage($payload['data']);
                 $venue = Venue::where('stripe_subscription_id', $payload['data']['object']['id'])->firstOrFail();
 
                 // Subscription cancelled
@@ -38,6 +40,16 @@ class StripeWebhookController extends ApiController
                     captureMessage('Venue Subscription: Subscription plan aangepast');
                     $venue->plan_id = Plan::where([['stripe_product_id', '=', $payload['data']['object']['plan']['product']], ['stripe_price_id', '=', $payload['data']['object']['plan']['id']]])->firstOrFail()->id;
                     $venue->save();
+
+                    if($venue->units()->count() > $venue->plan->unit_limit) {
+                        $client = new StripeClient(env('STRIPE_SECRET'));
+                        $item = $client->invoiceItems->create([
+                            'customer' => $venue->stripe_customer_id,
+                            'price' => env('EXTRA_UNIT_PRICE_ID'),
+                            'currency' => 'eur',
+                            'description' => 'Extra unit buiten abonnement',
+                        ]);
+                    }
                 }
 
                 // Subscription extended paid

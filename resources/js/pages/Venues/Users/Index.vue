@@ -30,7 +30,7 @@
               <td class="whitespace-nowrap px-2 py-2 text-sm font-medium text-gray-900">{{ user.user.email }}</td>
               <td class="whitespace-nowrap px-2 py-2 text-sm font-medium text-gray-900">{{ user.owner ? 'Eigenaar' : user.role.name }}</td>
               <td class="whitespace-nowrap px-2 py-2 text-sm font-medium text-gray-900">
-                <DeleteButton v-if="current_user.id !== user.id" @delete="deleteData" :id="user.id"><i class="fa fa-trash"></i></DeleteButton>
+                <DeleteButton v-if="current_user.id !== user.id" @delete="deleteData" :id="user.user.id"><i class="fa fa-trash"></i></DeleteButton>
                 <span v-else>-</span>
               </td>
             </tr>

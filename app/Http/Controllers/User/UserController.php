@@ -43,11 +43,10 @@ class UserController extends ApiController
         $userVenue = UserVenue::where('user_id', '9ca5c8ff-31f0-431a-88f8-295ae5dd8282')
             ->where('venue_id', $venue->id)->firstOrFail();
 
-        captureMessage($userVenue->role);
         return $this->success(
             [
                 'user' => new UserVenueResource($userVenue),
-                'role' => new RoleResource($userVenue->role),
+//                'role' => new RoleResource($userVenue->role),
             ]
         );
     }

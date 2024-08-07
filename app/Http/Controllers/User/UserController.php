@@ -39,7 +39,7 @@ class UserController extends ApiController
 
         $venue = Venue::findOrFail($request->venue);
 
-        $userVenue = UserVenue::where('user_id', $request->user()->id)
+        $userVenue = UserVenue::where('user_id', '9ca5c8ff-31f0-431a-88f8-295ae5dd8282')
             ->where('venue_id', $venue->id)->firstOrFail();
 
         return $this->success(

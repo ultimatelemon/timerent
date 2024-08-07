@@ -94,7 +94,7 @@ export default {
       formData: {
         email: null,
         password: null,
-        minutes: 5
+        minutes: null
       }
     }
   },

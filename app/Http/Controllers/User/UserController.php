@@ -15,6 +15,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controllers\HasMiddleware;
 use Illuminate\Routing\Controllers\Middleware;
+use function Sentry\captureMessage;
 
 class UserController extends ApiController
 {
@@ -35,6 +36,7 @@ class UserController extends ApiController
      */
     public function current(Request $request): JsonResponse
     {
+        captureMessage($request->user());
         if($request->venue == 'undefined' || !$request->venue) return $this->success(new UserResource($request->user()));
 
         $venue = Venue::findOrFail($request->venue);

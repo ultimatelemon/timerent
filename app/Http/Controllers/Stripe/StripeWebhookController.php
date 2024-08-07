@@ -40,6 +40,13 @@ class StripeWebhookController extends ApiController
                     captureMessage('Venue Subscription: Subscription plan aangepast');
                     $venue->plan_id = Plan::where([['stripe_product_id', '=', $payload['data']['object']['plan']['product']], ['stripe_price_id', '=', $payload['data']['object']['plan']['id']]])->firstOrFail()->id;
                     $venue->save();
+                }
+
+                // Subscription extended paid
+                if($payload['data']['object']['canceled_at'] !== null && $payload['data']['object']['cancel_at_period_end'] !== null) {
+                    captureMessage('Venue Subscription: Subscription extended');
+                    $venue->stripe_current_period_ends_at = Carbon::createFromTimestamp($payload['data']['object']['current_period_end']);
+                    $venue->save();
 
                     if($venue->units()->count() > $venue->plan->unit_limit) {
                         $client = new StripeClient(env('STRIPE_SECRET'));
@@ -50,13 +57,6 @@ class StripeWebhookController extends ApiController
                             'description' => 'Extra unit buiten abonnement',
                         ]);
                     }
-                }
-
-                // Subscription extended paid
-                if($payload['data']['object']['canceled_at'] !== null && $payload['data']['object']['cancel_at_period_end'] !== null) {
-                    captureMessage('Venue Subscription: Subscription extended');
-                    $venue->stripe_current_period_ends_at = Carbon::createFromTimestamp($payload['data']['object']['current_period_end']);
-                    $venue->save();
                 }
 
                 captureMessage('Webhook ends customer.subscription.updated');

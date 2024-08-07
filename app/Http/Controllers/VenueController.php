@@ -31,7 +31,7 @@ class VenueController extends ApiController
     {
         $venue = Venue::create($request->all());
 
-        UserVenue::create(['user_id' => $request->user()->id, 'venue_id' => $venue->id, 'owner' => true]);
+        UserVenue::create(['user_id' => $request->user()->id, 'venue_id' => $venue->id, 'owner' => true, 'role_id' => '6e488921-9675-4e5e-b7b5-8b6acd1ecd18']);
 
         if (!(new StripeCustomerController())->create($venue, $request->user())) return $this->error(['']);
 

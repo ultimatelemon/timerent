@@ -36,10 +36,13 @@ class UserController extends ApiController
      */
     public function current(Request $request): JsonResponse
     {
-        captureMessage($request->user());
         if($request->venue == 'undefined' || !$request->venue) return $this->success(new UserResource($request->user()));
 
+        captureMessage("REQUEST VENUE: " . $request->venue);
+
         $venue = Venue::findOrFail($request->venue);
+
+        captureMessage('VENUE: ' . $venue);
 
         $userVenue = UserVenue::where('user_id', '9ca5c8ff-31f0-431a-88f8-295ae5dd8282')
             ->where('venue_id', $venue->id)->firstOrFail();

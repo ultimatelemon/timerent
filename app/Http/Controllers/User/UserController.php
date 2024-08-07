@@ -15,7 +15,6 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controllers\HasMiddleware;
 use Illuminate\Routing\Controllers\Middleware;
-use function Sentry\captureMessage;
 
 class UserController extends ApiController
 {
@@ -40,13 +39,13 @@ class UserController extends ApiController
 
         $venue = Venue::findOrFail($request->venue);
 
-        $userVenue = UserVenue::where('user_id', '9ca5c8ff-31f0-431a-88f8-295ae5dd8282')
+        $userVenue = UserVenue::where('user_id', $request->user()->id)
             ->where('venue_id', $venue->id)->firstOrFail();
 
         return $this->success(
             [
                 'user' => new UserVenueResource($userVenue),
-//                'role' => new RoleResource($userVenue->role),
+                'role' => new RoleResource($userVenue->role),
             ]
         );
     }

@@ -18,7 +18,6 @@ class UserVenueResource extends JsonResource
             'id' => $this->id,
             'owner' => $this->owner,
             'venue' => new VenueResource($this->whenLoaded('venue')),
-            'role' => new RoleResource($this->role),
             'user' => new UserResource($this->user),
             'created_at' => $this->created_at,
         ];

@@ -1,28 +1,34 @@
 <template>
-  <div class="flex justify-center items-center h-full w-full text-center">
-    <div class="space-y-8">
-      <div class="text-3xl" v-if="loading && !error">Momentje...</div>
-      <div class="text-3xl" v-if="!loading && error">Oeps...</div>
-      <div class="text-3xl" v-if="!loading && !error">Hallo!</div>
-      <div v-if="loading && !error" class="flex gap-4">
-        We verifieren je email... <i class="bx bx-loader-alt animate-spin"></i>
+  <main class="grid min-h-full place-items-center bg-white px-6 py-24 sm:py-32 lg:px-8">
+    <div class="text-center" v-if="!error && loading">
+      <div class="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-green-100">
+        <svg class="h-6 w-6 text-green-600" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" />
+        </svg>
       </div>
-      <div v-else-if="!loading && !error">
-        <div class="flex">Je email is succesvol geverifieerd! <component :is="CheckIcon" class="h-5 w-5 text-green-500"></component></div>
-        <div class="pt-4">
-          <a href="/login" class="text-indigo-700">Inloggen &rarr;</a>
-        </div>
-      </div>
-      <div v-else>
-        <div class="">
-          <div>Er is iets mis gegaan. Heb je de juiste verificatie token of is je email al geverifieerd?</div>
-          <div class="pt-4">
-            <a href="/login" class="text-indigo-700">Wil je inloggen? &rarr;</a>
-          </div>
-        </div>
-      </div>
+      <h1 class="mt-4 text-3xl font-bold tracking-tight text-gray-900 sm:text-5xl">We verifieren je email <i v-if="loading" class="fa fa-spinner mr-2 animate-spin"></i> </h1>
+      <p class="mt-6 text-base leading-7 text-gray-600">Zo gedaan...</p>
     </div>
-  </div>
+    <div class="text-center" v-if="!error && !loading">
+      <div class="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-green-100">
+        <svg class="h-6 w-6 text-green-600" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" />
+        </svg>
+      </div>
+      <h1 class="mt-4 text-3xl font-bold tracking-tight text-gray-900 sm:text-5xl">Verificatie gelukt 🥳</h1>
+      <p class="mt-6 text-base leading-7 text-gray-600">Je kunt dit scherm nu sluiten.</p>
+    </div>
+    <div class="text-center" v-if="error && !loading">
+      <div class="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-red-100">
+        <svg class="h-6 w-6 text-red-600" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+        </svg>
+      </div>
+      <h1 class="mt-4 text-3xl font-bold tracking-tight text-gray-900 sm:text-5xl">Verificatie mislukt 😥</h1>
+      <p class="mt-6 text-base leading-7 text-gray-600">Onjuiste token, of je email is al geverifieerd.</p>
+      <a href="/login">Wil je inloggen? &rarr;</a>
+    </div>
+  </main>
 </template>
 
 <script>

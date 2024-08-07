@@ -1,10 +1,10 @@
 <template>
-  <div v-if='!success' class='w-screen h-screen flex justify-center items-center'>
+  <div v-if='!success' class='h-screen flex justify-center items-center'>
     <div class='flex items-center justify-center gap-3'>
       <i class='bx bx-loader-alt animate-spin'></i> Bezig met afronden ...
     </div>
   </div>
-  <div v-else class="text-center w-screen h-screen flex flex-col items-center justify-center">
+  <div v-else class="text-center h-screen flex flex-col items-center justify-center">
     <div class="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-green-100">
       <svg class="h-6 w-6 text-green-600" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
         <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" />

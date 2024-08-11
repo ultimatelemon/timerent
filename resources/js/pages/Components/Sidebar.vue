@@ -30,20 +30,25 @@
                   <img class="h-8 w-auto" src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600" alt="Your Company" />
                   <span class="ml-3 font-semibold">Timerent</span>
                 </div>
+                <a href="/select">Terug naar select</a>
+                <a :href="'https://' + current_venue.subdomain + '.timerent-rewrite.test'" target="_blank" class="flex items-center space-x-2">
+                  <p>Bekijk pagina</p>
+                  <component :is="ArrowTopRightOnSquareIcon" class="text-gray-400 group-hover:text-indigo-600 h-6 w-6 shrink-0" aria-hidden="true"></component>
+                </a>
                 <nav class="flex flex-1 flex-col">
                   <ul role="list" class="flex flex-1 flex-col gap-y-7">
                     <li>
                       <ul role="list" class="-mx-2 space-y-1">
                         <li v-for="item in navigation" :key="item.name">
-                          <div v-if="item.type === 'category' && (item.permission.length > 0 ? hasCommon(item.permission, user.role.permissions) : false)" class="mb-1 mt-3 text-sm flex items-center">
+                          <div v-if="item.type === 'category' && (item.permission.length > 0 ? (user.owner ? true : hasCommon(item.permission, role.flags)) : true)" class="mb-1 mt-3 text-sm flex items-center">
                     <span class="font-bold text-xs pr-1">
                       {{item.name}}
                     </span>
                           </div>
-                          <router-link v-else :to="item.link" active-class="bg-gray-50 text-indigo-600" class="text-gray-700 hover:text-indigo-600 hover:bg-gray-50 group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold">
+                          <router-link v-else v-if="item.permission.length > 0 ? (user.owner ? true : hasCommon(item.permission, role.flags)) : true" :to="item.link" active-class="bg-gray-50 text-indigo-600" class="text-gray-700 hover:text-indigo-600 hover:bg-gray-50 group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold">
                             <component :is="item.icon" class="text-gray-400 group-hover:text-indigo-600 h-6 w-6 shrink-0" aria-hidden="true"></component>
                             <!--                    <i :class="'bx bx-' + item.icon"></i>-->
-                            {{ item.name }}
+                            {{item.name}}
                           </router-link>
                         </li>
                       </ul>

@@ -17,7 +17,7 @@ class RoleSeeder extends Seeder
             [
                 'id' => '6e488921-9675-4e5e-b7b5-8b6acd1ecd18',
                 'name' => 'Admin',
-                'bitfield' => 33010254,
+                'bitfield' => 33554431,
                 'deletable' => false,
             ],
             [

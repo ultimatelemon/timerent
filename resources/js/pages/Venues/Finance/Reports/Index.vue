@@ -74,24 +74,24 @@
       </div>
     </div>
 
-    <div v-if="charts" class="grid grid-cols-4 gap-4 font-semibold">
-      <div>
-        <p>Reserveringen per dag</p>
-        <apexchart width="375" :series="charts.reservations.series" :options="charts.reservations.options"></apexchart>
-      </div>
-      <div>
-        <p>Reserveringen per dag</p>
-        <apexchart width="375" :series="series" :options="options"></apexchart>
-      </div>
-      <div>
-        <p>Reserveringen per dag</p>
-        <apexchart width="375" :series="series" :options="options"></apexchart>
-      </div>
-      <div>
-        <p>Reserveringen per dag</p>
-        <apexchart width="375" :series="series" :options="options"></apexchart>
-      </div>
-    </div>
+<!--    <div v-if="charts" class="grid grid-cols-4 gap-4 font-semibold">-->
+<!--      <div>-->
+<!--        <p>Reserveringen per dag</p>-->
+<!--        <apexchart width="375" :series="charts.reservations.series" :options="charts.reservations.options"></apexchart>-->
+<!--      </div>-->
+<!--      <div>-->
+<!--        <p>Reserveringen per dag</p>-->
+<!--        <apexchart width="375" :series="series" :options="options"></apexchart>-->
+<!--      </div>-->
+<!--      <div>-->
+<!--        <p>Reserveringen per dag</p>-->
+<!--        <apexchart width="375" :series="series" :options="options"></apexchart>-->
+<!--      </div>-->
+<!--      <div>-->
+<!--        <p>Reserveringen per dag</p>-->
+<!--        <apexchart width="375" :series="series" :options="options"></apexchart>-->
+<!--      </div>-->
+<!--    </div>-->
   </div>
 </template>
 

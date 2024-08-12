@@ -144,7 +144,7 @@ export default {
               this.loading = false;
             })
       } else {
-        axios.post('/venues/' + this.$route.params.venue + '/templates/', this.formData)
+        axios.post('/venues/' + this.$route.params.venue + '/templates', this.formData)
             .then(response => {
               this.$router.push({ name: 'venues.templates.index' });
             })

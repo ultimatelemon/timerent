@@ -42,9 +42,9 @@ class StripeWebhookController extends ApiController
                 }
 
                 // Subscription extended paid
-                captureMessage($payload['data']['object']['canceled_at']);
-                captureMessage($payload['data']['object']['cancel_at_period_end']);
-                captureMessage($payload['data']['object']['current_period_end']);
+                captureMessage($payload['data']['object']['canceled_at'] ?? 'Geen annulering');
+                captureMessage($payload['data']['object']['cancel_at_period_end'] ?? 'Geen cancel op period end');
+                captureMessage($payload['data']['object']['current_period_end'] ?? 'Current periode end');
 
 
                 if($payload['data']['object']['canceled_at'] !== null && $payload['data']['object']['cancel_at_period_end'] !== null) {

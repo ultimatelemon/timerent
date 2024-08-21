@@ -22,12 +22,12 @@ class StripeWebhookController extends ApiController
 
         switch($payload['type']) {
             case "customer.subscription.updated":
-                captureMessage('Customer subscription updated');
+//                captureMessage('Customer subscription updated');
                 $venue = Venue::where('stripe_subscription_id', $payload['data']['object']['id'])->firstOrFail();
 
                 // Subscription cancelled
                 if($payload['data']['object']['canceled_at'] !== null) {
-                    captureMessage('Venue Subscription: Subscription geannuleerd');
+//                    captureMessage('Venue Subscription: Subscription geannuleerd');
                     $time = Carbon::parse($payload['data']['object']['canceled_at']);
                     $venue->canceled_at = $time;
                     $venue->stripe_current_period_ends_at = Carbon::createFromTimestamp($payload['data']['object']['current_period_end']);
@@ -36,19 +36,19 @@ class StripeWebhookController extends ApiController
 
                 // Subscription plan changed
                 if($payload['data']['object']['plan']['product'] !== $venue->plan->stripe_product_id || $payload['data']['object']['plan']['id'] !== $venue->plan->stripe_price_id) {
-                    captureMessage('Venue Subscription: Subscription plan aangepast');
+//                    captureMessage('Venue Subscription: Subscription plan aangepast');
                     $venue->plan_id = Plan::where([['stripe_product_id', '=', $payload['data']['object']['plan']['product']], ['stripe_price_id', '=', $payload['data']['object']['plan']['id']]])->firstOrFail()->id;
                     $venue->save();
                 }
 
                 // Subscription extended paid
-                captureMessage($payload['data']['object']['canceled_at'] ?? 'Geen annulering');
-                captureMessage($payload['data']['object']['cancel_at_period_end'] ?? 'Geen cancel op period end');
-                captureMessage($payload['data']['object']['current_period_end'] ?? 'Current periode end');
+//                captureMessage($payload['data']['object']['canceled_at'] ?? 'Geen annulering');
+//                captureMessage($payload['data']['object']['cancel_at_period_end'] ?? 'Geen cancel op period end');
+//                captureMessage($payload['data']['object']['current_period_end'] ?? 'Current periode end');
 
 
-                if($payload['data']['object']['canceled_at'] !== null && $payload['data']['object']['cancel_at_period_end'] !== null) {
-                    captureMessage('Venue Subscription: Subscription extended');
+                if($payload['data']['object']['canceled_at'] !== null && !$payload['data']['object']['cancel_at_period_end']) {
+//                    captureMessage('Venue Subscription: Subscription extended');
                     $venue->stripe_current_period_ends_at = Carbon::createFromTimestamp($payload['data']['object']['current_period_end']);
                     $venue->save();
 

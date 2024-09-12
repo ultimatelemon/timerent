@@ -23,6 +23,7 @@ class StripeWebhookController extends ApiController
         switch($payload['type']) {
             case "customer.subscription.updated":
                 captureMessage('Customer subscription updated');
+                return true;
                 $venue = Venue::where('stripe_subscription_id', $payload['data']['object']['id'])->firstOrFail();
 
                 // Subscription cancelled
@@ -78,6 +79,6 @@ class StripeWebhookController extends ApiController
                 }
                 break;
         }
-        return true;
+        return http_response_code(200);
     }
 }

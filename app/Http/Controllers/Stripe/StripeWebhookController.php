@@ -15,19 +15,19 @@ use function Sentry\captureMessage;
 
 class StripeWebhookController extends ApiController
 {
-    public function handle(Request $request)
+    public function handle(Request $request): bool
     {
         $payload = json_decode($request->getContent(), true);
         captureMessage($payload['type']);
 
         switch($payload['type']) {
             case "customer.subscription.updated":
-//                captureMessage('Customer subscription updated');
+                captureMessage('Customer subscription updated');
                 $venue = Venue::where('stripe_subscription_id', $payload['data']['object']['id'])->firstOrFail();
 
                 // Subscription cancelled
                 if($payload['data']['object']['canceled_at'] !== null) {
-//                    captureMessage('Venue Subscription: Subscription geannuleerd');
+                    captureMessage('Venue Subscription: Subscription geannuleerd');
                     $time = Carbon::parse($payload['data']['object']['canceled_at']);
                     $venue->canceled_at = $time;
                     $venue->stripe_current_period_ends_at = Carbon::createFromTimestamp($payload['data']['object']['current_period_end']);
@@ -36,7 +36,7 @@ class StripeWebhookController extends ApiController
 
                 // Subscription plan changed
                 if($payload['data']['object']['plan']['product'] !== $venue->plan->stripe_product_id || $payload['data']['object']['plan']['id'] !== $venue->plan->stripe_price_id) {
-//                    captureMessage('Venue Subscription: Subscription plan aangepast');
+                    captureMessage('Venue Subscription: Subscription plan aangepast');
                     $venue->plan_id = Plan::where([['stripe_product_id', '=', $payload['data']['object']['plan']['product']], ['stripe_price_id', '=', $payload['data']['object']['plan']['id']]])->firstOrFail()->id;
                     $venue->save();
                 }
@@ -48,7 +48,7 @@ class StripeWebhookController extends ApiController
 
 
                 if($payload['data']['object']['canceled_at'] !== null && !$payload['data']['object']['cancel_at_period_end']) {
-//                    captureMessage('Venue Subscription: Subscription extended');
+                    captureMessage('Venue Subscription: Subscription extended');
                     $venue->stripe_current_period_ends_at = Carbon::createFromTimestamp($payload['data']['object']['current_period_end']);
                     $venue->save();
 
@@ -64,7 +64,7 @@ class StripeWebhookController extends ApiController
                 }
 
                 captureMessage('Webhook ends customer.subscription.updated');
-                return;
+                break;
 
             // Payment session expired
             case 'checkout.session.expired':
@@ -76,7 +76,8 @@ class StripeWebhookController extends ApiController
                     $reservation->payment_status = PaymentStatus::Expired;
                     $reservation->save();
                 }
-
+                break;
         }
+        return true;
     }
 }

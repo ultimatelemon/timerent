@@ -15,7 +15,7 @@ use function Sentry\captureMessage;
 
 class StripeWebhookController extends ApiController
 {
-    public function handle(Request $request): bool
+    public function handle(Request $request): void
     {
         $payload = json_decode($request->getContent(), true);
         captureMessage($payload['type']);
@@ -23,7 +23,8 @@ class StripeWebhookController extends ApiController
         switch($payload['type']) {
             case "customer.subscription.updated":
                 captureMessage('Customer subscription updated');
-                return true;
+                http_response_code(200);
+
                 $venue = Venue::where('stripe_subscription_id', $payload['data']['object']['id'])->firstOrFail();
 
                 // Subscription cancelled
@@ -79,6 +80,5 @@ class StripeWebhookController extends ApiController
                 }
                 break;
         }
-        return http_response_code(200);
     }
 }

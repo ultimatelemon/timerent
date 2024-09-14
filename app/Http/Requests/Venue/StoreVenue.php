@@ -37,7 +37,7 @@ class StoreVenue extends FormRequest
             'bank_number' => 'nullable|string',
 
             'plan_id' => 'required|exists:plans,id',
-            'subdomain' => 'required|string|unique:venues,subdomain',
+            'subdomain' => 'required|string|unique:venues,subdomain|lowercase|max:32|regex:/^[a-z\-]+$/',
 
             'avatar_id' => 'nullable|uuid|exists:files,id',
             'cover_id' => 'nullable|uuid|exists:files,id',

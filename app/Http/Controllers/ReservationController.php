@@ -84,7 +84,7 @@ class ReservationController extends ApiController implements HasMiddleware
 
         switch($reservation->payment_provider) {
             case 'mollie':
-                if($reservation->payment_status === PaymentStatus::Paid) break;
+                if($reservation->payment_status === PaymentStatus::Paid->value) break;
                 $setting = Setting::where([['key', '=', 'payment_api_key'], ['venue_id', '=', $reservation->venue->id]])->firstOrFail()->value;
                 $payment = new MolliePaymentClient(Crypt::decrypt($setting));
                 $payment = $payment->getPayment($reservation->payment_id);

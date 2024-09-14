@@ -57,6 +57,7 @@ class StripeWebhookController extends ApiController
                     if($venue->units()->count() > $venue->plan->unit_limit) {
                         $client = new StripeClient(env('STRIPE_SECRET'));
                         $item = $client->invoiceItems->create([
+                            'quantity' => ($venue->units()->count() - $venue->plan->unit_limit),
                             'customer' => $venue->stripe_customer_id,
                             'price' => env('EXTRA_UNIT_PRICE_ID'),
                             'currency' => 'eur',

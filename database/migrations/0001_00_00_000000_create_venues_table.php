@@ -34,6 +34,8 @@ return new class extends Migration
             $table->string('stripe_subscription_id')->nullable();
             $table->timestamp('stripe_current_period_ends_at')->nullable();
 
+            $table->timestamp('canceled_at')->nullable();
+
             $table->foreignUuid('plan_id')->constrained();
 
             $table->softDeletes();

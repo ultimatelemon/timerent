@@ -8,6 +8,8 @@ export const routes = [
     { path: '/register', component: () => import('./pages/Auth/Register.vue'), name: 'register', meta: { title: "pages.register" } },
     { path: '/select', component: () => import('./pages/VenueSelector.vue'), name: 'venueselect', meta: { title: "pages.login" } },
 
+    { path: '/manage/:venue', component: () => import('./pages/Manage/Venue.vue'), name: 'manage.venue', meta: { title: "pages.login" } },
+
     { path: '/', redirect: '/select' },
 
     { path: '/store/:venue/home', component: () => import('./pages/Venues/Home.vue'), name: 'venues.home' },

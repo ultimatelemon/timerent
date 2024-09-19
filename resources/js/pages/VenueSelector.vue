@@ -95,7 +95,7 @@
               <component :is="ArrowTopRightOnSquareIcon" class="text-gray-400 group-hover:text-indigo-600 h-6 w-6 shrink-0" aria-hidden="true"></component>
             </a>
 <!--            <a :href="'/store/' + user_venue.venue.id + '/home'" class="btn btn-primary">Bezoeken</a>-->
-            <button @click="openCustomerPortal" class="btn btn-danger">Abonnement</button>
+            <a :href="'/manage/' + user_venue.venue.id" class="btn btn-danger">Beheer</a>
           </div>
         </div>
       </div>

@@ -54,6 +54,9 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/venues/{venue}/settings/payment', [SettingController::class, 'getPaymentSettings']);
     Route::put('/venues/{venue}/settings', [SettingController::class, 'updateSettings']);
 
+    // Manage
+    Route::get('/users/{user}/venue/{venue}', [UserVenueController::class, 'show']);
+
     // Payment
     Route::get('/paymentproviders/available', [PaymentProviderController::class, 'available']);
     Route::post('/venue/{venue}/payments/setup', [VenueController::class, 'setupTimerentPayments']);

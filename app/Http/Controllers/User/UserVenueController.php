@@ -4,6 +4,7 @@ namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\ApiController;
 use App\Http\Resources\UserVenueResource;
+use App\Http\Resources\VenueResource;
 use App\Models\User;
 use App\Models\Venue;
 use Illuminate\Http\JsonResponse;
@@ -20,5 +21,10 @@ class UserVenueController extends ApiController
         $user_venues = $user_venues->paginate(env('POST_PER_PAGE'));
 
         return $this->success(UserVenueResource::collection($user_venues), null, $user_venues->toArray());
+    }
+
+    public function show(Request $request, User $user, Venue $venue): JsonResponse
+    {
+        return $this->success(new VenueResource($venue));
     }
 }

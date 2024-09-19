@@ -56,6 +56,8 @@ Route::middleware('auth:sanctum')->group(function () {
 
     // Manage
     Route::get('/users/{user}/venue/{venue}', [UserVenueController::class, 'show']);
+    Route::put('/users/{user}/venue/{venue}', [UserVenueController::class, 'update']);
+    Route::post('/users/{user}/venue/{venue}/portal', [UserVenueController::class, 'openCustomerPortal']);
 
     // Payment
     Route::get('/paymentproviders/available', [PaymentProviderController::class, 'available']);

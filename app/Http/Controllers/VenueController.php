@@ -15,6 +15,7 @@ use Database\Seeders\SettingSeeder;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\Validator;
 use Stripe\Exception\ApiErrorException;
 
 class VenueController extends ApiController
@@ -72,7 +73,7 @@ class VenueController extends ApiController
         $venue->update(['stripe_connect_id' => $connectedAccount->id]);
         $onboardingUrl = (new StripeConnectController())->accountLink($venue);
 
-        if($currentAccount) (new StripeConnectController())->deleteConnectedAccount($currentAccount, $venue);
+        if ($currentAccount) (new StripeConnectController())->deleteConnectedAccount($currentAccount, $venue);
 
         return $this->success($onboardingUrl);
     }

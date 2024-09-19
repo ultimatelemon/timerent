@@ -1,6 +1,6 @@
 <template>
-  <main class="fixed top-0 left-0 right-0 bottom-0 bg-gray-100 flex flex-col">
-    <div v-if="current_user" class="leading-tight flex items-center p-5 rounded border-b mb-12">
+  <main class="fixed top-0 left-0 right-0 bottom-0 bg-gray-100 flex flex-col" v-if="current_user && venue">
+    <div class="leading-tight flex items-center p-5 rounded border-b mb-12">
       <router-link to="#" class="cursor-pointer flex items-center mr-auto">
         <!--        <img :src="current_user?.avatar" alt="hallo" class="w-12 h-12 rounded-full mr-5">-->
         <div class="leading-none">
@@ -12,8 +12,14 @@
       <button class="btn btn-lg btn-danger" @click="logout">Afmelden</button>
     </div>
     <div class="px-5">
+      <div v-if="saved" class="my-3 alert alert-success">
+        <div class="flex justify-between items-center">
+          <div>Je instellingen zijn opgeslagen.</div>
+          <div @click="saved = false" class="cursor-pointer"><i class="fa fa-close"></i></div>
+        </div>
+      </div>
       <div class="pb-8">
-        <div class="font-semibold text-lg">Beheer</div>
+        <div class="font-semibold text-lg">Informatie</div>
         <div class="text-sm">Beheer hier je venue informatie en instellingen</div>
       </div>
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 mb-12">
@@ -56,128 +62,42 @@
           </div>
           <p v-if="errors.subdomain" class="mt-2 text-sm text-red-600" id="name-error">{{ errors.subdomain[0] }}</p>
         </div>
+      </div>
 
-<!--        <div>-->
-<!--          <label for="description" class="block text-sm font-medium leading-6 text-gray-900">Omschrijving</label>-->
-<!--          <div class="relative mt-2 rounded-md shadow-sm">-->
-<!--            <input v-model="formData.description" type="text" name="description" id="description"-->
-<!--                   v-on:keyup.enter="postData"-->
-<!--                   :class="errors.description ? 'ring-red-300' : ''"-->
-<!--                   class="block w-full rounded-md border-0 py-1.5 pr-10 ring-1 ring-inset focus:ring-2 focus:ring-inset focus:ring-indigo-500 sm:text-sm sm:leading-6"-->
-<!--                   aria-invalid="true" aria-describedby="description-error"/>-->
-<!--            <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">-->
-<!--              <svg v-if="errors.description" class="h-5 w-5 text-red-500" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">-->
-<!--                <path fill-rule="evenodd"-->
-<!--                      d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-8-5a.75.75 0 01.75.75v4.5a.75.75 0 01-1.5 0v-4.5A.75.75 0 0110 5zm0 10a1 1 0 100-2 1 1 0 000 2z"-->
-<!--                      clip-rule="evenodd"/>-->
-<!--              </svg>-->
-<!--            </div>-->
-<!--          </div>-->
-<!--          <p v-if="errors.description" class="mt-2 text-sm text-red-600" id="description-error">{{ errors.description[0] }}</p>-->
-<!--        </div>-->
+      <div class="pb-8">
+        <div class="font-semibold text-lg">Abonnement</div>
+        <div class="text-sm">Bekijk hier je huidige abonnement. Aanpassingen kun je direct in je Stripe dashboard regelen.</div>
+      </div>
 
-<!--        <div>-->
-<!--          <label for="tax_percentage" class="block text-sm font-medium leading-6 text-gray-900">Belasting tarief <span class="required-star">*</span></label>-->
-<!--          <select v-model="formData.tax_percentage" id="location" name="location" class="mt-2 block w-full rounded-md border-0 py-1.5 pl-3 pr-10 text-gray-900 ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600 sm:text-sm sm:leading-6">-->
-<!--            <option :value="0">0%</option>-->
-<!--            <option :value="9">9%</option>-->
-<!--            <option :value="21">21%</option>-->
-<!--          </select>-->
-<!--        </div>-->
-
-<!--        <div>-->
-<!--          <label for="price_per_timeblock" class="block text-sm font-medium leading-6 text-gray-900">Prijs per <span :class="formData.price_per_timeblock ? '' : 'font-semibold'">reservering</span>/<span :class="formData.price_per_timeblock ? 'font-semibold' : ''">tijdblock</span></label>-->
-<!--          <div class="relative mt-2">-->
-<!--            <Switch v-model="formData.price_per_timeblock" :class="[formData.price_per_timeblock ? 'bg-indigo-600' : 'bg-gray-200', 'relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-indigo-600 focus:ring-offset-2']">-->
-<!--              <span class="sr-only">Use setting</span>-->
-<!--              <span :class="[formData.price_per_timeblock ? 'translate-x-5' : 'translate-x-0', 'pointer-events-none relative inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out']">-->
-<!--            <span :class="[formData.price_per_timeblock ? 'opacity-0 duration-100 ease-out' : 'opacity-100 duration-200 ease-in', 'absolute inset-0 flex h-full w-full items-center justify-center transition-opacity']" aria-hidden="true">-->
-<!--              <svg class="h-3 w-3 text-gray-400" fill="none" viewBox="0 0 12 12">-->
-<!--               <path d="M4 8l2-2m0 0l2-2M6 6L4 4m2 2l2 2" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />-->
-<!--              </svg>-->
-<!--             </span>-->
-<!--            <span :class="[formData.price_per_timeblock ? 'opacity-100 duration-200 ease-in' : 'opacity-0 duration-100 ease-out', 'absolute inset-0 flex h-full w-full items-center justify-center transition-opacity']" aria-hidden="true">-->
-<!--             <svg class="h-3 w-3 text-indigo-600" fill="currentColor" viewBox="0 0 12 12">-->
-<!--               <path d="M3.707 5.293a1 1 0 00-1.414 1.414l1.414-1.414zM5 8l-.707.707a1 1 0 001.414 0L5 8zm4.707-3.293a1 1 0 00-1.414-1.414l1.414 1.414zm-7.414 2l2 2 1.414-1.414-2-2-1.414 1.414zm3.414 2l4-4-1.414-1.414-4 4 1.414 1.414z" />-->
-<!--             </svg>-->
-<!--            </span>-->
-<!--            </span>-->
-<!--            </Switch>-->
-<!--            <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">-->
-<!--              <svg v-if="errors.price_per_timeblock" class="h-5 w-5 text-red-500" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">-->
-<!--                <path fill-rule="evenodd"-->
-<!--                      d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-8-5a.75.75 0 01.75.75v4.5a.75.75 0 01-1.5 0v-4.5A.75.75 0 0110 5zm0 10a1 1 0 100-2 1 1 0 000 2z"-->
-<!--                      clip-rule="evenodd"/>-->
-<!--              </svg>-->
-<!--            </div>-->
-<!--          </div>-->
-<!--          <p v-if="errors.price_per_timeblock" class="mt-2 text-sm text-red-600" id="description-error">{{ errors.price_per_timeblock[0] }}</p>-->
-<!--        </div>-->
-
-<!--        <div>-->
-<!--          <label for="max_per_day" class="block text-sm font-medium leading-6 text-gray-900">Max aantal per dag te reserveren (0 voor geen limiet) <span-->
-<!--              class="required-star">*</span></label>-->
-<!--          <div class="relative mt-2 rounded-md shadow-sm">-->
-<!--            <input v-model="formData.max_per_day" type="number" name="max_per_day" id="max_per_day"-->
-<!--                   v-on:keyup.enter="postData"-->
-<!--                   :class="errors.max_per_day ? 'ring-red-300' : ''"-->
-<!--                   class="block w-full rounded-md border-0 py-1.5 pr-10 ring-1 ring-inset focus:ring-2 focus:ring-inset focus:ring-indigo-500 sm:text-sm sm:leading-6"-->
-<!--                   aria-invalid="true" aria-describedby="name-error"/>-->
-<!--            <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">-->
-<!--              <svg v-if="errors.max_per_day" class="h-5 w-5 text-red-500" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">-->
-<!--                <path fill-rule="evenodd"-->
-<!--                      d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-8-5a.75.75 0 01.75.75v4.5a.75.75 0 01-1.5 0v-4.5A.75.75 0 0110 5zm0 10a1 1 0 100-2 1 1 0 000 2z"-->
-<!--                      clip-rule="evenodd"/>-->
-<!--              </svg>-->
-<!--            </div>-->
-<!--          </div>-->
-<!--          <p v-if="errors.max_per_day" class="mt-2 text-sm text-red-600" id="name-error">{{ errors.max_per_day[0] }}</p>-->
-<!--        </div>-->
-
-<!--        <div>-->
-<!--          <label for="price" class="block text-sm font-medium leading-6 text-gray-900">Prijs per {{ formData.price_per_timeblock ? 'tijdblock' : 'reservering' }}</label>-->
-<!--          <div class="relative mt-2">-->
-<!--            <CurrencyInput v-on:keyup.enter='postData' v-model='formData.price'></CurrencyInput>-->
-<!--            <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">-->
-<!--              <svg v-if="errors.price" class="h-5 w-5 text-red-500" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">-->
-<!--                <path fill-rule="evenodd"-->
-<!--                      d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-8-5a.75.75 0 01.75.75v4.5a.75.75 0 01-1.5 0v-4.5A.75.75 0 0110 5zm0 10a1 1 0 100-2 1 1 0 000 2z"-->
-<!--                      clip-rule="evenodd"/>-->
-<!--              </svg>-->
-<!--            </div>-->
-<!--          </div>-->
-<!--          <p v-if="errors.price" class="mt-2 text-sm text-red-600" id="description-error">{{ errors.price[0] }}</p>-->
-<!--        </div>-->
-
-<!--        <div>-->
-<!--          <label for="is_active" class="block text-sm font-medium leading-6 text-gray-900">Actief</label>-->
-<!--          <div class="relative mt-2">-->
-<!--            <Switch v-model="formData.is_active" :class="[formData.is_active ? 'bg-indigo-600' : 'bg-gray-200', 'relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-indigo-600 focus:ring-offset-2']">-->
-<!--              <span class="sr-only">Use setting</span>-->
-<!--              <span :class="[formData.is_active ? 'translate-x-5' : 'translate-x-0', 'pointer-events-none relative inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out']">-->
-<!--            <span :class="[formData.is_active ? 'opacity-0 duration-100 ease-out' : 'opacity-100 duration-200 ease-in', 'absolute inset-0 flex h-full w-full items-center justify-center transition-opacity']" aria-hidden="true">-->
-<!--              <svg class="h-3 w-3 text-gray-400" fill="none" viewBox="0 0 12 12">-->
-<!--               <path d="M4 8l2-2m0 0l2-2M6 6L4 4m2 2l2 2" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />-->
-<!--              </svg>-->
-<!--             </span>-->
-<!--            <span :class="[formData.is_active ? 'opacity-100 duration-200 ease-in' : 'opacity-0 duration-100 ease-out', 'absolute inset-0 flex h-full w-full items-center justify-center transition-opacity']" aria-hidden="true">-->
-<!--             <svg class="h-3 w-3 text-indigo-600" fill="currentColor" viewBox="0 0 12 12">-->
-<!--               <path d="M3.707 5.293a1 1 0 00-1.414 1.414l1.414-1.414zM5 8l-.707.707a1 1 0 001.414 0L5 8zm4.707-3.293a1 1 0 00-1.414-1.414l1.414 1.414zm-7.414 2l2 2 1.414-1.414-2-2-1.414 1.414zm3.414 2l4-4-1.414-1.414-4 4 1.414 1.414z" />-->
-<!--             </svg>-->
-<!--            </span>-->
-<!--            </span>-->
-<!--            </Switch>-->
-<!--            <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">-->
-<!--              <svg v-if="errors.is_active" class="h-5 w-5 text-red-500" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">-->
-<!--                <path fill-rule="evenodd"-->
-<!--                      d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-8-5a.75.75 0 01.75.75v4.5a.75.75 0 01-1.5 0v-4.5A.75.75 0 0110 5zm0 10a1 1 0 100-2 1 1 0 000 2z"-->
-<!--                      clip-rule="evenodd"/>-->
-<!--              </svg>-->
-<!--            </div>-->
-<!--          </div>-->
-<!--          <p v-if="errors.is_active" class="mt-2 text-sm text-red-600" id="description-error">{{ errors.is_active[0] }}</p>-->
-<!--        </div>-->
-
+      <div class="mt-6 border-t border-gray-100">
+        <dl class="divide-y divide-gray-100">
+          <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+            <dt class="text-sm font-medium leading-6 text-gray-900">Huidige pakket</dt>
+            <dd class="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">{{ venue.plan.name }}</dd>
+          </div>
+          <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+            <dt class="text-sm font-medium leading-6 text-gray-900">Huidig abonnement termijn tot</dt>
+            <dd class="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">{{ $filters.humanDateTime(venue.stripe_current_period_ends_at) }}</dd>
+          </div>
+          <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+            <dt class="text-sm font-medium leading-6 text-gray-900">Maximale units</dt>
+            <dd class="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">{{ venue.plan.unit_limit }}</dd>
+          </div>
+          <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+            <dt class="text-sm font-medium leading-6 text-gray-900">Salary expectation</dt>
+            <dd class="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">$120,000</dd>
+          </div>
+          <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+            <dt class="text-sm font-medium leading-6 text-gray-900">Beheer je abonnement & bekijk je facturen</dt>
+            <dd class="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
+              <button @click="openCustomerPortal" :class="customerPortalLoading ? 'btn btn-secondary opacity-50 cursor-not-allowed' : 'btn btn-primary'"><i v-if="customerPortalLoading" class="fa fa-spinner mr-2 animate-spin"></i> Open portal</button>
+            </dd>
+          </div>
+        </dl>
+      </div>
+      <div class="flex justify-end gap-4">
+        <button @click="$router.go(-1)" class="btn btn-secondary">Annuleren</button>
+        <button @click="postData" :class="loading ? 'btn btn-secondary opacity-50 cursor-not-allowed' : 'btn btn-primary'"><i v-if="loading" class="fa fa-spinner mr-2 animate-spin"></i> Opslaan</button>
       </div>
     </div>
   </main>
@@ -198,8 +118,13 @@ export default {
   data() {
     return {
       venue_id: this.$route.params.venue,
+      venue: null,
       current_user: null,
       errors: [],
+
+      loading: false,
+      customerPortalLoading: false,
+      saved: false,
 
       formData: {
         name: null,
@@ -220,8 +145,6 @@ export default {
     },
 
     fetchData() {
-      this.loading = true;
-
       axios.get('/users/' + this.current_user.id + '/venue/' + this.venue_id)
           .then(response => {
             this.venue = response.data.data;
@@ -232,12 +155,26 @@ export default {
             console.log("ERROR", e)
           })
           .finally(() => {
-            this.loading = false;
+
           })
     },
 
     postData() {
-      //
+      if(this.loading) return;
+      this.loading = true;
+
+      axios.put('/users/' + this.current_user.id + '/venue/' + this.$store.state.venue.id, this.formData)
+          .then(response => {
+            this.venue = response.data.data;
+            this.saved = true;
+          })
+          .catch(e => {
+            this.saved = false;
+            this.errors = e.response.data.errors;
+          })
+          .finally(() => {
+            this.loading = false;
+          })
     },
 
     logout() {
@@ -249,8 +186,23 @@ export default {
     },
 
     openCustomerPortal() {
-      alert('goed');
-    }
+      if(this.customerPortalLoading) return;
+      this.customerPortalLoading = true;
+      axios.post('/users/' + this.current_user.id + '/venue/' + this.$store.state.venue.id + '/portal', {
+        return_url: window.location.href,
+      })
+          .then(response => {
+            console.log(response.data.data);
+            this.openURL(response.data.data.url);
+          })
+          .finally(() => {
+            this.customerPortalLoading = false;
+          })
+    },
+
+    openURL(url) {
+      window.location.href = url
+    },
   },
 
   mounted() {

@@ -52,13 +52,13 @@ class StripeWebhookController extends ApiController
                 if($payload['data']['object']['canceled_at'] !== null) {
                     $cancelat = $payload['data']['object']['canceled_at'];
                 }
-                captureMessage($cancelat);
+                captureMessage("cancelat " . $cancelat);
 
                 $cancelperiodends = 'Cancel period ends is false';
                 if($payload['data']['object']['canceled_at'] !== null) {
                     $cancelperiodends = $payload['data']['object']['canceled_at'];
                 }
-                captureMessage($cancelperiodends);
+                captureMessage("ends " . $cancelperiodends);
 
                 if ($payload['data']['object']['canceled_at'] === 'null' && $payload['data']['object']['cancel_at_period_end'] === 'false') {
                     captureMessage('Venue Subscription: Subscription extended');

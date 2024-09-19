@@ -56,7 +56,7 @@ class StripeWebhookController extends ApiController
 
                 $cancelperiodends = 'Cancel period ends is false';
                 if($payload['data']['object']['canceled_at'] !== false) {
-                    $cancelperiodends = $payload['data']['object']['canceled_at'];
+                    $cancelperiodends = $payload['data']['object']['current_period_end'];
                 }
                 captureMessage($cancelperiodends);
 

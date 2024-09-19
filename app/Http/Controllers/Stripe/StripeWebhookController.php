@@ -52,15 +52,15 @@ class StripeWebhookController extends ApiController
                 if($payload['data']['object']['canceled_at'] !== null) {
                     $cancelat = $payload['data']['object']['canceled_at'];
                 }
-                captureMessage("cancelat " . $cancelat);
+                captureMessage($cancelat);
 
                 $cancelperiodends = 'Cancel period ends is false';
-                if($payload['data']['object']['canceled_at'] !== null) {
+                if($payload['data']['object']['canceled_at'] !== false) {
                     $cancelperiodends = $payload['data']['object']['canceled_at'];
                 }
-                captureMessage("ends " . $cancelperiodends);
+                captureMessage($cancelperiodends);
 
-                if ($payload['data']['object']['canceled_at'] === 'null' && $payload['data']['object']['cancel_at_period_end'] === 'false') {
+                if ($payload['data']['object']['canceled_at'] === null && $payload['data']['object']['cancel_at_period_end'] === false) {
                     captureMessage('Venue Subscription: Subscription extended');
                     $venue->stripe_current_period_ends_at = Carbon::createFromTimestamp($payload['data']['object']['current_period_end']);
                     $venue->save();

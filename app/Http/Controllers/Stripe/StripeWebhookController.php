@@ -20,7 +20,7 @@ class StripeWebhookController extends ApiController
         $payload = json_decode($request->getContent(), true);
         captureMessage($payload['type']);
 
-        switch($payload['type']) {
+        switch ($payload['type']) {
             case "customer.subscription.updated":
                 captureMessage('Customer subscription updated');
                 http_response_code(200);
@@ -28,7 +28,7 @@ class StripeWebhookController extends ApiController
                 $venue = Venue::where('stripe_subscription_id', $payload['data']['object']['id'])->firstOrFail();
 
                 // Subscription cancelled
-                if($payload['data']['object']['canceled_at'] !== null) {
+                if ($payload['data']['object']['canceled_at'] !== null) {
                     captureMessage('Venue Subscription: Subscription geannuleerd');
                     $time = Carbon::parse($payload['data']['object']['canceled_at']);
                     $venue->canceled_at = $time;
@@ -37,7 +37,7 @@ class StripeWebhookController extends ApiController
                 }
 
                 // Subscription plan changed
-                if($payload['data']['object']['plan']['product'] !== $venue->plan->stripe_product_id || $payload['data']['object']['plan']['id'] !== $venue->plan->stripe_price_id) {
+                if ($payload['data']['object']['plan']['product'] !== $venue->plan->stripe_product_id || $payload['data']['object']['plan']['id'] !== $venue->plan->stripe_price_id) {
                     captureMessage('Venue Subscription: Subscription plan aangepast');
                     $venue->plan_id = Plan::where([['stripe_product_id', '=', $payload['data']['object']['plan']['product']], ['stripe_price_id', '=', $payload['data']['object']['plan']['id']]])->firstOrFail()->id;
                     $venue->save();
@@ -48,13 +48,24 @@ class StripeWebhookController extends ApiController
 //                captureMessage($payload['data']['object']['cancel_at_period_end'] ?? 'Geen cancel op period end');
 //                captureMessage($payload['data']['object']['current_period_end'] ?? 'Current periode end');
 
+                $cancelat = 'Cancelat is null';
+                if($payload['data']['object']['canceled_at'] !== null) {
+                    $cancelat = $payload['data']['object']['canceled_at'];
+                }
+                captureMessage($cancelat);
 
-                if($payload['data']['object']['canceled_at'] === 'null' && $payload['data']['object']['cancel_at_period_end'] === 'false') {
+                $cancelperiodends = 'Cancel period ends is false';
+                if($payload['data']['object']['canceled_at'] !== null) {
+                    $cancelperiodends = $payload['data']['object']['canceled_at'];
+                }
+                captureMessage($cancelperiodends);
+
+                if ($payload['data']['object']['canceled_at'] === 'null' && $payload['data']['object']['cancel_at_period_end'] === 'false') {
                     captureMessage('Venue Subscription: Subscription extended');
                     $venue->stripe_current_period_ends_at = Carbon::createFromTimestamp($payload['data']['object']['current_period_end']);
                     $venue->save();
 
-                    if($venue->units()->count() > $venue->plan->unit_limit) {
+                    if ($venue->units()->count() > $venue->plan->unit_limit) {
                         $client = new StripeClient(env('STRIPE_SECRET'));
                         $item = $client->invoiceItems->create([
                             'quantity' => ($venue->units()->count() - $venue->plan->unit_limit),
@@ -73,7 +84,7 @@ class StripeWebhookController extends ApiController
             case 'checkout.session.expired':
                 captureMessage('Checkout session expired');
 
-                if($payload['data']['object']['mode'] === 'payment' && $payload['data']['object']['status'] === 'expired') {
+                if ($payload['data']['object']['mode'] === 'payment' && $payload['data']['object']['status'] === 'expired') {
                     captureMessage('Payment expired');
                     $reservation = Reservation::where('payment_id', $payload['data']['object']['id'])->firstOrFail();
                     $reservation->payment_status = PaymentStatus::Expired;

@@ -96,7 +96,7 @@
         </dl>
       </div>
       <div class="flex justify-end gap-4">
-        <button @click="$router.go(-1)" class="btn btn-secondary">Annuleren</button>
+        <a href="/" class="btn btn-secondary">Terug</a>
         <button @click="postData" :class="loading ? 'btn btn-secondary opacity-50 cursor-not-allowed' : 'btn btn-primary'"><i v-if="loading" class="fa fa-spinner mr-2 animate-spin"></i> Opslaan</button>
       </div>
     </div>

@@ -1,5 +1,5 @@
 <template>
-  <div v-if="venue && activeSubscription">
+  <div v-if="venue && (new Date(venue.stripe_current_period_ends_at) < new Date())">
 
     <TopBar></TopBar>
 
@@ -155,10 +155,7 @@
   </div>
 
   <div v-else class="h-full flex items-center justify-center">
-    <div>
-      <div class="mb-4">Deze pagina is (tijdelijk) niet bereikbaar.</div>
-      <a href="https://timerent.nl" class="text-blue-500">&larr; Naar timerent.nl</a>
-    </div>
+    <PageNotAvailable></PageNotAvailable>
   </div>
 </template>
 
@@ -170,17 +167,17 @@ import flatpickr from "flatpickr";
 import {DateTime} from "luxon";
 import ButtonTimeReservation from "./Components/ButtonTimeReservation.vue";
 import TopBar from "./Components/TopBar.vue";
+import PageNotAvailable from "./PageNotAvailable.vue";
 
 export default {
   name: "Home",
-  components: {TopBar, ButtonTimeReservation, flatPickr},
+  components: {NotFound, TopBar, ButtonTimeReservation, flatPickr},
   data() {
     return {
       venue: null,
       loading: false,
       showModal: false,
       url: "",
-      activeSubscription: true,
       current_member: null,
 
       date: null,

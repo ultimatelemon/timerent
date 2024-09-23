@@ -17,9 +17,11 @@ class VenueSubscription
      */
     public function handle(Request $request, Closure $next): Response
     {
-        $venue = Venue::findOrFail(explode('/', $request->getPathInfo())[2]);
+        if(str_contains($request->getPathInfo(), 'store')) {
+            $venue = Venue::findOrFail(explode('/', $request->getPathInfo())[2]);
 
-        if($venue->stripe_current_period_ends_at <= Carbon::now()) return redirect()->route('index');
+            if ($venue->stripe_current_period_ends_at <= Carbon::now()) return redirect()->route('index');
+        }
 
         return $next($request);
     }

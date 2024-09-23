@@ -6,7 +6,7 @@ use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-class Tenant
+class ActiveSubscription
 {
     /**
      * Handle an incoming request.
@@ -15,8 +15,7 @@ class Tenant
      */
     public function handle(Request $request, Closure $next): Response
     {
-//        $host = $request->getHost();
-//        $subdomain = explode('.', $host)[0];
+        ray($request->getPathInfo());
         return $next($request);
     }
 }

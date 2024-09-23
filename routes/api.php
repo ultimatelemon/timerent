@@ -48,42 +48,47 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/plans/available',                          [PlanController::class, 'available']);
     Route::resource('plans',                    PlanController::class)->except('create', 'edit');
 
-    // Settings
-    Route::get('/venues/{venue}/settings/category', [SettingController::class, 'getSettingByCategory']);
-    Route::put('/venues/{venue}/settings/payment', [SettingController::class, 'updatePaymentSettings']);
-    Route::get('/venues/{venue}/settings/payment', [SettingController::class, 'getPaymentSettings']);
-    Route::put('/venues/{venue}/settings', [SettingController::class, 'updateSettings']);
+    Route::middleware('venueSubscription')->group(function () {
 
-    // Manage
-    Route::get('/users/{user}/venue/{venue}', [UserVenueController::class, 'show']);
-    Route::put('/users/{user}/venue/{venue}', [UserVenueController::class, 'update']);
-    Route::post('/users/{user}/venue/{venue}/portal', [UserVenueController::class, 'openCustomerPortal']);
 
-    // Payment
-    Route::get('/paymentproviders/available', [PaymentProviderController::class, 'available']);
-    Route::post('/venue/{venue}/payments/setup', [VenueController::class, 'setupTimerentPayments']);
-    Route::post('/venue/{venue}/payments/checkandupdate', [StripeConnectController::class, 'checkOnboardedAndUpdateVenue']);
+        // Settings
+        Route::get('/venues/{venue}/settings/category', [SettingController::class, 'getSettingByCategory']);
+        Route::put('/venues/{venue}/settings/payment', [SettingController::class, 'updatePaymentSettings']);
+        Route::get('/venues/{venue}/settings/payment', [SettingController::class, 'getPaymentSettings']);
+        Route::put('/venues/{venue}/settings', [SettingController::class, 'updateSettings']);
 
-    // Reservation
-    Route::post('/venues/{venue}/reservations/{reservation}/resend/confirmation', [ReservationController::class, 'resendConfirmationMail']);
+        // Manage
+        Route::get('/users/{user}/venue/{venue}', [UserVenueController::class, 'show']);
+        Route::put('/users/{user}/venue/{venue}', [UserVenueController::class, 'update']);
+        Route::post('/users/{user}/venue/{venue}/portal', [UserVenueController::class, 'openCustomerPortal']);
 
-    //  Member
-    Route::get('/venues/{venue}/members/{member}/reservations', [MemberController::class, 'reservations']);
+        // Payment
+        Route::get('/paymentproviders/available', [PaymentProviderController::class, 'available']);
+        Route::post('/venue/{venue}/payments/setup', [VenueController::class, 'setupTimerentPayments']);
+        Route::post('/venue/{venue}/payments/checkandupdate', [StripeConnectController::class, 'checkOnboardedAndUpdateVenue']);
 
-    // Invoice
-    Route::post('/venues/{venue}/invoices/{invoice}/download', [InvoiceController::class, 'download']);
+        // Reservation
+        Route::post('/venues/{venue}/reservations/{reservation}/resend/confirmation', [ReservationController::class, 'resendConfirmationMail']);
 
-    // Todo: Permission routes
-    Route::resource('venues',                   VenueController::class)->except(['create', 'edit']);
-    Route::resource('venues.units',             UnitController::class)->except(['create', 'edit']);
-    Route::resource('venues.templates',         TemplateController::class)->except(['create', 'edit']);
-    Route::resource('venues.weeks',             WeekController::class)->except(['create', 'edit']);
-    Route::resource('venues.products',          ProductController::class)->except(['create', 'edit']);
-    Route::resource('venues.reservations',      ReservationController::class)->except(['create', 'edit']);
-    Route::resource('venues.reports',           ReportController::class)->except(['create', 'edit']);
-    Route::resource('venues.users',             UserController::class)->except(['create', 'edit']);
-    Route::resource('venues.members',           MemberController::class)->except(['create', 'edit']);
-    Route::resource('venues.invoices',          InvoiceController::class)->except(['create', 'edit']);
-    Route::resource('venues.roles',             RoleController::class)->except(['create', 'edit']);
-    Route::resource('venues.groups',             GroupController::class)->except(['create', 'edit']);
+        //  Member
+        Route::get('/venues/{venue}/members/{member}/reservations', [MemberController::class, 'reservations']);
+
+        // Invoice
+        Route::post('/venues/{venue}/invoices/{invoice}/download', [InvoiceController::class, 'download']);
+
+        // Todo: Permission routes
+        Route::resource('venues',                   VenueController::class)->except(['create', 'edit']);
+        Route::resource('venues.units',             UnitController::class)->except(['create', 'edit']);
+        Route::resource('venues.templates',         TemplateController::class)->except(['create', 'edit']);
+        Route::resource('venues.weeks',             WeekController::class)->except(['create', 'edit']);
+        Route::resource('venues.products',          ProductController::class)->except(['create', 'edit']);
+        Route::resource('venues.reservations',      ReservationController::class)->except(['create', 'edit']);
+        Route::resource('venues.reports',           ReportController::class)->except(['create', 'edit']);
+        Route::resource('venues.users',             UserController::class)->except(['create', 'edit']);
+        Route::resource('venues.members',           MemberController::class)->except(['create', 'edit']);
+        Route::resource('venues.invoices',          InvoiceController::class)->except(['create', 'edit']);
+        Route::resource('venues.roles',             RoleController::class)->except(['create', 'edit']);
+        Route::resource('venues.groups',             GroupController::class)->except(['create', 'edit']);
+    });
+
 });

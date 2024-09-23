@@ -1,5 +1,5 @@
 <template>
-  <div v-if="venue && (new Date(venue.stripe_current_period_ends_at) < new Date())">
+  <div v-if="venue && (new Date(venue.stripe_current_period_ends_at) > new Date())">
 
     <TopBar></TopBar>
 
@@ -171,7 +171,7 @@ import PageNotAvailable from "./PageNotAvailable.vue";
 
 export default {
   name: "Home",
-  components: {NotFound, TopBar, ButtonTimeReservation, flatPickr},
+  components: {PageNotAvailable, TopBar, ButtonTimeReservation, flatPickr},
   data() {
     return {
       venue: null,

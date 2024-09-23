@@ -86,14 +86,18 @@
             <p>Vestiging</p>
           </div>
         </div>
-
+<!--        user_venue.venue.stripe_current_period_ends_at != null && (new Date(user_venue.venue.stripe_current_period_ends_at) > new Date())"-->
         <div v-for="user_venue in user_venues">
           <div class="w-48 h-48 rounded-md shadow flex flex-col gap-6 items-center justify-center text-center border-2 border-indigo-500 cursor-pointer hover:shadow-lg hover:border-indigo-800"
-             v-if="user_venue.venue.stripe_current_period_ends_at != null && (new Date(user_venue.venue.stripe_current_period_ends_at) > new Date())" @click="current_venue = user_venue.venue;">
-            <a class="text-sm font-semibold text-gray-900 flex justify-center items-center" :href="'/store/' + user_venue.venue.id + '/home'">
-              <span class="mr-2">{{ user_venue.venue.name }}</span>
-              <component :is="ArrowTopRightOnSquareIcon" class="text-gray-400 group-hover:text-indigo-600 h-6 w-6 shrink-0" aria-hidden="true"></component>
+               @click="current_venue = user_venue.venue;">
+            <span class="mr-2 text-sm font-semibold text-gray-900 flex justify-center items-center">{{ user_venue.venue.name }}</span>
+            <a class="text-sm font-semibold text-gray-900 flex justify-center items-center" :href="'/store/' + user_venue.venue.id + '/home'" v-if="user_venue.venue.stripe_current_period_ends_at != null && (new Date(user_venue.venue.stripe_current_period_ends_at) > new Date())">
+              <span class="mr-2">Open dashboard</span>
+              <component class="text-gray-400 group-hover:text-indigo-600 h-6 w-6 shrink-0" aria-hidden="true" :is="ArrowTopRightOnSquareIcon"></component>
             </a>
+            <span v-else class="text-red-500 text-sm">
+              Verlopen op {{ $filters.humanDate(user_venue.venue.stripe_current_period_ends_at) }}
+            </span>
 <!--            <a :href="'/store/' + user_venue.venue.id + '/home'" class="btn btn-primary">Bezoeken</a>-->
             <a :href="'/manage/' + user_venue.venue.id" class="btn btn-danger">Beheer</a>
           </div>

@@ -24,8 +24,9 @@
       </div>
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 mb-12">
         <div>
-          <label for="name" class="block text-sm font-medium leading-6 text-gray-900">Naam <span
+          <label for="name" class="block font-medium leading-6 text-gray-900">Naam <span
               class="required-star">*</span></label>
+          <span class="text-sm">De naam van je vestiging, zichtbaar voor je klanten.</span>
           <div class="relative mt-2 rounded-md shadow-sm">
             <input v-model="formData.name" type="text" name="name" id="name"
                    v-on:keyup.enter="postData"
@@ -44,8 +45,9 @@
         </div>
 
         <div>
-          <label for="subdomain" class="block text-sm font-medium leading-6 text-gray-900">Subdomein <span
+          <label for="subdomain" class="block font-medium leading-6 text-gray-900">Subdomein <span
               class="required-star">*</span></label>
+          <span class="text-sm">Let op: Alleen kleine letters van a-z. Geen spaties of speciale tekens.</span>
           <div class="relative mt-2 rounded-md shadow-sm">
             <input v-model="formData.subdomain" type="text" name="subdomain" id="subdomain"
                    v-on:keyup.enter="postData"

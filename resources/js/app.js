@@ -83,6 +83,7 @@ import {DateTime} from "luxon";
 // import {VenueRoutes} from "./VenueRoutes.js";
 app.component('side-bar', Sidebar)
 app.component('dashboard-top-bar', DashboardTopBar);
+app.component('selector-side-nav', SelectorSideNav);
 
 /**
  * Use lodash for magic calculation shit
@@ -154,6 +155,7 @@ app.config.globalProperties.$filters = {
  */
 import VueApexCharts from "vue3-apexcharts";
 import DashboardTopBar from "./pages/Application/Components/DashboardTopBar.vue";
+import SelectorSideNav from "./pages/DashboardComponents/SelectorSideNav.vue";
 app.use(VueApexCharts)
 
 app.component('apexchart', VueApexCharts)

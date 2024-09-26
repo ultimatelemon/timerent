@@ -15,9 +15,9 @@
     {{--          href="https://cdn.jsdelivr.net/npm/boxicons@latest/css/boxicons.min.css">--}}
     <title>{{ config('app.name') }}</title>
 </head>
-<body class="h-full bg-coolGray-200 overflow-y-auto flex flex-col">
-<div id="app" class="min-h-screen w-full">
-    <router-view></router-view>
+<body class="h-full">
+<div id="app" class="h-full">
+    <selector-side-nav></selector-side-nav>
 </div>
 @vite('resources/js/app.js')
 </body>

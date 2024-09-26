@@ -6,7 +6,7 @@ export const routes = [
     { path: '/email/verify', component: () => import('./pages/Auth/EmailVerify.vue'), name: 'email.verify', meta: { title: "pages.email-verify" } },
     { path: '/login', component: () => import('./pages/Auth/Login.vue'), name: 'login', meta: { title: "pages.login" } },
     { path: '/register', component: () => import('./pages/Auth/Register.vue'), name: 'register', meta: { title: "pages.register" } },
-    { path: '/select', component: () => import('./pages/VenueSelector.vue'), name: 'venueselect', meta: { title: "pages.login" } },
+    { path: '/select', component: () => import('./pages/VenueSelectorOLD.vue'), name: 'venueselect', meta: { title: "pages.login" } },
 
     { path: '/manage/:venue', component: () => import('./pages/Manage/Venue.vue'), name: 'manage.venue', meta: { title: "pages.login" } },
 

@@ -1,148 +1,60 @@
 <template>
-  <main class="fixed top-0 left-0 right-0 bottom-0 bg-gray-100 flex flex-col">
-    <div v-if="current_user" class="leading-tight flex items-center p-5 rounded">
-      <router-link to="#" class="cursor-pointer flex items-center mr-auto">
-<!--        <img :src="current_user?.avatar" alt="hallo" class="w-12 h-12 rounded-full mr-5">-->
-        <div class="leading-none">
-          <h1 class="font-medium">{{ current_user?.name }}</h1>
-          <p class="text-gray-500 text-sm">{{ current_user?.email }}</p>
-        </div>
-      </router-link>
-
-      <button class="btn btn-lg btn-danger" @click="logout">Afmelden</button>
-    </div>
-    <div class="px-5 flex flex-col items-center justify-center flex-1">
-      <!--
-          New venue modal
-      -->
-      <transition name="modalfade">
-        <modal v-if="showNewVenue" @close="showNewVenue = false">
-          <div class="px-1 border-b border-gray-200 flex items-center justify-between">
-            <p class="font-medium p-4">Nieuwe venue</p>
-            <button class="p-4" @click="showNewVenue = false"><i class="far fa-times"></i></button>
-          </div>
-          <div class="p-5">
-            <div class="p-4 rounded-md text-sm mb-5 flex items-center"
-            :class="errorMessage ? 'bg-red-50 text-red-400' : 'bg-blue-50 text-blue-400' "
-            >
-              <i :class="errorMessage ? 'fa-exclamation' : 'fa-info-circle'" class="far mr-4"></i>
-              <p v-if="!errorMessage">Registreer een nieuwe venue</p>
-              <p v-else>{{errorMessage}}</p>
-            </div>
-            <div class="mb-4">
-              <label>Naam <span class="required-star">*</span></label>
-              <input v-model="name" type="text" class="input">
-            </div>
-            <div class="mb-4">
-              <label>Subdomein <span class="required-star">*</span></label>
-              <input v-model="subdomain" type="text" class="input">
-            </div>
-            <div class="mb-4 flex flex-col">
-              <label for="plan">Abonnement <span class="required-star">*</span></label>
-              <select name="plan" id="plan" v-model="plan_id">
-                <option :value="plan.id" v-for="plan in plans" :selected="plan">{{ plan.name }}</option>
-              </select>
-            </div>
-          </div>
-          <div class="flex justify-end bg-gray-50 px-5 py-3">
-            <button class="btn btn-primary ml-auto" @click="addVenue">
-              Aanmaken
-            </button>
-          </div>
-        </modal>
-      </transition>
-
-
-      <!--
-          Payment modal
-      -->
-      <modal v-if="subscription_url && !showNewVenue">
-        <div class="px-1 border-b border-gray-200 flex items-center justify-between h-full">
-          <p class="font-medium p-4">Rond je betaling af</p>
-          <button class="p-4" @click="showNewVenue = false"><i class="far fa-times"></i></button>
-        </div>
-        <div class="p-5">
-          <div class="bg-red-50 text-red-400 p-4 rounded-md text-sm mb-5 flex items-center">
-            <i class="fas fa-triangle-exclamation mr-4"></i>
-            <p>Rond de betaling voor je abonnement af.</p>
-          </div>
-        </div>
-        <div class="flex justify-end bg-gray-50 px-5 py-3">
-          <button class="btn btn-secondary ml-auto" @click="openURL(subscription_url)">
-            Naar betalen
-          </button>
-        </div>
-      </modal>
-
-      <!--
-          Content
-      -->
-
-      <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
-        <div @click="showNewVenue = true" class="w-48 h-48 rounded-md shadow flex items-center justify-center text-center border-2 border-dashed border-indigo-500 cursor-pointer hover:shadow-lg hover:border-indigo-800">
-          <div class="block text-sm font-semibold text-gray-900">
-            <p class="text-3xl material-symbols-outlined">add</p>
-            <p>Nieuwe</p>
-            <p>Vestiging</p>
-          </div>
-        </div>
-<!--        user_venue.venue.stripe_current_period_ends_at != null && (new Date(user_venue.venue.stripe_current_period_ends_at) > new Date())"-->
-        <div v-for="user_venue in user_venues">
-          <div class="w-48 h-48 rounded-md shadow flex flex-col gap-6 items-center justify-center text-center border-2 border-indigo-500 cursor-pointer hover:shadow-lg hover:border-indigo-800"
-               @click="current_venue = user_venue.venue;">
-            <span class="mr-2 text-sm font-semibold text-gray-900 flex justify-center items-center">{{ user_venue.venue.name }}</span>
-            <a class="text-sm font-semibold text-gray-900 flex justify-center items-center" :href="'/store/' + user_venue.venue.id + '/home'" v-if="user_venue.venue.stripe_current_period_ends_at != null && (new Date(user_venue.venue.stripe_current_period_ends_at) > new Date())">
-              <span class="mr-2">Open dashboard</span>
-              <component class="text-gray-400 group-hover:text-indigo-600 h-6 w-6 shrink-0" aria-hidden="true" :is="ArrowTopRightOnSquareIcon"></component>
-            </a>
-            <span v-else class="text-red-500 text-sm">
-              Verlopen op {{ $filters.humanDate(user_venue.venue.stripe_current_period_ends_at) }}
-            </span>
-<!--            <a :href="'/store/' + user_venue.venue.id + '/home'" class="btn btn-primary">Bezoeken</a>-->
-            <a :href="'/manage/' + user_venue.venue.id" class="btn btn-danger">Beheer</a>
-          </div>
-        </div>
-      </div>
-
-<!--      <div class="venue-wrap flex flex-wrap justify-center gap-4">-->
-<!--        <loader v-if="loading"></loader>-->
-<!--        <div v-for="user_venue in user_venues" class="bg-white">-->
-<!--          <a v-if="user_venue.venue.stripe_current_period_ends_at != null && (new Date(user_venue.venue.stripe_current_period_ends_at) > new Date())" @click="current_venue = user_venue.venue;" :href="'/store/' + user_venue.venue.id + '/home'" class="cursor-pointer">-->
-<!--            <img v-if="user_venue.venue.avatar" class="w-32 h-32 rounded-md bg-gray-100 shadow border-8 border-white object-contain" :src="user_venue.venue.avatar.full_path" :alt="user_venue.venue.name"/>-->
-<!--            <p v-else class="w-32 h-32 rounded-md bg-gray-100 shadow border-8 border-white flex items-center justify-center text-center">{{ user_venue.venue.name }}</p>-->
-<!--            <p>Beheren</p>-->
-<!--          </a>-->
-
-<!--          <div v-else class="cursor-not-allowed relative">-->
-<!--            <img v-if="user_venue.venue.avatar" class="w-32 h-32 rounded-md bg-gray-100 shadow border-8 border-white object-contain" :src="user_venue.venue.avatar.full_path" :alt="user_venue.venue.name"/>-->
-<!--            <p v-else class="w-32 h-32 rounded-md bg-gray-100 shadow border-8 border-white flex items-center justify-center text-center opacity-45"-->
-<!--            >{{ user_venue.venue.name }}</p>-->
-<!--            <div class="absolute top-1/3 left-3 -rotate-45 text-semibold text-3xl text-red-500">-->
-<!--              Inactive-->
-<!--            </div>-->
-<!--          </div>-->
-<!--        </div>-->
-<!--        <div class="w-32 h-32 rounded-md bg-gray-100 text-gray-500 shadow border-8 border-white font-bold cursor-pointer flex items-center justify-center text-center" @click="showNewVenue = true">-->
-<!--          <span class="text-3xl material-symbols-outlined">add</span>-->
-<!--        </div>-->
-<!--      </div>-->
-
-    </div>
+  <main>
+    test
   </main>
 </template>
+
 
 <script>
 
 import Loader from "./Components/Loader.vue";
 import Modal from "./Components/Modal.vue";
 import {DateTime} from "luxon";
-import {ArrowTopRightOnSquareIcon} from "@heroicons/vue/24/outline/index.js";
+import {ArrowTopRightOnSquareIcon, HomeIcon, UsersIcon} from "@heroicons/vue/24/outline/index.js";
+import { Disclosure, DisclosureButton, DisclosurePanel, Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/vue'
+import {
+  Bars3Icon,
+  BellIcon,
+  XMarkIcon,
+  ChevronRightIcon,
+  FolderIcon,
+  CalendarIcon,
+  DocumentDuplicateIcon, ChartPieIcon
+} from '@heroicons/vue/24/outline';
 
 export default {
   name: "VenueSelector",
-  components: {Loader, Modal},
+  components: {DisclosurePanel, Disclosure, DisclosureButton, MenuButton, MenuItem, MenuItems, Loader, Modal, Bars3Icon, BellIcon, XMarkIcon, ChevronRightIcon},
   data() {
     return {
+      navigation: [
+        { name: 'Dashboard', href: '#', icon: HomeIcon, current: true },
+        {
+          name: 'Teams',
+          icon: UsersIcon,
+          current: false,
+          children: [
+            { name: 'Engineering', href: '#' },
+            { name: 'Human Resources', href: '#' },
+            { name: 'Customer Success', href: '#' },
+          ],
+        },
+        {
+          name: 'Projects',
+          icon: FolderIcon,
+          current: false,
+          children: [
+            { name: 'GraphQL API', href: '#' },
+            { name: 'iOS App', href: '#' },
+            { name: 'Android App', href: '#' },
+            { name: 'New Customer Portal', href: '#' },
+          ],
+        },
+        { name: 'Calendar', href: '#', icon: CalendarIcon, current: false },
+        { name: 'Documents', href: '#', icon: DocumentDuplicateIcon, current: false },
+        { name: 'Reports', href: '#', icon: ChartPieIcon, current: false },
+      ],
+
       showNewVenue: false,
       user_venues: [],
       plans: [],

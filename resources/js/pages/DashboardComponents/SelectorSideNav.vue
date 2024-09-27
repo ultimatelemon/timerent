@@ -7,7 +7,8 @@
     <body class="h-full">
     ```
   -->
-  <div v-if="current_venue">
+  <div v-if="user">
+
     <TransitionRoot as="template" :show="sidebarOpen">
       <Dialog class="relative z-50 lg:hidden" @close="sidebarOpen = false">
         <TransitionChild as="template" enter="transition-opacity ease-linear duration-300" enter-from="opacity-0"
@@ -79,8 +80,8 @@
                         <!--                <img class="h-8 w-8 rounded-full bg-gray-50" src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="" />-->
                         <div class="flex flex-col">
                           <span class="sr-only">Your profile</span>
-                          <span aria-hidden="true">{{ current_user.name }}</span>
-                          <span aria-hidden="true" class="font-light text-xs">{{ current_user.email }}</span>
+                          <span aria-hidden="true">{{ user.name }}</span>
+                          <span aria-hidden="true" class="font-light text-xs">{{ user.email }}</span>
                         </div>
                         <div>
                           <i>
@@ -148,8 +149,8 @@
                 <!--                <img class="h-8 w-8 rounded-full bg-gray-50" src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="" />-->
                 <div class="flex flex-col">
                   <span class="sr-only">Your profile</span>
-                  <span aria-hidden="true">{{ current_user.name }}</span>
-                  <span aria-hidden="true" class="font-light text-xs">{{ current_user.email }}</span>
+                  <span aria-hidden="true">{{ user.name }}</span>
+                  <span aria-hidden="true" class="font-light text-xs">{{ user.email }}</span>
                 </div>
                 <div>
                   <i>
@@ -235,17 +236,17 @@ export default {
 
   methods: {
 
-    // fetchUser() {
-    //   axios.get('/users/current')
-    //       .then(response => {
-    //         this.user = response.data.data;
-    //         // this.role = response.data.data.role;
-    //         this.fetchNavigation();
-    //       })
-    //       .catch(e => {
-    //         console.log(e.message)
-    //       })
-    // },
+    fetchUser() {
+      axios.get('/users/current')
+          .then(response => {
+            this.user = response.data.data;
+            console.log(response.data.data);
+            // this.role = response.data.data.role;
+          })
+          .catch(e => {
+            console.log(e.message)
+          })
+    },
 
     // fetchUser(venue) {
     //   axios.get('/users/current?venue=' + venue)
@@ -259,14 +260,14 @@ export default {
     //       })
     // },
 
-    fetchUser() {
-      axios.get('/users/current')
-          .then(response => {
-            this.current_user = response.data.data;
-            this.current_user_role = response.data.role;
-            this.fetchData();
-          })
-    },
+    // fetchUser() {
+    //   axios.get('/users/current')
+    //       .then(response => {
+    //         // this.current_user = response.data.data.user;
+    //         this.current_user_role = response.data.role;
+    //         // this.fetchData();
+    //       })
+    // },
 
     hasCommon(permission, flags) {
       return flags.some(item1 => permission.some(item2 => item1 === item2));

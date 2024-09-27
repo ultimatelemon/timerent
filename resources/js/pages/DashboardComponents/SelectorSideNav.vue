@@ -106,7 +106,7 @@
         <div class="flex h-16 shrink-0 items-center">
           <img class="h-8 w-auto" src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600"
                alt="Your Company"/>
-          <span class="ml-3 font-semibold">{{ current_venue.name }}</span>
+          <span class="ml-3 font-semibold">Timerent</span>
         </div>
         <nav class="flex flex-1 flex-col">
           <ul role="list" class="flex flex-1 flex-col gap-y-7">

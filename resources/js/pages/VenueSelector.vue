@@ -1,6 +1,13 @@
 <template>
-  <main>
-    test
+  <main v-if="current_user">
+    <div>
+      <div class="mb-12 flex justify-between">
+        <div>
+          <div class="font-semibold text-lg">{{ this.greeting }}, {{current_user.name}}</div>
+          <div class="text-sm">Beheer hier je persoonlijke account, maak een nieuwe vestiging of navigeer direct naar een bestaande vestiging.</div>
+        </div>
+      </div>
+    </div>
   </main>
 </template>
 
@@ -27,33 +34,6 @@ export default {
   components: {DisclosurePanel, Disclosure, DisclosureButton, MenuButton, MenuItem, MenuItems, Loader, Modal, Bars3Icon, BellIcon, XMarkIcon, ChevronRightIcon},
   data() {
     return {
-      navigation: [
-        { name: 'Dashboard', href: '#', icon: HomeIcon, current: true },
-        {
-          name: 'Teams',
-          icon: UsersIcon,
-          current: false,
-          children: [
-            { name: 'Engineering', href: '#' },
-            { name: 'Human Resources', href: '#' },
-            { name: 'Customer Success', href: '#' },
-          ],
-        },
-        {
-          name: 'Projects',
-          icon: FolderIcon,
-          current: false,
-          children: [
-            { name: 'GraphQL API', href: '#' },
-            { name: 'iOS App', href: '#' },
-            { name: 'Android App', href: '#' },
-            { name: 'New Customer Portal', href: '#' },
-          ],
-        },
-        { name: 'Calendar', href: '#', icon: CalendarIcon, current: false },
-        { name: 'Documents', href: '#', icon: DocumentDuplicateIcon, current: false },
-        { name: 'Reports', href: '#', icon: ChartPieIcon, current: false },
-      ],
 
       showNewVenue: false,
       user_venues: [],
@@ -98,7 +78,7 @@ export default {
           })
     },
 
-    addVenue() {
+    storeVenue() {
       axios.post('/venues', {
         name: this.name,
         subdomain: this.subdomain.toLowerCase(),
@@ -126,18 +106,6 @@ export default {
             this.plans = response.data.data;
           })
     },
-
-    logout() {
-      axios.post('/sanctum/logout')
-          .then(() => {
-            window.localStorage.removeItem('tr_auth_token');
-            window.location.href = '/';
-          })
-    },
-
-    openCustomerPortal() {
-      alert('goed');
-    }
   },
 
   mounted() {
@@ -148,6 +116,14 @@ export default {
   computed: {
     DateTime() {
       return DateTime
+    },
+    greeting() {
+      const hour = DateTime.now().hour;
+      if (hour >= 0 && hour < 6) return 'Goedenacht';
+      if (hour >= 6 && hour < 12) return 'Goedemorgen';
+      if (hour >= 12 && hour < 18) return 'Goedemiddag';
+      if (hour >= 18 && hour < 24) return 'Goedenavond';
+      return hour;
     },
     current_venue: {
       get() {

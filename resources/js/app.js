@@ -21,7 +21,7 @@ window.axios.defaults.headers.common['X-CSRF-TOKEN'] = window.Laravel.csrfToken;
 axios.interceptors.response.use(function (response) {
     return response;
 }, function (error) {
-    if(error.response.status === 401 && window.location !== '/login') {
+    if(error.response.status === 401 || error.response.status === 400  && window.location !== '/login') {
         window.localStorage.removeItem('tr_auth_token');
         window.location = '/login';
     }

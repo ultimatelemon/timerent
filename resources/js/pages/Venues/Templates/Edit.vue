@@ -72,9 +72,16 @@
       </div>
     </div>
 
-    <div class="flex justify-end gap-4">
-      <button @click="$router.go(-1)" class="btn btn-secondary">Annuleren</button>
-      <button @click="postData" class="btn btn-primary">Opslaan</button>
+
+    <div class="flex justify-between gap-4">
+      <div>
+        <delete-modal @delete="deleteData" @close="deleteModalOpen = false;" :show="deleteModalOpen"></delete-modal>
+        <button v-if="template?.id !== defaultTemplateId" @click="deleteModalOpen = true;" class="btn btn-danger">Verwijderen</button>
+      </div>
+      <div class="flex gap-4">
+        <button @click="$router.go(-1)" class="btn btn-secondary">Annuleren</button>
+        <button @click="postData" :class="loading ? 'btn-secondary' : 'btn-primary'" class="btn"><i v-if="loading" class="fa fa-spinner fa-spin mr-2"></i> Opslaan</button>
+      </div>
     </div>
   </div>
 </template>
@@ -82,13 +89,15 @@
 <script>
 import CurrencyInput from "../../Components/CurrencyInput.vue";
 import InputWeekSchedule from "../../Components/InputWeekSchedule.vue";
+import DeleteModal from "../../Components/Modals/DeleteModal.vue";
 
 export default {
   name: "Edit",
-  components: {InputWeekSchedule, CurrencyInput},
+  components: {DeleteModal, InputWeekSchedule, CurrencyInput},
   data() {
     return {
       template: null,
+      deleteModalOpen: false,
       loading: false,
       errors: [],
       defaultTemplateId: "0a2f32e0-3002-4348-8576-1979b9905c2e",
@@ -155,6 +164,16 @@ export default {
               this.loading = false;
             })
       }
+    },
+
+    deleteData() {
+      axios.delete('/venues/' + this.$route.params.venue + '/templates/' + this.$route.params.template)
+          .then(response => {
+            this.$router.push({name: 'venues.templates.index'});
+          })
+          .catch(e => {
+            console.log(e.response.data);
+          })
     },
 
     updateTemplate(template) {

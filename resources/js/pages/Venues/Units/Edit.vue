@@ -75,25 +75,32 @@
       </div>
     </modal>
 
-    <div class="flex justify-end gap-4">
-      <button @click="$router.go(-1)" class="btn btn-secondary">Annuleren</button>
-      <button v-if="this.$route.params.unit != null || venue.unit_count < venue.plan.unit_limit" :class="loading ? 'btn btn-secondary opacity-50 cursor-not-allowed btn-lg' : 'btn btn-lg btn-primary'" @click="postData"><i v-if="loading" class="fa fa-spinner mr-2 animate-spin"></i>Opslaan</button>
-      <button v-else @click="showModal = true;" class="btn btn-primary">Opslaan</button>
+    <div class="flex justify-between gap-4">
+      <div>
+        <delete-modal @delete="deleteData" @close="deleteModalOpen = false;" :show="deleteModalOpen"></delete-modal>
+        <button v-if="unit" @click="deleteModalOpen = true;" class="btn btn-danger">Verwijderen</button>
+      </div>
+      <div class="flex gap-4">
+        <button @click="$router.go(-1)" class="btn btn-secondary">Annuleren</button>
+        <button v-if="this.$route.params.unit != null || venue.unit_count < venue.plan.unit_limit" :class="loading ? 'btn btn-secondary opacity-50 cursor-not-allowed btn-lg' : 'btn btn-primary'" @click="postData"><i v-if="loading" class="fa fa-spinner mr-2 animate-spin"></i>Opslaan</button>
+        <button v-else @click="showModal = true;" class="btn btn-primary">Opslaan</button>
+      </div>
     </div>
 
   </div>
 </template>
 
 <script>
-import Modal from "../../Components/Modal.vue";
+import Modal from "../../Components/Modals/Modal.vue";
 import MultipleSelectGroups from "../../Components/MultipleSelectGroups.vue";
+import DeleteModal from "../../Components/Modals/DeleteModal.vue";
 
 export default {
   name: "Edit",
-  components: {MultipleSelectGroups, Modal},
+  components: {DeleteModal, MultipleSelectGroups, Modal},
   data() {
     return {
-      // unit_id: this.$route.params.unit,
+      deleteModalOpen: false,
       loading: false,
       unit: null,
       errors: [],
@@ -141,6 +148,16 @@ export default {
       axios.get('/venues/' + this.$route.params.venue + '/groups')
           .then(response => {
             this.groups = response.data.data;
+          })
+    },
+
+    deleteData() {
+      axios.delete('/venues/' + this.$route.params.venue + '/units/' + this.$route.params.unit)
+          .then(response => {
+            this.$router.push({name: 'venues.units.index'});
+          })
+          .catch(e => {
+            console.log(e.response.data);
           })
     },
 

@@ -89,7 +89,7 @@
 <script>
 
 import Loader from "./Components/Loader.vue";
-import Modal from "./Components/Modal.vue";
+import Modal from "./Components/Modals/Modal.vue";
 import {DateTime} from "luxon";
 import {ArrowTopRightOnSquareIcon, HomeIcon, UsersIcon} from "@heroicons/vue/24/outline/index.js";
 import { Disclosure, DisclosureButton, DisclosurePanel, Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/vue'

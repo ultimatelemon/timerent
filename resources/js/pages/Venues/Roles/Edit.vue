@@ -72,7 +72,7 @@
 </template>
 
 <script>
-import Modal from "../../Components/Modal.vue";
+import Modal from "../../Components/Modals/Modal.vue";
 
 export default {
   name: "Edit",

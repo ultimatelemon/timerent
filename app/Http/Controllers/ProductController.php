@@ -84,4 +84,17 @@ class ProductController extends ApiController implements HasMiddleware
         $product->units()->sync($request->units);
         return $this->success(['message' => 'Product updated successfully.']);
     }
+
+    /**
+     * Delete the specific resource
+     *
+     * @param Venue $venue
+     * @param Product $product
+     * @return JsonResponse
+     */
+    public function destroy(Venue $venue, Product $product): JsonResponse
+    {
+        $product->delete();
+        return $this->success();
+    }
 }

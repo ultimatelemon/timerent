@@ -81,4 +81,17 @@ class TemplateController extends ApiController implements HasMiddleware
         $template->update($request->validated());
         return $this->success(new TemplateResource($template));
     }
+
+    /**
+     * Delete the specific resource
+     *
+     * @param Venue $venue
+     * @param Template $template
+     * @return JsonResponse
+     */
+    public function destroy(Venue $venue, Template $template): JsonResponse
+    {
+        $template->delete();
+        return $this->success();
+    }
 }

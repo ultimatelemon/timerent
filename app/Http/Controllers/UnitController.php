@@ -100,4 +100,17 @@ class UnitController extends ApiController implements HasMiddleware
         $unit->groups()->sync($request->groups);
         return $this->success(['message' => 'Updated successfully']);
     }
+
+    /**
+     * Delete the specific resource
+     *
+     * @param Venue $venue
+     * @param Unit $unit
+     * @return JsonResponse
+     */
+    public function destroy(Venue $venue, Unit $unit): JsonResponse
+    {
+        $unit->delete();
+        return $this->success();
+    }
 }

@@ -96,7 +96,7 @@
 <script>
 import {groupBy} from "lodash";
 import {EnvelopeIcon, PaperClipIcon} from "@heroicons/vue/24/outline/index.js";
-import Modal from "../../../Components/Modal.vue";
+import Modal from "../../../Components/Modals/Modal.vue";
 import html2pdf from "html2pdf.js";
 
 export default {

@@ -154,9 +154,15 @@
 
     </div>
 
-    <div class="flex justify-end gap-4">
-      <button @click="$router.go(-1)" class="btn btn-secondary">Annuleren</button>
-      <button @click="postData" class="btn btn-primary">Opslaan</button>
+    <div class="flex justify-between gap-4">
+      <div>
+        <delete-modal @delete="deleteData" @close="deleteModalOpen = false;" :show="deleteModalOpen"></delete-modal>
+        <button v-if="product" @click="deleteModalOpen = true;" class="btn btn-danger">Verwijderen</button>
+      </div>
+      <div class="flex justify-between gap-4">
+        <button @click="$router.go(-1)" class="btn btn-secondary">Annuleren</button>
+        <button @click="postData" :class="loading ? 'btn-secondary' : 'btn-primary'" class="btn"><i v-if="loading" class="fa fa-spinner fa-spin mr-2"></i> Opslaan</button>
+      </div>
     </div>
   </div>
 </template>
@@ -165,16 +171,18 @@
 import {Switch} from "@headlessui/vue";
 import CurrencyInput from "../../Components/CurrencyInput.vue";
 import MultipleSelectUnits from "../../Components/MultipleSelectUnits.vue";
+import DeleteModal from "../../Components/Modals/DeleteModal.vue";
 
 export default {
   name: "Edit",
-  components: {MultipleSelectUnits, CurrencyInput, Switch},
+  components: {DeleteModal, MultipleSelectUnits, CurrencyInput, Switch},
   data() {
     return {
       loading: false,
       product: null,
       errors: [],
       units: null,
+      deleteModalOpen: false,
 
       formData: {
         name: "",
@@ -236,6 +244,16 @@ export default {
           this.loading = false;
         })
       }
+    },
+
+    deleteData() {
+      axios.delete('/venues/' + this.$route.params.venue + '/products/' + this.$route.params.product)
+          .then(response => {
+            this.$router.push({name: 'venues.products.index'});
+          })
+          .catch(e => {
+            console.log(e.response.data);
+          })
     },
 
     fetchUnits() {

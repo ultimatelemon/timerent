@@ -67,7 +67,7 @@
 
 <script>
 
-import Modal from "../../Components/Modal.vue";
+import Modal from "../../Components/Modals/Modal.vue";
 import DeleteButton from "../../Components/DeleteButton.vue";
 
 export default {

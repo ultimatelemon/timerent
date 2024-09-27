@@ -54,6 +54,8 @@
           </div>
           <div class="py-6 sm:grid sm:grid-cols-3 sm:gap-2">
             <dt class="text-sm font-medium leading-6 text-gray-900">Huidig abonnement</dt>
+
+            {{venue}}
             <dd class="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">{{ venue.plan.name }}</dd>
           </div>
           <div class="py-6 sm:grid sm:grid-cols-3 sm:gap-2">
@@ -141,7 +143,7 @@ export default {
       if(this.loading) return;
       this.loading = true;
 
-      axios.put('/users/' + this.current_user.id + '/venue/' + this.$store.state.venue.id, this.formData)
+      axios.put('/users/' + this.current_user.id + '/venue/' + this.venue_id, this.formData)
           .then(response => {
             this.venue = response.data.data;
             this.saved = true;
@@ -158,7 +160,7 @@ export default {
     openCustomerPortal() {
       if(this.customerPortalLoading) return;
       this.customerPortalLoading = true;
-      axios.post('/users/' + this.current_user.id + '/venue/' + this.$store.state.venue.id + '/portal', {
+      axios.post('/users/' + this.current_user.id + '/venue/' + this.venue_id + '/portal', {
         return_url: window.location.href,
       })
           .then(response => {

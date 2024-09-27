@@ -67,7 +67,7 @@
                                     {{ subItem.name }}
                                   </router-link>
                                 </li>
-                              </Disclos urePanel>
+                              </DisclosurePanel>
                             </Disclosure>
                           </div>
                         </li>

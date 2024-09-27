@@ -48,11 +48,9 @@
                             <router-link :to="item.link" v-if="!item.children"
                                          active-class="bg-gray-100"
                                          class="hover:bg-gray-100 block rounded-md py-2 pl-10 pr-2 text-sm font-semibold leading-6 text-gray-700">
-                              {{
-                                item.name
-                              }}
+                              {{ item.name }}
                             </router-link>
-                            <Disclosure as="div" v-if="item.children" :to="item.link" v-slot="{ open }">
+                            <Disclosure as="div" v-if="item.children" v-slot="{ open }">
                               <DisclosureButton
                                   :class="[item.current ? 'bg-gray-50' : 'hover:bg-gray-50', 'flex w-full items-center gap-x-3 rounded-md p-2 text-left text-sm font-semibold leading-6 text-gray-700']">
                                 <ChevronRightIcon

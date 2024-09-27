@@ -43,41 +43,63 @@
                     <li>
                       <ul role="list" class="-mx-2 space-y-1">
                         <li v-for="item in navigation" :key="item.name">
-                          <div
-                              v-if="item.type === 'category' && (item.permission.length > 0 ? (user.owner ? true : hasCommon(item.permission, role.flags)) : true)"
-                              class="mb-1 mt-3 text-sm flex items-center">
-                    <span class="font-bold text-xs pr-1">
-                      {{ item.name }}
-                    </span>
+                          <div>
+                            <router-link :to="item.link" v-if="!item.children && (item.permission.length > 0 ? (user.owner ? true : hasCommon(item.permission, role.flags)) : true)"
+                                         active-class="bg-gray-100"
+                                         class="hover:bg-gray-100 block rounded-md py-2 pl-10 pr-2 text-sm font-semibold leading-6 text-gray-700">
+                              {{
+                                item.name
+                              }}
+                            </router-link>
+                            <Disclosure as="div" v-if="item.children && (item.permission.length > 0 ? (user.owner ? true : hasCommon(item.permission, role.flags)) : true)" :to="item.link" v-slot="{ open }">
+                              <DisclosureButton
+                                  :class="[item.current ? 'bg-gray-50' : 'hover:bg-gray-50', 'flex w-full items-center gap-x-3 rounded-md p-2 text-left text-sm font-semibold leading-6 text-gray-700']">
+                                <ChevronRightIcon
+                                    :class="[open ? 'rotate-90 text-gray-500' : 'text-gray-400', 'h-5 w-5 shrink-0']"
+                                    aria-hidden="true"/>
+                                {{ item.name }}
+                              </DisclosureButton>
+                              <DisclosurePanel as="ul" class="mt-1 px-2">
+                                <li v-for="subItem in item.children" :key="subItem.name">
+                                  <router-link @click="!open" :to="subItem.link"
+                                               active-class="bg-gray-100"
+                                               class="hover:bg-gray-100 block rounded-md py-2 pl-9 pr-2 text-sm leading-6 text-gray-700">
+                                    {{ subItem.name }}
+                                  </router-link>
+                                </li>
+                              </DisclosurePanel>
+                            </Disclosure>
                           </div>
-                          <router-link v-else
-                                       v-if="item.permission.length > 0 ? (user.owner ? true : hasCommon(item.permission, role.flags)) : true"
-                                       :to="item.link" active-class="bg-gray-50 text-indigo-600"
-                                       class="text-gray-700 hover:text-indigo-600 hover:bg-gray-50 group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold">
-                            <component :is="item.icon"
-                                       class="text-gray-400 group-hover:text-indigo-600 h-6 w-6 shrink-0"
-                                       aria-hidden="true"></component>
-                            <!--                    <i :class="'bx bx-' + item.icon"></i>-->
-                            {{ item.name }}
-                          </router-link>
                         </li>
                       </ul>
                     </li>
-<!--                    <li>-->
-<!--                      <div class="text-xs font-semibold leading-6 text-gray-400">Your teams</div>-->
-<!--                      <ul role="list" class="-mx-2 mt-2 space-y-1">-->
-<!--                        <li v-for="item in externalNaviation" :key="item.name">-->
-<!--                          <a :href="item.href"-->
-<!--                             class="text-gray-700 hover:text-indigo-600 hover:bg-gray-50 group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold">-->
-<!--                            <span-->
-<!--                                class="text-gray-400 border-gray-200 group-hover:border-indigo-600 group-hover:text-indigo-600 flex h-6 w-6 shrink-0 items-center justify-center rounded-lg border text-[0.625rem] font-medium bg-white">{{-->
-
-<!--                              }}</span>-->
-<!--                            <span class="truncate">{{ item.name }}</span>-->
-<!--                          </a>-->
-<!--                        </li>-->
-<!--                      </ul>-->
-<!--                    </li>-->
+                    <li class="mt-auto cursor-pointer">
+                      <div class="text-xs font-semibold leading-6 text-gray-400">Externe navigatie</div>
+                      <ul role="list" class="-mx-2 mt-2 space-y-1">
+                        <li v-for="item in externalNaviation" :key="item.name">
+                          <a :href="item.href"
+                             class="text-gray-700 hover:text-indigo-600 hover:bg-gray-50 group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold" target="_blank">
+                            <span class="truncate">{{ item.name }}</span>
+                          </a>
+                        </li>
+                      </ul>
+                    </li>
+                    <li class="-mx-6 mt-auto cursor-pointer" @click="logout">
+                      <div
+                          class="flex items-center border-t gap-x-4 px-6 py-3 text-sm font-semibold leading-6 text-gray-900 hover:bg-gray-50 justify-between">
+                        <!--                <img class="h-8 w-8 rounded-full bg-gray-50" src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="" />-->
+                        <div class="flex flex-col">
+                          <span class="sr-only">Your profile</span>
+                          <span aria-hidden="true">{{ user.user.name }}</span>
+                          <span aria-hidden="true" class="font-light text-xs">{{ user.user.email }}</span>
+                        </div>
+                        <div>
+                          <i>
+                            <component :is="ArrowRightEndOnRectangleIcon" class="h-6 w-6 text-red-500"></component>
+                          </i>
+                        </div>
+                      </div>
+                    </li>
                   </ul>
                 </nav>
               </div>

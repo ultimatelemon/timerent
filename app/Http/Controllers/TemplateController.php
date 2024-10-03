@@ -44,6 +44,19 @@ class TemplateController extends ApiController implements HasMiddleware
     }
 
     /**
+     * Display a list of all the templates
+     *
+     * @param Request $request
+     * @param Venue $venue
+     * @return JsonResponse
+     */
+    public function list(Request $request, Venue $venue): JsonResponse
+    {
+        $templates = $venue->templates()->get();
+        return $this->success(TemplateResource::collection($templates));
+    }
+
+    /**
      * Show the specific resource
      *
      * @param Venue $venue

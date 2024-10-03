@@ -20,7 +20,7 @@ class UnitController extends ApiController implements HasMiddleware
     {
         return [
                 new Middleware('unitLimit', only: ['store']),
-                new Middleware('hasPermissions:VIEW_UNITS', only: ['index', 'show']),
+                new Middleware('hasPermissions:VIEW_UNITS', only: ['index', 'show', 'list']),
                 new Middleware('hasPermissions:MANAGE_UNITS', only: ['store', 'update', 'destroy']),
         ];
     }
@@ -46,6 +46,19 @@ class UnitController extends ApiController implements HasMiddleware
             UnitResource::collection($units),
             collect($units)->only(['from', 'to', 'total', 'per_page', 'last_page', 'current_page'])->toArray(),
         );
+    }
+
+    /**
+     * Display a list of all the units
+     *
+     * @param Request $request
+     * @param Venue $venue
+     * @return JsonResponse
+     */
+    public function list(Request $request, Venue $venue): JsonResponse
+    {
+        $units = $venue->units()->get();
+        return $this->success(UnitResource::collection($units));
     }
 
     /**

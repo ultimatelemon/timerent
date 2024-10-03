@@ -7,6 +7,11 @@
 
 
     <div class="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
+      <div v-if="success" class="alert alert-success">
+        <div>Verifieer je email. Check ook je spam-folder</div>
+        <div class="cursor-pointer" @click="success = false;"><i class="fa fa-close"></i></div>
+      </div>
+
       <div class="text-center text-red-500 mb-4">{{errors?.errors ? errors.errors[0] : ''}}</div>
       <div class="space-y-6">
         <div v-if="errors.data" class="rounded-md bg-yellow-50 p-4">
@@ -73,6 +78,7 @@ export default {
   data() {
     return {
       loading: false,
+      success: false,
       errors: [],
 
       formData: {
@@ -90,8 +96,7 @@ export default {
       axios.post('/sanctum/register', this.formData)
           .then(response => {
             this.errors = [];
-            // window.localStorage.setItem('t/r_auth_token', response.data.data.token);
-            // window.location = '/select';
+            this.success = true;
           })
           .catch(e => {
             this.errors = e.response.data

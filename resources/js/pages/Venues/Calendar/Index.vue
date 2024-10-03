@@ -169,7 +169,7 @@ export default {
     MinusIcon,
 
     fetchUnits() {
-      axios.get('/venues/' + this.$route.params.venue + '/units')
+      axios.get('/venues/' + this.$route.params.venue + '/units/list')
           .then(response => {
             this.units = response.data.data;
           })
@@ -183,7 +183,7 @@ export default {
     },
 
     fetchTemplates() {
-      axios.get('/venues/' + this.$route.params.venue + '/templates')
+      axios.get('/venues/' + this.$route.params.venue + '/templates/list')
           .then(response => {
             this.templates = response.data.data;
           })

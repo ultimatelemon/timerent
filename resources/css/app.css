@@ -13,7 +13,7 @@ button, .btn, input, textarea, select { @apply outline-none focus:outline-none }
 input { font-size: 16px !important; }
 input * { font-size: 16px !important; }
 .input { @apply min-h-9 block w-full rounded-md border-0 px-3 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 }
-input:not([type="checkbox"]) { @apply block w-full rounded-md border-0 px-3 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 }
+input:not([type="checkbox"]) { @apply block w-full rounded-md border-0 px-3 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6  }
 .input-icon { @apply border-gray-300 transition duration-150 ease-in-out sm:text-sm sm:leading-5 rounded-md shadow-sm h-10 w-10 flex items-center justify-center hover:shadow cursor-pointer border }
 
 .smooth { @apply transition duration-150 ease-in-out }
@@ -29,12 +29,13 @@ input:not([type="checkbox"]) { @apply block w-full rounded-md border-0 px-3 py-1
 .icon-btn { @apply h-8 w-8 bg-indigo-500 text-white rounded p-1 hover:bg-indigo-800 cursor-pointer }
 .icon-btn-red { @apply h-8 w-8 bg-red-500 text-white rounded p-1 hover:bg-red-800 cursor-pointer }
 
-.label { @apply text-xs font-semibold inline-block py-1 px-2 uppercase rounded text-gray-600 bg-gray-200 items-center }
+.label { @apply text-xs font-semibold py-1 px-2 uppercase rounded text-gray-600 bg-gray-200 items-center }
 .label-danger { @apply text-red-600 bg-red-200 }
 .label-success { @apply text-emerald-600 bg-emerald-200 }
 .label-warning { @apply text-orange-600 bg-orange-200 }
+.label-info { @apply text-indigo-600 bg-indigo-200 }
 
-.alert { @apply w-full inline-block py-2 px-4 rounded text-gray-600 bg-gray-200 items-center }
+.alert { @apply w-full flex justify-between py-2 px-4 rounded text-gray-600 bg-gray-200 items-center }
 .alert-success { @apply text-emerald-600 bg-emerald-200 }
 
 .required-star { @apply text-xl text-red-500 }

@@ -22,10 +22,10 @@ class StoreTemplate extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => 'required|string',
-            'interval' => 'required|numeric|min:1',
+            'name' => 'required|string|max:120',
+            'interval' => 'required|numeric|min:1|max:60',
             'template' => 'required',
-            'price' => 'required'
+            'price' => 'required|numeric|min:1|max:9999999'
         ];
     }
 }

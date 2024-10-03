@@ -7,6 +7,8 @@ export const routes = [
     { path: '/login', component: () => import('./pages/Auth/Login.vue'), name: 'login', meta: { title: "pages.login" } },
     { path: '/register', component: () => import('./pages/Auth/Register.vue'), name: 'register', meta: { title: "pages.register" } },
     { path: '/select', component: () => import('./pages/VenueSelector.vue'), name: 'venueselect', meta: { title: "pages.login" } },
+    { path: '/password-forgot', component: () => import('./pages/Auth/PasswordForgot.vue'), name: 'password-forgot', meta: { title: "pages.login" } },
+    { path: '/password-reset', component: () => import('./pages/Auth/PasswordReset.vue'), name: 'password-reset', meta: { title: "pages.login" } },
 
     { path: '/manage/:venue', component: () => import('./pages/Manage/Venue.vue'), name: 'manage.venue', meta: { title: "pages.login" } },
 
@@ -128,6 +130,16 @@ export const routes = [
             { path: '', component: () => import('./pages/Venues/Groups/Index.vue'), name: 'venues.groups.index' },
             { path: 'create', component: () => import('./pages/Venues/Groups/Edit.vue'), name: 'venues.groups.create' },
             { path: ':group', component: () => import('./pages/Venues/Groups/Edit.vue'), name: 'venues.groups.edit' },
+        ]
+    },
+
+    {
+        path: '/store/:venue/support/tickets',
+        component: Wrapper,
+        children: [
+            { path: '', component: () => import('./pages/Venues/Support/Tickets/Index.vue'), name: 'venues.support.tickets.index' },
+            { path: 'create', component: () => import('./pages/Venues/Support/Tickets/Create.vue'), name: 'venues.support.tickets.create' },
+            { path: ':ticket', component: () => import('./pages/Venues/Support/Tickets/Show.vue'), name: 'venues.support.tickets.show' },
         ]
     },
 

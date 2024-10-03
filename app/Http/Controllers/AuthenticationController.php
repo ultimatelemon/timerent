@@ -5,9 +5,10 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Stripe\StripeCustomerController;
 use App\Http\Requests\Authentication\LoginRequest;
 use App\Http\Requests\Authentication\StoreUser;
-use App\Mail\EmailVerification;
 use App\Models\User;
 use App\Notifications\EmailVerified;
+use App\Notifications\PasswordResetRequest;
+use App\Notifications\PasswordResetted;
 use Carbon\Carbon;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Notifications\VerifyEmail;
@@ -17,6 +18,7 @@ use Illuminate\Notifications\Notification;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Validation\Rules\Password;
 use Illuminate\Support\Str;
 use Jenssegers\Agent\Agent;
 use Resend\Laravel\Facades\Resend;
@@ -142,6 +144,49 @@ class AuthenticationController extends ApiController
         $user->save();
 
         event(new Registered($user));
+
+        return $this->success();
+    }
+
+    public function createPasswordResetToken(Request $request): JsonResponse
+    {
+        $validatedRequest = $request->validate([
+            'email' => 'required|exists:users,email|email:rfc,dns',
+        ]);
+
+        $user = User::where('email', $request->email)->first();
+        if(!$user) return $this->error();
+
+        $token = Str::random(64);
+        $user->password_reset_token = Hash::make($token . $user->email);
+        $user->password_reset_token_expires_at = Carbon::now()->addHours(2);
+        $user->save();
+
+        $url = env('APP_URL') . '/password-reset?user=' . $user->id . '&token=' . $token;
+
+        $user->notify(new PasswordResetRequest($user, $url));
+
+        return $this->success();
+    }
+
+    public function resetPassword(Request $request)
+    {
+        $validatedRequest = $request->validate([
+            'token' => 'required',
+            'password' => 'required', 'string', Password::min(8)->mixedCase()->numbers()->symbols()->uncompromised(),
+            'email' => 'required|email:rfc,dns',
+        ]);
+
+        $user = User::where('email', $validatedRequest['email'])->first();
+        if (!$user || $user->password_reset_token_expires_at < Carbon::now()) return $this->error($user->password_reset_token_expires_at);
+        if (!Hash::check($validatedRequest['token'] . $validatedRequest['email'], $user->password_reset_token)) return $this->error(['Email of token onjuist']);
+
+        $user->password = Hash::make($validatedRequest['password']);
+        $user->password_reset_token = null;
+        $user->password_reset_token_expires_at = null;
+        $user->save();
+
+        $user->notify(new PasswordResetted($user));
 
         return $this->success();
     }

@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AuthenticationController;
 use App\Http\Controllers\GroupController;
 use App\Http\Controllers\InvoiceController;
 use App\Http\Controllers\Management\PaymentProviderController;
@@ -13,6 +14,7 @@ use App\Http\Controllers\SettingController;
 use App\Http\Controllers\StatisticsController;
 use App\Http\Controllers\Stripe\StripeConnectController;
 use App\Http\Controllers\Stripe\StripeWebhookController;
+use App\Http\Controllers\Support\TicketController;
 use App\Http\Controllers\TemplateController;
 use App\Http\Controllers\UnitController;
 use App\Http\Controllers\User\UserController;
@@ -30,6 +32,9 @@ Route::post('/sanctum/token', [\App\Http\Controllers\AuthenticationController::c
 Route::post('/sanctum/register', [\App\Http\Controllers\AuthenticationController::class, 'createUser']);
 Route::post('/sanctum/email/verify', [\App\Http\Controllers\AuthenticationController::class, 'verifyEmail']);
 Route::post('/sanctum/email/verify/resend', [\App\Http\Controllers\AuthenticationController::class, 'resendVerifyEmail']);
+
+Route::post('/sanctum/password/reset/request', [AuthenticationController::class, 'createPasswordResetToken']);
+Route::post('/sanctum/password/reset', [AuthenticationController::class, 'resetPassword']);
 
 Route::get('/reservationispaid/{reservation}', [ReservationController::class, 'isPaid']);
 Route::post('/venuepayments/mollie/webhook', [\App\Http\Controllers\Mollie\MollieWebhookController::class, 'updatePayment']);
@@ -95,6 +100,7 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::resource('venues.invoices',          InvoiceController::class)->except(['create', 'edit']);
         Route::resource('venues.roles',             RoleController::class)->except(['create', 'edit']);
         Route::resource('venues.groups',             GroupController::class)->except(['create', 'edit']);
+        Route::resource('venues.tickets',             TicketController::class)->except(['create', 'edit']);
     });
 
 });

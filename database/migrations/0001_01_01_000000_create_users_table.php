@@ -20,6 +20,8 @@ return new class extends Migration
             $table->timestamp('email_verification_token_expires_at')->nullable();
             $table->foreignUuid('role_id')->constrained()->default('509ab95a-9dbc-4857-a142-c3a1fa9a9812');
             $table->string('password');
+            $table->string('password_reset_token')->nullable();
+            $table->timestamp('password_reset_token_expires_at')->nullable();
             $table->rememberToken();
             $table->softDeletes();
             $table->timestamps();

@@ -23,8 +23,8 @@ Route::get('/callback/success', [\App\Http\Controllers\Stripe\StripeCallbackCont
 Route::get('/mollie/callback/success/{reservation}', [\App\Http\Controllers\Mollie\MollieWebhookController::class, 'updatePayment'])->name('mollie.callback.success');
 Route::get('/confirmation/{any}', function() { return view('layouts.blank-page'); })->name('confirmation');
 
-Route::get('/forgot-password', function () { return view('auth.authentication'); })->name('forgot');
-Route::get('/reset-password/{any}', function () { return view('auth.authentication'); })->name('reset')->where('any', '^(?!api).*$');
+Route::get('/password-forgot', function() { return view('layouts.authentication');});
+Route::get('/password-reset', function() { return view('layouts.authentication');});
 Route::get('/select', function () { return view('layouts.dashboard'); })->name('select');
 Route::get('/manage/{any}', function () { return view('layouts.dashboard'); })->name('manage');
 

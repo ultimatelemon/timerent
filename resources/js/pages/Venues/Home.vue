@@ -27,7 +27,7 @@
             </div>
 
             <div
-                v-if="calculatePercentageChange(statistics.revenue.previous_week, statistics.revenue.now) >= 0"
+                v-if="calculatePercentageChange(statistics.revenue.previous_week, statistics.revenue.now) > 0"
                 class="inline-flex items-baseline rounded-full px-2.5 py-0.5 text-sm font-medium bg-green-100 text-green-800 md:mt-2 lg:mt-0">
               <svg class="-ml-1 mr-0.5 h-5 w-5 flex-shrink-0 self-center text-green-500" viewBox="0 0 20 20"
                    fill="currentColor" aria-hidden="true">
@@ -49,6 +49,11 @@
               <span class="sr-only"> Difference </span>
               {{ calculatePercentageChange(statistics.reservations.previous_week, statistics.reservations.now) }}%
             </div>
+            <div v-else
+                 class="inline-flex items-baseline rounded-full px-2.5 py-0.5 text-sm font-medium bg-gray-100 text-gray-800 md:mt-2 lg:mt-0">
+              <span class="sr-only"> Difference </span>
+              0%
+            </div>
           </dd>
         </div>
         <div class="px-4 py-5 sm:p-6">
@@ -61,7 +66,7 @@
             </div>
 
             <div
-                v-if="calculatePercentageChange(statistics.reservations.previous_week, statistics.reservations.now) >= 0"
+                v-if="calculatePercentageChange(statistics.reservations.previous_week, statistics.reservations.now) > 0"
                 class="inline-flex items-baseline rounded-full px-2.5 py-0.5 text-sm font-medium bg-green-100 text-green-800 md:mt-2 lg:mt-0">
               <svg class="-ml-1 mr-0.5 h-5 w-5 flex-shrink-0 self-center text-green-500" viewBox="0 0 20 20"
                    fill="currentColor" aria-hidden="true">
@@ -72,7 +77,7 @@
               <span class="sr-only"> Increased by </span>
               {{ calculatePercentageChange(statistics.reservations.previous_week, statistics.reservations.now) }}%
             </div>
-            <div v-else
+            <div v-else-if="calculatePercentageChange(statistics.reservations.previous_week, statistics.reservations.now) < 0"
                  class="inline-flex items-baseline rounded-full px-2.5 py-0.5 text-sm font-medium bg-red-100 text-red-800 md:mt-2 lg:mt-0">
               <svg class="-ml-1 mr-0.5 h-5 w-5 flex-shrink-0 self-center text-red-500" viewBox="0 0 20 20"
                    fill="currentColor" aria-hidden="true">
@@ -82,6 +87,11 @@
               </svg>
               <span class="sr-only"> Increased by </span>
               {{ calculatePercentageChange(statistics.reservations.previous_week, statistics.reservations.now) }}%
+            </div>
+            <div v-else
+                 class="inline-flex items-baseline rounded-full px-2.5 py-0.5 text-sm font-medium bg-gray-100 text-gray-800 md:mt-2 lg:mt-0">
+              <span class="sr-only"> Difference </span>
+              0%
             </div>
           </dd>
         </div>
@@ -95,7 +105,7 @@
             </div>
 
             <div
-                v-if="calculatePercentageChange(statistics.average_spending.previous_week, statistics.average_spending.now) >= 0"
+                v-if="calculatePercentageChange(statistics.average_spending.previous_week, statistics.average_spending.now) > 0"
                 class="inline-flex items-baseline rounded-full px-2.5 py-0.5 text-sm font-medium bg-green-100 text-green-800 md:mt-2 lg:mt-0">
               <svg class="-ml-1 mr-0.5 h-5 w-5 flex-shrink-0 self-center text-green-500" viewBox="0 0 20 20"
                    fill="currentColor" aria-hidden="true">
@@ -106,7 +116,7 @@
               <span class="sr-only"> Difference </span>
               {{ calculatePercentageChange(statistics.average_spending.previous_week, statistics.average_spending.now) }}%
             </div>
-            <div v-else
+            <div v-else-if="calculatePercentageChange(statistics.average_spending.previous_week, statistics.average_spending.now) < 0"
                  class="inline-flex items-baseline rounded-full px-2.5 py-0.5 text-sm font-medium bg-red-100 text-red-800 md:mt-2 lg:mt-0">
               <svg class="-ml-1 mr-0.5 h-5 w-5 flex-shrink-0 self-center text-red-500" viewBox="0 0 20 20"
                    fill="currentColor" aria-hidden="true">
@@ -116,6 +126,11 @@
               </svg>
               <span class="sr-only"> Difference </span>
               {{ calculatePercentageChange(statistics.average_spending.previous_week, statistics.average_spending.now) }}%
+            </div>
+            <div v-else
+                 class="inline-flex items-baseline rounded-full px-2.5 py-0.5 text-sm font-medium bg-gray-100 text-gray-800 md:mt-2 lg:mt-0">
+              <span class="sr-only"> Difference </span>
+              0%
             </div>
           </dd>
         </div>

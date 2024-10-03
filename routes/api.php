@@ -61,6 +61,7 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('/users/{user}/venue/{venue}', [UserVenueController::class, 'show']);
         Route::put('/users/{user}/venue/{venue}', [UserVenueController::class, 'update']);
         Route::post('/users/{user}/venue/{venue}/portal', [UserVenueController::class, 'openCustomerPortal']);
+        Route::post('/venues/{venue}/paymentlink', [VenueController::class, 'createNewPaymentLink']);
 
         // Payment
         Route::get('/paymentproviders/available', [PaymentProviderController::class, 'available']);
@@ -76,7 +77,12 @@ Route::middleware('auth:sanctum')->group(function () {
         // Invoice
         Route::post('/venues/{venue}/invoices/{invoice}/download', [InvoiceController::class, 'download']);
 
-        // Todo: Permission routes
+        // Units
+        Route::get('/venues/{venue}/units/list', [UnitController::class, 'list']);
+
+        // Templates
+        Route::get('/venues/{venue}/templates/list', [TemplateController::class, 'list']);
+
         Route::resource('venues',                   VenueController::class)->except(['create', 'edit']);
         Route::resource('venues.units',             UnitController::class)->except(['create', 'edit']);
         Route::resource('venues.templates',         TemplateController::class)->except(['create', 'edit']);

@@ -50,7 +50,10 @@
           </div>
           <div class="py-6 sm:grid sm:grid-cols-3 sm:gap-4">
             <dt class="text-sm font-medium leading-6 text-gray-900">Huidig betaaltermijn t/m</dt>
-            <dd class="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">{{ $filters.humanDateTime(venue.stripe_current_period_ends_at) }}</dd>
+            <dd class="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0" v-if="venue.stripe_current_period_ends_at">{{ $filters.humanDateTime(venue.stripe_current_period_ends_at) }}</dd>
+            <dd class="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0" v-else>
+              <button @click="generatePaymentURL" class="btn btn-success">Rond je betaling af</button>
+            </dd>
           </div>
           <div class="py-6 sm:grid sm:grid-cols-3 sm:gap-2">
             <dt class="text-sm font-medium leading-6 text-gray-900">Huidig abonnement</dt>
@@ -134,6 +137,13 @@ export default {
           })
           .finally(() => {
 
+          })
+    },
+
+    generatePaymentURL() {
+      axios.post('/venues/' + this.venue_id + '/paymentlink')
+          .then(response => {
+            this.openURL(response.data.data);
           })
     },
 

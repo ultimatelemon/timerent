@@ -77,4 +77,17 @@ class VenueController extends ApiController
 
         return $this->success($onboardingUrl);
     }
+
+    /**
+     * Create a new payment link for subscription
+     *
+     * @param Venue $venue
+     * @return JsonResponse
+     * @throws ApiErrorException
+     */
+    public function createNewPaymentLink(Venue $venue): JsonResponse
+    {
+        $subscription_url = (new StripeSubscriptionController())->create($venue, $venue->plan);
+        return $this->success($subscription_url);
+    }
 }

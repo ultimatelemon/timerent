@@ -9,19 +9,6 @@
       </div>
     </div>
 
-<!--    <div class="rounded-md bg-green-50 p-4 mb-12">-->
-<!--      <div class="flex">-->
-<!--        <div class="flex-shrink-0">-->
-<!--          <svg class="h-5 w-5 text-green-400" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">-->
-<!--            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.857-9.809a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z" clip-rule="evenodd" />-->
-<!--          </svg>-->
-<!--        </div>-->
-<!--        <div class="ml-3">-->
-<!--          <h3 class="text-sm font-medium text-green-800">Je wijzigingen zijn opgeslagen</h3>-->
-<!--        </div>-->
-<!--      </div>-->
-<!--    </div>-->
-
     <SuccessAlert v-if="saved" @close="this.saved = false;">Je wijzigingen zijn opgeslagen</SuccessAlert>
 
     <div>
@@ -33,20 +20,26 @@
         <dl class="divide-y divide-gray-100">
           <div class="py-6 sm:grid sm:grid-cols-3 sm:gap-4">
             <dt class="text-sm font-medium leading-6 text-gray-900">Zichtbare naam <span class="required-star">*</span></dt>
-            <input v-model="formData.subdomain" type="text" name="subdomain" id="subdomain"
-                   v-on:keyup.enter="postData"
-                   :class="errors.subdomain ? 'ring-red-300' : ''"
-                   class="block w-full rounded-md border-0 py-1.5 pr-10 ring-1 ring-inset focus:ring-2 focus:ring-inset focus:ring-indigo-500 sm:text-sm sm:leading-6"
-                   aria-invalid="true" aria-describedby="name-error"/>
+            <div>
+              <input v-model="formData.name" type="text" name="name" id="name"
+                     v-on:keyup.enter="postData"
+                     :class="errors.name ? 'ring-red-300' : ''"
+                     class="block w-full rounded-md border-0 py-1.5 pr-10 ring-1 ring-inset focus:ring-2 focus:ring-inset focus:ring-indigo-500 sm:text-sm sm:leading-6"
+                     aria-invalid="true" aria-describedby="name-error"/>
+              <span v-if="errors.name" class="text-red-500 text-sm">{{errors.name[0]}}</span>
+            </div>
           </div>
           <div class="py-6 sm:grid sm:grid-cols-3 sm:gap-4">
             <dt class="text-sm font-medium leading-6 text-gray-900">Subdomein <span class="required-star">*</span></dt>
-            <input v-model="formData.subdomain" type="text" name="subdomain" id="subdomain"
-                   v-on:keyup.enter="postData"
-                   :class="errors.subdomain ? 'ring-red-300' : ''"
-                   placeholder="Alleen a-z, geen spaties of speciale tekens"
-                   class="block w-full rounded-md border-0 py-1.5 pr-10 ring-1 ring-inset focus:ring-2 focus:ring-inset focus:ring-indigo-500 sm:text-sm sm:leading-6"
-                   aria-invalid="true" aria-describedby="name-error"/>
+            <div>
+              <input v-model="formData.subdomain" type="text" name="subdomain" id="subdomain"
+                     v-on:keyup.enter="postData"
+                     :class="errors.subdomain ? 'ring-red-300' : ''"
+                     placeholder="Alleen a-z, geen spaties of speciale tekens"
+                     class="block w-full rounded-md border-0 py-1.5 pr-10 ring-1 ring-inset focus:ring-2 focus:ring-inset focus:ring-indigo-500 sm:text-sm sm:leading-6"
+                     aria-invalid="true" aria-describedby="name-error"/>
+              <span v-if="errors.subdomain" class="text-red-500 text-sm">{{errors.subdomain[0]}}</span>
+            </div>
           </div>
           <div class="py-6 sm:grid sm:grid-cols-3 sm:gap-4">
             <dt class="text-sm font-medium leading-6 text-gray-900">Huidig betaaltermijn t/m</dt>

@@ -32,7 +32,7 @@ class UserVenueController extends ApiController
     public function update(Request $request, User $user, Venue $venue): JsonResponse
     {
         $validatedRequest = Validator::make($request->all(), [
-            'name' => 'required|string',
+            'name' => 'required|string|max:32',
             'description' => 'nullable|string|max:200',
             'address' => 'nullable|string',
             'postal_code' => 'nullable|string',

@@ -5,6 +5,11 @@
       <div class="text-sm">Beheer hier je template</div>
     </div>
 
+    <div v-if="errors.invalid" class="alert alert-danger mb-12">
+      <div>Template is ongeldig</div>
+      <i class="fa fa-close cursor-pointer" @click="errors = []"></i>
+    </div>
+
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 mb-12">
       <div>
         <label for="name" class="block text-sm font-medium leading-6 text-gray-900">Naam <span

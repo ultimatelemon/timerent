@@ -77,7 +77,42 @@ class TemplateController extends ApiController implements HasMiddleware
      */
     public function store(StoreTemplate $request, Venue $venue): JsonResponse
     {
-        $template = $venue->templates()->create($request->validated());
+        $validatedRequest = $request->validated();
+        $template = $validatedRequest['template'];
+        foreach ($template as $temp) {
+            foreach($temp['ranges'] as $range) {
+                $rest = array_filter($temp['ranges'], function($t) use ($range) {
+                    return $t['from'] !== $range['from'];
+                });
+
+                $baseFrom = intval(explode(':', $range['from'])[0]);
+                $baseTo = intval(explode(':', $range['to'])[0]);
+
+                foreach($rest as $r) {
+                    $from = intval(explode(':', $r['from'])[0]);
+                    $to = intval(explode(':', $r['to'])[0]);
+
+                    if ($baseFrom < $from && $baseTo > $from) {
+                        return $this->error(['invalid' => 'Template invalid']);
+                    }
+
+                    if ($baseFrom < $to && $baseTo > $to) {
+                        return $this->error(['invalid' => 'Template invalid']);
+                    }
+
+                    if($baseFrom === $from && $baseTo === $to) {
+                        return $this->error(['invalid' => 'Template invalid']);
+                    }
+                }
+            }
+        }
+
+        $venue->templates()->create($validatedRequest);
+
+        return $this->success($validatedRequest);
+
+
+//        $template = $venue->templates()->create($request->validated());
         return $this->success(new TemplateResource($template));
     }
 

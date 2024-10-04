@@ -37,6 +37,7 @@ input:not([type="checkbox"]) { @apply block w-full rounded-md border-0 px-3 py-1
 
 .alert { @apply w-full flex justify-between py-2 px-4 rounded text-gray-600 bg-gray-200 items-center }
 .alert-success { @apply text-emerald-600 bg-emerald-200 }
+.alert-danger { @apply text-red-600 bg-red-200 }
 
 .required-star { @apply text-xl text-red-500 }
 

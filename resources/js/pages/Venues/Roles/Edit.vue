@@ -39,6 +39,7 @@
           </div>
         </div>
       </div>
+      <p v-if="errors.bitfield" class="mt-2 text-sm text-red-600" id="name-error">{{ errors.bitfield[0] }}</p>
     </div>
 
     <!--    <div class="mt-10">-->

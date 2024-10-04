@@ -2,7 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-* {font-family: 'General Sans', sans-serif}
 .noscrollbar::-webkit-scrollbar {
     display: none;
 }

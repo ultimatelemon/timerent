@@ -5,6 +5,11 @@
       <div class="text-sm">Beheer hier de rol</div>
     </div>
 
+    <div class="mb-12 alert alert-danger" v-if="errors.bitfield">
+      <div>Selecteer 1 of meerdere permissies om een rol aan te maken</div>
+      <i class="fa fa-close cursor-pointer" @click="errors = []"></i>
+    </div>
+
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 mb-12">
       <div>
         <label for="name" class="block text-sm font-medium leading-6 text-gray-900">Naam <span
@@ -39,7 +44,6 @@
           </div>
         </div>
       </div>
-      <p v-if="errors.bitfield" class="mt-2 text-sm text-red-600" id="name-error">{{ errors.bitfield[0] }}</p>
     </div>
 
     <!--    <div class="mt-10">-->

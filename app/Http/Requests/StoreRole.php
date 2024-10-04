@@ -23,7 +23,7 @@ class StoreRole extends FormRequest
     {
         return [
             'name' => 'required|string|max:32',
-            'bitfield' => 'required|numeric'
+            'bitfield' => 'required|numeric|min:1'
         ];
     }
 }

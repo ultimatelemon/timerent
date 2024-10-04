@@ -90,7 +90,9 @@ class RoleController extends ApiController implements HasMiddleware
      */
     public function update(Venue $venue, Role $role, StoreRole $request): JsonResponse
     {
-        $role->update($request->validated());
+        ray($request->all());
+        $validatedRequest = $request->validated();
+        $role->update($validatedRequest);
         return $this->success(new RoleResource($role));
     }
 }

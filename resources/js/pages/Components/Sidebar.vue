@@ -409,6 +409,24 @@ export default {
               permission: ['VIEW_GROUPS'],
             }
           ]
+        },
+        {
+          name: 'Help',
+          permission: [''],
+          children: [
+            {
+              name: 'Questie',
+              link: {name: 'venues.support.tickets.index', params: {venue: this.$store.state.venue.id}},
+              icon: UserCircleIcon,
+              permission: ['VIEW_GROUPS'],
+            },
+            {
+              name: 'Gesloten vragen',
+              link: {name: 'venues.groups.index', params: {venue: this.$store.state.venue.id}},
+              icon: UserCircleIcon,
+              permission: ['VIEW_GROUPS'],
+            }
+          ]
         }
       ]
     },

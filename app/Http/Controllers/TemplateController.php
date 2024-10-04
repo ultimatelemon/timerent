@@ -126,7 +126,36 @@ class TemplateController extends ApiController implements HasMiddleware
      */
     public function update(StoreTemplate $request, Venue $venue, Template $template): JsonResponse
     {
-        $template->update($request->validated());
+        $validatedRequest = $request->validated();
+        $template = $validatedRequest['template'];
+        foreach ($template as $temp) {
+            foreach($temp['ranges'] as $range) {
+                $rest = array_filter($temp['ranges'], function($t) use ($range) {
+                    return $t['from'] !== $range['from'];
+                });
+
+                $baseFrom = intval(explode(':', $range['from'])[0]);
+                $baseTo = intval(explode(':', $range['to'])[0]);
+
+                foreach($rest as $r) {
+                    $from = intval(explode(':', $r['from'])[0]);
+                    $to = intval(explode(':', $r['to'])[0]);
+
+                    if ($baseFrom < $from && $baseTo > $from) {
+                        return $this->error(['invalid' => 'Template invalid']);
+                    }
+
+                    if ($baseFrom < $to && $baseTo > $to) {
+                        return $this->error(['invalid' => 'Template invalid']);
+                    }
+
+                    if($baseFrom === $from && $baseTo === $to) {
+                        return $this->error(['invalid' => 'Template invalid']);
+                    }
+                }
+            }
+        }
+        $template->update($validatedRequest);
         return $this->success(new TemplateResource($template));
     }
 

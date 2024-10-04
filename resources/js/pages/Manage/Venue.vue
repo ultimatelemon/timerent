@@ -148,6 +148,7 @@ export default {
           .then(response => {
             this.venue = response.data.data;
             this.saved = true;
+            this.errors = [];
           })
           .catch(e => {
             this.saved = false;

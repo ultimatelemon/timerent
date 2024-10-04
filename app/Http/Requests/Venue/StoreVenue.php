@@ -25,7 +25,7 @@ class StoreVenue extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => 'required|string',
+            'name' => 'required|string|max:32',
             'description' => 'nullable|string|max:200',
             'address' => 'nullable|string',
             'postal_code' => 'nullable|string',

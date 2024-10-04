@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Support\Ticket;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -13,8 +14,9 @@ class Venue extends Model
     use HasFactory, HasUuids;
 
     protected $fillable = [
-        'name', 'description', 'address', 'postal_code', 'city', 'email', 'phone', 'coc_number', 'tax_number', 'bank_number', 'avatar_id', 'cover_id', 'receipt_logo_id',
+        'name', 'description', 'address', 'postal_code', 'city', 'email', 'phone_number', 'phone_number_support', 'coc_number', 'tax_number', 'bank_number', 'avatar_id', 'cover_id', 'receipt_logo_id',
         'receipt_top', 'receipt_bottom', 'subdomain', 'plan_id', 'stripe_customer_id', 'stripe_subscription_id', 'stripe_current_period_ends_at', 'stripe_connect_onboarded', 'stripe_connect_id',
+        'payment_service_provider', 'payment_api_key', 'reservation_prefix', 'cancellation_hours',
     ];
 
     /**
@@ -85,5 +87,10 @@ class Venue extends Model
     public function groups(): HasMany
     {
         return $this->hasMany(Group::class);
+    }
+
+    public function tickets(): HasMany
+    {
+        return $this->hasMany(Ticket::class);
     }
 }

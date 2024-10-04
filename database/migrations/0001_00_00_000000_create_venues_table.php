@@ -23,11 +23,16 @@ return new class extends Migration
             $table->string('postal_code')->nullable();
             $table->string('city')->nullable();
             $table->string('email')->nullable();
-            $table->string('phone')->nullable();
-            $table->string('coc_number')->nullable();
+            $table->string('phone_number')->nullable();
+            $table->string('phone_number_support')->nullable();
+            $table->integer('coc_number')->nullable();
             $table->string('tax_number')->nullable();
 
             $table->string('payment_service_provider')->nullable();
+            $table->longText('payment_api_key')->nullable();
+            $table->string('reservation_prefix')->nullable()->default('TR-');
+            $table->integer('cancellation_hours')->nullable();
+
             $table->string('stripe_customer_id')->nullable();
             $table->string('stripe_connect_id')->nullable();
             $table->boolean('stripe_connect_onboarded')->nullable()->default(false);

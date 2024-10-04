@@ -11,7 +11,6 @@ use App\Models\Plan;
 use App\Models\User;
 use App\Models\UserVenue;
 use App\Models\Venue;
-use Database\Seeders\SettingSeeder;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Artisan;

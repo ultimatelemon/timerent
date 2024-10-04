@@ -66,15 +66,9 @@ export const routes = [
         ]
     },
 
-    {
-        path: '/store/:venue/settings',
-        component: Wrapper,
-        children: [
-            { path: '', component: () => import('./pages/Venues/Settings/Index.vue'), name: 'venues.settings.index' },
-            // { path: 'create', component: () => import('./pages/Venues/Products/Edit.vue'), name: 'venues.products.create' },
-            // { path: ':reservation', component: () => import('./pages/Venues/Reservations/Edit.vue'), name: 'venues.reservations.edit' },
-        ]
-    },
+    { path: '/store/:venue/settings', component: () => import('./pages/Venues/Settings/Index.vue'), name: 'venues.settings.index' },
+    { path: '/store/:venue/settings/finance', component: () => import('./pages/Venues/Settings/Finance.vue'), name: 'venues.settings.finance' },
+    { path: '/store/:venue/settings/reservations', component: () => import('./pages/Venues/Settings/Reservation.vue'), name: 'venues.settings.reservations' },
 
     {
         path: '/store/:venue/reports',

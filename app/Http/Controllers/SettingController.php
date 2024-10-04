@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\Venue\Settings\StoreFinanceSettings;
+use App\Http\Requests\Venue\Settings\StoreGeneralSettings;
+use App\Http\Requests\Venue\Settings\StoreReservationSettings;
 use App\Models\Setting;
 use App\Models\Venue;
 use Illuminate\Http\JsonResponse;
@@ -15,79 +18,50 @@ class SettingController extends ApiController implements HasMiddleware
     public static function middleware(): array
     {
         return [
-            new Middleware('hasPermissions:VIEW_SETTINGS', only: ['getSettingByCategory']),
-            new Middleware('hasPermissions:MANAGE_SETTINGS', only: ['updateSettings', 'getPaymentSettings', 'updatePaymentSettings']),
+            new Middleware('hasPermissions:VIEW_SETTINGS', only: ['getGeneralSettings', 'getFinanceSettings', 'getReservationSettings']),
+            new Middleware('hasPermissions:MANAGE_SETTINGS', only: ['updateGeneralSettings', 'updateFinanceSettings', 'updateReservationSettings']),
         ];
     }
 
-    /**
-     * Get settings of the venue by category
-     *
-     * @param Venue $venue
-     * @param Request $request
-     * @return JsonResponse
-     */
-    public function getSettingByCategory(Venue $venue, Request $request): JsonResponse
+    public function getGeneralSettings(Venue $venue): JsonResponse
     {
-        $settings = $venue->settings()->where('category', $request->category)->get();
+        $settings = $venue->only(['name', 'address', 'postal_code', 'city', 'email', 'phone_number', 'phone_number_support', 'coc_number', 'tax_number']);
         return $this->success($settings);
     }
 
-    /**
-     * Update the venue's settings
-     *
-     * @param Venue $venue
-     * @param Request $request
-     * @return JsonResponse
-     */
-    public function updateSettings(Venue $venue, Request $request): JsonResponse
+    public function updateGeneralSettings(Venue $venue, StoreGeneralSettings $request): JsonResponse
     {
-        foreach ($request->settings as $setting) {
-            $s = Setting::findOrFail($setting['id']);
-            $s->value = $setting['value'];
-            $s->save();
-        }
+        $venue->update($request->validated());
+        return $this->success();
+    }
+
+    public function getFinanceSettings(Venue $venue): JsonResponse
+    {
+        $settings = $venue->only(['payment_service_provider', 'stripe_connect_id', 'stripe_connect_onboarded']);
+        return $this->success($settings);
+    }
+
+    public function updateFinanceSettings(Venue $venue, StoreFinanceSettings $request): JsonResponse
+    {
+        $validatedRequest = $request->validated();
+        $venue->update([
+            'payment_service_provider' => $validatedRequest['payment_service_provider'],
+            'payment_api_key' => Crypt::encrypt($validatedRequest['payment_api_key']),
+        ]);
 
         return $this->success();
     }
 
-    /**
-     * Get the venue's payment settings
-     *
-     * @param Venue $venue
-     * @return JsonResponse
-     */
-    public function getPaymentSettings(Venue $venue): JsonResponse
+    public function getReservationSettings(Venue $venue): JsonResponse
     {
-        $settings = $venue->settings()->where('category', 'finance')->get();
-        return $this->success(
-          [
-              'venue' => $venue,
-              'settings' => [
-                  'payment_provider' => $settings->where('key', 'payment_provider')->first()->value,
-              ]
-          ]
-        );
+        $settings = $venue->only(['reservation_prefix', 'cancellation_hours']);
+        return $this->success($settings);
     }
 
-    /**
-     * Update the venue's payment settings
-     *
-     * @param Venue $venue
-     * @param Request $request
-     * @return JsonResponse
-     */
-    public function updatePaymentSettings(Venue $venue, Request $request): JsonResponse
+    public function updateReservationSettings(Venue $venue, StoreReservationSettings $request): JsonResponse
     {
-        $setting_provider = $venue->settings->where('key', 'payment_provider')->first();
-        $setting_api_key = $venue->settings->where('key', 'payment_api_key')->first();
-
-        $setting_provider->value = $request->payment_provider;
-        $setting_provider->save();
-
-        $setting_api_key->value = Crypt::encrypt($request->payment_api_key);
-        $setting_api_key->save();
-
+        ray($request->all());
+        $venue->update($request->validated());
         return $this->success();
     }
 }

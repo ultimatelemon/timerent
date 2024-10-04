@@ -57,10 +57,12 @@ Route::middleware('auth:sanctum')->group(function () {
 
 
         // Settings
-        Route::get('/venues/{venue}/settings/category', [SettingController::class, 'getSettingByCategory']);
-        Route::put('/venues/{venue}/settings/payment', [SettingController::class, 'updatePaymentSettings']);
-        Route::get('/venues/{venue}/settings/payment', [SettingController::class, 'getPaymentSettings']);
-        Route::put('/venues/{venue}/settings', [SettingController::class, 'updateSettings']);
+        Route::get('/venues/{venue}/settings/general', [SettingController::class, 'getGeneralSettings']);
+        Route::put('/venues/{venue}/settings/general', [SettingController::class, 'updateGeneralSettings']);
+        Route::get('/venues/{venue}/settings/finance', [SettingController::class, 'getFinanceSettings']);
+        Route::put('/venues/{venue}/settings/finance', [SettingController::class, 'updateFinanceSettings']);
+        Route::get('/venues/{venue}/settings/reservations', [SettingController::class, 'getReservationSettings']);
+        Route::put('/venues/{venue}/settings/reservations', [SettingController::class, 'updateReservationSettings']);
 
         // Manage
         Route::get('/users/{user}/venue/{venue}', [UserVenueController::class, 'show']);

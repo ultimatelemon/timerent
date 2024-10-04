@@ -73,7 +73,7 @@
                         </li>
                       </ul>
                     </li>
-                    <li class="mt-auto cursor-pointer">
+                    <li class="mt-auto">
                       <div class="text-xs font-semibold leading-6 text-gray-400">Externe navigatie</div>
                       <ul role="list" class="-mx-2 mt-2 space-y-1">
                         <li v-for="item in externalNaviation" :key="item.name">
@@ -268,18 +268,6 @@ export default {
 
   methods: {
 
-    // fetchUser() {
-    //   axios.get('/users/current')
-    //       .then(response => {
-    //         this.user = response.data.data;
-    //         // this.role = response.data.data.role;
-    //         this.fetchNavigation();
-    //       })
-    //       .catch(e => {
-    //         console.log(e.message)
-    //       })
-    // },
-
     fetchUser(venue) {
       axios.get('/users/current?venue=' + venue)
           .then(response => {
@@ -355,11 +343,23 @@ export default {
           permission: ['VIEW_SETTINGS'],
           children: [
             {
-              name: 'Instellingen',
+              name: 'Algemene instellingen',
               link: {name: 'venues.settings.index', params: {venue: this.$store.state.venue.id}},
               icon: CogIcon,
               permission: ['VIEW_SETTINGS'],
-            }
+            },
+            {
+              name: 'Finance instellingen',
+              link: {name: 'venues.settings.finance', params: {venue: this.$store.state.venue.id}},
+              icon: CogIcon,
+              permission: ['VIEW_SETTINGS'],
+            },
+            {
+              name: 'Reservering instellingen',
+              link: {name: 'venues.settings.reservations', params: {venue: this.$store.state.venue.id}},
+              icon: CogIcon,
+              permission: ['VIEW_SETTINGS'],
+            },
           ]
         },
         {

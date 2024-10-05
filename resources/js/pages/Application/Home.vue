@@ -26,7 +26,7 @@
           <div v-if="units.length <= 0" class="text-center text-lg pt-6">Er is op deze datum (nog) niks beschikbaar. Probeer een andere datum</div>
           <div v-else class="">
             <div v-for="unit in units">
-              <div v-if="canViewUnit(unit.unit)"  class="lg:p-4">
+              <div class="lg:p-4">
                 <div class="font-semibold text-md mb-1">{{ unit.unit.name }} <span class="text-xs text-gray-700 font-semibold">- {{ unit.unit.description ?? 'Geen omschrijving' }}</span></div>
                 <div v-if="unit.unit.groups.length > 0" class="text-xs text-red-700 font-semibold">Alleen te reserveren voor groep(en): {{ unit.unit.groups.map(g => g.name).join(', ') }}</div>
                 <div class="text-xs text-gray-700 mb-4 font-semibold">{{ $filters.currency(unit.price) }} per {{ unit.interval }} minuten</div>
@@ -217,7 +217,8 @@ export default {
             if(new Date(response.data.data.stripe_current_period_ends_at) <= new Date()) this.activeSubscription = false;
             this.fetchProducts();
             this.fetchMemberData();
-      })
+            console.log('fetch venue');
+          })
     },
 
     fetchMemberData() {
@@ -244,14 +245,15 @@ export default {
         }
       })
           .then(response => {
-            this.units = response.data.data;
+            // this.units = response.data.data;
+            this.units = response.data.data.filter(unit => this.canViewUnit(unit));
           })
     },
 
     canViewUnit(unit) {
-      if(unit.groups.length === 0) return true;
-      if(!this.current_member?.group_id) return false;
-      let groupIds = unit.groups.map(g => g.id);
+      if(unit.unit.groups.length === 0) return true;
+      if(this.current_member && !this.current_member.group.id) return false;
+      let groupIds = unit.unit.groups.map(g => g.id);
       return groupIds.includes(this.current_member.group.id);
     },
 

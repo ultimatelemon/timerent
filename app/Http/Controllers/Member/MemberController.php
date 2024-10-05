@@ -14,6 +14,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
+use Illuminate\Validation\Rules\Password;
 use Illuminate\Validation\ValidationException;
 
 class MemberController extends ApiController
@@ -66,10 +67,18 @@ class MemberController extends ApiController
     {
         $validatedRequest = Validator::make($request->all(), [
             'name' => 'required|string|min:2|max:48',
-            'email' => 'required|string|email|email:rfc,dns|unique:members,email,'.$member->id,
+            'notes' => 'nullable|string',
             'pay_on_invoice' => 'required|boolean',
             'loyality_points' => 'required|numeric|integer',
             'group_id' => 'nullable|sometimes|uuid|exists:groups,id',
+            'email' => [
+                'required',
+                'string',
+                'email:rfc,dns',
+                Rule::unique('members', 'email')->where(function ($query) use ($venue) {
+                    return $venue ? $query->where('venue_id', $venue->id) : $query;
+                })->ignore($member->id)
+            ],
         ]);
 
         $member = $venue->members()->findOrFail($member->id);

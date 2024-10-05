@@ -17,12 +17,12 @@
     <div class="mt-6">
       <dl class="grid grid-cols-1 sm:grid-cols-2">
         <div class=" px-4 py-6 sm:col-span-1 sm:px-0 mr-0 sm:mr-12">
-          <dt class="text-sm font-semibold leading-6 text-gray-900 pb-2">Naam</dt>
+          <dt class="text-sm font-semibold leading-6 text-gray-900 pb-2">Naam <span class="required-star">*</span></dt>
           <input v-on:keyup.enter="postData" class="text-sm" v-model="formData.name">
           <span v-if="errors.name" class="text-sm text-red-500">{{ errors.name[0] }}</span>
         </div>
         <div class="border-t border-gray-100 md:border-none px-4 py-6 sm:col-span-1 sm:px-0 mr-0 sm:mr-12">
-          <dt class="text-sm font-semibold leading-6 text-gray-900 pb-2">Email</dt>
+          <dt class="text-sm font-semibold leading-6 text-gray-900 pb-2">Email <span class="required-star">*</span></dt>
           <input v-on:keyup.enter="postData" class="text-sm" v-model="formData.email">
           <span v-if="errors.email" class="text-sm text-red-500">{{ errors.email[0] }}</span>
         </div>

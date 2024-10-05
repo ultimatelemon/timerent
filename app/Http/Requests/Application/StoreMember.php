@@ -32,6 +32,7 @@ class StoreMember extends FormRequest
         return [
             'subdomain' => 'required|exists:venues,subdomain',
             'name' => 'required|string|min:2|max:48',
+            'notes' => 'nullable|string',
             'email' => [
                 'required',
                 'string',

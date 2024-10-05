@@ -25,8 +25,8 @@ class StoreUnit extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => 'required|string',
-            'description' => 'nullable|string',
+            'name' => 'required|string|max:32',
+            'description' => 'nullable|string|max:64',
             'tax_percentage' => [Rule::enum(TaxPercentage::class)],
             'groups' => 'nullable',
             'groups.*' => 'string|distinct|exists:groups,id',

@@ -7,7 +7,7 @@
 
 
     <div class="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
-      <div class="text-center text-red-500 mb-4">{{errors?.errors ? errors.errors[0] : ''}}</div>
+      <DangerAlert v-if="errors.errors">{{ errors.errors[0] }}</DangerAlert>
       <div class="space-y-6">
         <div v-if="errors.data" class="rounded-md bg-yellow-50 p-4">
           <div class="flex">
@@ -82,8 +82,11 @@
 
 <script>
 
+import DangerAlert from "../../Components/Alerts/DangerAlert.vue";
+
 export default {
   name: "Login",
+  components: {DangerAlert},
   data() {
     return {
       loading: false,

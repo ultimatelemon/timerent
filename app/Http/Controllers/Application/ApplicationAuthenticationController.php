@@ -70,10 +70,10 @@ class ApplicationAuthenticationController extends ApiController
         $member = Member::where('email', strtolower($validatedRequest['email']))->first();
 
         if (!$member || !Hash::check($request->password, $member->password))
-            return $this->error([__('Wrong email or password')], 400);
+            return $this->error([__('Onjuist e-mail of wachtwoord')], 400);
 
         if (!$member->email_verified_at)
-            return $this->error(['email_verification' => __('Email not verified')], 400);
+            return $this->error(['email_verification' => __('Verifieer eerst je email')], 400);
 
         $agent = new Agent();
         $sa = $agent->device() . ', ' . $agent->platform() . ' (' . $agent->browser() . ')';
@@ -183,7 +183,6 @@ class ApplicationAuthenticationController extends ApiController
 
     public function resetPassword(Request $request)
     {
-        ray($request->all());
         $validatedRequest = $request->validate([
             'token' => 'required',
             'password' => Password::min(8)->mixedCase()->numbers()->symbols(), 'string',

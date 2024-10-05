@@ -51,8 +51,12 @@
 
 <script>
 
+import Success from "../StripeConnectSuccess.vue";
+import SuccessAlert from "../Components/Alerts/SuccessAlert.vue";
+
 export default {
   name: "Login",
+  components: {SuccessAlert, Success},
   data() {
     return {
       loading: false,

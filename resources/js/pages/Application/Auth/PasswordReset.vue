@@ -7,9 +7,10 @@
 
 
     <div class="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
-      <div class="text-center text-red-500 mb-4">{{errors?.errors ? errors.errors[0] : ''}}</div>
-      <div class="text-center text-green-500 mb-4" v-if="success">Je wachtwoord is gereset, je kunt nu inloggen. <span
-          class="text-black ml-2 cursor-pointer" @click="success = false"><i class="fa fa-close"></i></span></div>
+
+      <SuccessAlert v-if="success" @close="success=false;">Je wachtwoord is succesvol gereset.</SuccessAlert>
+      <DangerAlert v-if="errors.message || errors.errors" @close="errors = []">{{ errors.message ?? errors.errors[0] }}</DangerAlert>
+
       <div class="space-y-6">
         <div v-if="errors.data" class="rounded-md bg-yellow-50 p-4">
           <div class="flex">
@@ -25,7 +26,7 @@
         <div>
           <label for="email" class="block text-sm font-medium leading-6 text-gray-900">Email</label>
           <div class="mt-2">
-            <input v-model="formData.email" v-on:keyup.enter="postData" type="email" autocomplete="email" required :class="errors?.errors?.email ? 'border-1 border-red-500': ''" class="block w-full border rounded-md  p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+            <input v-model="formData.email" v-on:keyup.enter="postData" placeholder="voorbeeld@voorbeeld.nl" type="email" autocomplete="email" required :class="errors?.errors?.email ? 'border-1 border-red-500': ''" class="block w-full border rounded-md  p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
             <span class="text-red-500 text-sm" v-if="errors?.errors?.email">{{ errors.errors.email[0]  }}</span>
           </div>
         </div>
@@ -41,16 +42,18 @@
         <div>
           <label for="email" class="block text-sm font-medium leading-6 text-gray-900">Wachtwoord</label>
           <div class="mt-2">
-            <input v-model="password" v-on:keyup.enter="postData" type="password" autocomplete="password" required :class="errors?.errors?.password ? 'border-1 border-red-500': ''" class="block w-full border rounded-md  p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
-            <span class="text-red-500 text-sm" v-if="passwordNotEqual">Wachtwoord niet hetzelfde</span>
+            <input v-model="password" v-on:keyup.enter="postData" placeholder="********" type="password" autocomplete="password" required :class="errors?.errors?.password ? 'border-1 border-red-500': ''" class="block w-full border rounded-md  p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+<!--            <span class="text-red-500 text-sm" v-if="passwordNotEqual">Wachtwoord niet hetzelfde</span>-->
+            <span class="text-red-500 text-sm" v-if="errors.errors?.password">{{errors.errors.password[0]}}</span>
           </div>
         </div>
 
         <div>
           <label for="password_confirmation" class="block text-sm font-medium leading-6 text-gray-900">Wachtwoord herhalen</label>
           <div class="mt-2">
-            <input v-model="password_confirmation" v-on:keyup.enter="postData" type="password" autocomplete="password" required :class="errors?.errors?.password_confirmation ? 'border-1 border-red-500': ''" class="block w-full border rounded-md  p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
-            <span class="text-red-500 text-sm" v-if="passwordNotEqual">Wachtwoord niet hetzelfde</span>
+            <input v-model="password_confirmation" v-on:keyup.enter="postData" placeholder="********" type="password" autocomplete="password" required :class="errors?.errors?.password_confirmation ? 'border-1 border-red-500': ''" class="block w-full border rounded-md  p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+<!--            <span class="text-red-500 text-sm" v-if="passwordNotEqual">Wachtwoord niet hetzelfde</span>-->
+            <span class="text-red-500 text-sm" v-if="errors.errors?.password_confirmation">{{errors.errors.password_confirmation[0]}}</span>
           </div>
         </div>
 
@@ -71,8 +74,12 @@
 
 <script>
 
+import SuccessAlert from "../../Components/Alerts/SuccessAlert.vue";
+import DangerAlert from "../../Components/Alerts/DangerAlert.vue";
+
 export default {
   name: "Login",
+  components: {DangerAlert, SuccessAlert},
   data() {
     return {
       loading: false,
@@ -95,12 +102,15 @@ export default {
     postData() {
       this.loading = true;
       axios.post('/app/sanctum/password/reset', {
+        subdomain: this.subdomain,
         email: this.formData.email,
         token: this.formData.token,
         password: this.password,
+        password_confirmation: this.password_confirmation,
       })
           .then(response => {
             this.success = true;
+            this.errors = [];
           })
           .catch(e => {
             this.success = false;
@@ -136,7 +146,8 @@ export default {
     password: function () {
       this.passwordNotEqual = this.password_confirmation !== this.password;
     }
-  }
+  },
+
 }
 
 </script>

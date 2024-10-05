@@ -8,8 +8,8 @@
 
     <div class="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
       <div class="text-center text-red-500 mb-4">{{errors?.errors ? errors.errors[0] : ''}}</div>
-      <div class="text-center text-green-500 mb-4" v-if="success">Je reset verzoek is verzonden, check ook je spam folder <span
-          class="text-black ml-2 cursor-pointer" @click="success = false"><i class="fa fa-close"></i></span></div>
+      <SuccessAlert v-if="success" @close="success=false">Je reset verzoek is verzonden</SuccessAlert>
+      <DangerAlert v-if="errors.message">{{errors.message}}</DangerAlert>
       <div class="space-y-6">
         <div v-if="errors.data" class="rounded-md bg-yellow-50 p-4">
           <div class="flex">
@@ -18,15 +18,15 @@
                 <path fill-rule="evenodd" d="M8.485 2.495c.673-1.167 2.357-1.167 3.03 0l6.28 10.875c.673 1.167-.17 2.625-1.516 2.625H3.72c-1.347 0-2.189-1.458-1.515-2.625L8.485 2.495zM10 5a.75.75 0 01.75.75v3.5a.75.75 0 01-1.5 0v-3.5A.75.75 0 0110 5zm0 9a1 1 0 100-2 1 1 0 000 2z" clip-rule="evenodd" />
               </svg>
             </div>
-            <h3 class="ml-3 text-sm font-medium text-yellow-800">{{ errors.data[0] }}</h3>
+<!--            <h3 class="ml-3 text-sm font-medium text-yellow-800">{{ errors.data[0] }}</h3>-->
           </div>
         </div>
 
         <div>
           <label for="email" class="block text-sm font-medium leading-6 text-gray-900">Email</label>
           <div class="mt-2">
-            <input v-model="formData.email" v-on:keyup.enter="postData" type="email" autocomplete="email" required :class="errors?.errors?.email ? 'border-1 border-red-500': ''" class="block w-full border rounded-md  p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
-            <span class="text-red-500 text-sm" v-if="errors?.errors?.email">{{ errors.errors.email[0]  }}</span>
+            <input v-model="formData.email" v-on:keyup.enter="postData" placeholder="voorbeeld@voorbeeld.nl" type="email" autocomplete="email" required :class="errors?.errors?.email ? 'border-1 border-red-500': ''" class="block w-full border rounded-md  p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+<!--            <span class="text-red-500 text-sm" v-if="errors?.errors?.email">{{ errors.errors.email }}</span>-->
           </div>
         </div>
 
@@ -47,8 +47,12 @@
 
 <script>
 
+import SuccessAlert from "../../Components/Alerts/SuccessAlert.vue";
+import DangerAlert from "../../Components/Alerts/DangerAlert.vue";
+
 export default {
   name: "Login",
+  components: {DangerAlert, SuccessAlert},
   data() {
     return {
       loading: false,
@@ -71,6 +75,7 @@ export default {
       })
           .then(response => {
             this.success = true;
+            this.errors = [];
           })
           .catch(e => {
             this.errors = e.response.data
@@ -86,10 +91,22 @@ export default {
       if (window.localStorage.getItem('tr_member_auth_token')) {
         window.location.href = '/';
       }
+    },
+
+    checkSubdomain() {
+      axios.get('/subdomain/check', {
+        params: {
+          subdomain: this.subdomain,
+        }
+      })
+          .then(response => {
+            if(response.data.data === false) window.location = 'https://timerent.nl';
+          })
     }
   },
 
   mounted() {
+    this.checkSubdomain();
     this.check();
   },
 

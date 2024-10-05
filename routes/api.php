@@ -39,6 +39,8 @@ Route::post('/sanctum/password/reset', [AuthenticationController::class, 'resetP
 Route::get('/reservationispaid/{reservation}', [ReservationController::class, 'isPaid']);
 Route::post('/venuepayments/mollie/webhook', [\App\Http\Controllers\Mollie\MollieWebhookController::class, 'updatePayment']);
 
+Route::get('/subdomain/check', [VenueController::class, 'checkSubdomain']);
+
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('/sanctum/logout', [\App\Http\Controllers\AuthenticationController::class, 'revokeToken']);

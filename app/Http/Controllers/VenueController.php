@@ -89,4 +89,13 @@ class VenueController extends ApiController
         $subscription_url = (new StripeSubscriptionController())->create($venue, $venue->plan);
         return $this->success($subscription_url);
     }
+
+    public function checkSubdomain(Request $request): JsonResponse
+    {
+        $validated = Validator::make($request->all(), [
+            'subdomain' => 'required|string'
+        ])->validated();
+
+        return $this->success(Venue::where('subdomain', $validated['subdomain'])->exists());
+    }
 }

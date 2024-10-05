@@ -41,7 +41,7 @@ class StoreMember extends FormRequest
                     return $venue ? $query->where('venue_id', $venue->id) : $query;
                 })
             ],
-            'password' => 'required', 'string', Password::min(8)->mixedCase()->numbers()->symbols()->uncompromised(),
+            'password' => 'required', Password::min(8)->mixedCase()->numbers()->symbols()->uncompromised(), 'string',
         ];
     }
 }

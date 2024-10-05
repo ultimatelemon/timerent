@@ -26,22 +26,22 @@
         </div>
 
         <div>
-          <label for="email" class="block text-sm font-medium leading-6 text-gray-900">Email</label>
+          <label for="email" class="block text-sm font-medium leading-6 text-gray-900">Email <span class="required-star">*</span></label>
           <div class="mt-2">
-            <input v-model="formData.email" v-on:keyup.enter="login" type="email" autocomplete="email" required :class="errors?.errors?.email ? 'border-1 border-red-500': ''" class="block w-full border rounded-md  p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+            <input v-model="formData.email" v-on:keyup.enter="login" type="email" placeholder="voorbeeld@voorbeeld.nl" autocomplete="email" required :class="errors?.errors?.email ? 'border-1 border-red-500': ''" class="block w-full border rounded-md  p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
             <span class="text-red-500 text-sm" v-if="errors?.errors?.email">{{ errors.errors.email[0]  }}</span>
           </div>
         </div>
 
         <div>
           <div class="flex items-center justify-between">
-            <label for="password" class="text-sm font-medium leading-6 text-gray-900 block">Wachtwoord</label>
+            <label for="password" class="text-sm font-medium leading-6 text-gray-900 block">Wachtwoord <span class="required-star">*</span></label>
             <div class="text-sm">
               <router-link :to='{name: "application.password-forgot"}' class="font-semibold text-indigo-600 hover:text-indigo-500">Wachtwoord vergeten?</router-link>
             </div>
           </div>
           <div class="mt-2">
-            <input v-model="formData.password" v-on:keyup.enter="login" type="password" autocomplete="password" required :class="errors?.errors?.password ? 'border-1 border-red-500': ''" class="block w-full border rounded-md  p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+            <input v-model="formData.password" v-on:keyup.enter="login" type="password" placeholder="********" autocomplete="password" required :class="errors?.errors?.password ? 'border-1 border-red-500': ''" class="block w-full border rounded-md  p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
             <span class="text-red-500 text-sm" v-if="errors?.errors?.password">{{ errors.errors.password[0]  }}</span>
           </div>
         </div>

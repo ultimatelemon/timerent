@@ -4,8 +4,7 @@
       <img class="mx-auto h-10 w-auto"
            src="https://ultimatelemon.eu/_next/image?url=https%3A%2F%2Fcdn.ultimatelemon.eu%2Ftransparent-black-banner.png&w=256&q=75"
            alt="Your Company">
-      <h2 class="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">Registreer bij
-        {{ venue.name }}</h2>
+      <h2 class="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">Registreer bij {{ venue.name }}</h2>
     </div>
 
     <div class="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
@@ -27,20 +26,22 @@
         </div>
 
         <div>
-          <label for="name" class="block text-sm font-medium leading-6 text-gray-900">Naam</label>
+          <label for="name" class="block text-sm font-medium leading-6 text-gray-900">Volledige naam <span class="required-star">*</span></label>
           <div class="mt-2">
             <input v-model="formData.name" v-on:keyup.enter="register" type="text" autocomplete="name" required
                    :class="errors?.errors?.name ? 'border-1 border-red-500': ''"
+                   placeholder="John de Boer"
                    class="block w-full border rounded-md  p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
             <span class="text-red-500 text-sm" v-if="errors?.errors?.name">{{ errors.errors.name[0] }}</span>
           </div>
         </div>
 
         <div>
-          <label for="email" class="block text-sm font-medium leading-6 text-gray-900">Email</label>
+          <label for="email" class="block text-sm font-medium leading-6 text-gray-900">Email <span class="required-star">*</span></label>
           <div class="mt-2">
             <input v-model="formData.email" v-on:keyup.enter="register" type="email" autocomplete="email" required
                    :class="errors?.errors?.email ? 'border-1 border-red-500': ''"
+                   placeholder="voorbeeld@timerent.nl"
                    class="block w-full border rounded-md  p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
             <span class="text-red-500 text-sm" v-if="errors?.errors?.email">{{ errors.errors.email[0] }}</span>
           </div>
@@ -48,7 +49,7 @@
 
         <div>
           <div class="flex items-center justify-between">
-            <label for="password" class="block text-sm font-medium leading-6 text-gray-900">Wachtwoord</label>
+            <label for="password" class="block text-sm font-medium leading-6 text-gray-900">Wachtwoord <span class="required-star">*</span></label>
             <div class="text-sm">
               <!--              <router-link :to='{name: "password.reset.request"}' class="font-semibold text-indigo-600 hover:text-indigo-500">Wachtwoord vergeten?</router-link>-->
             </div>
@@ -56,6 +57,7 @@
           <div class="mt-2">
             <input v-model="formData.password" v-on:keyup.enter="register" type="password" autocomplete="password"
                    required :class="errors?.errors?.password ? 'border-1 border-red-500': ''"
+                   placeholder="********"
                    class="block w-full border rounded-md  p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
             <span class="text-red-500 text-sm" v-if="errors?.errors?.password">{{ errors.errors.password[0] }}</span>
           </div>

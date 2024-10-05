@@ -24,6 +24,7 @@ use Illuminate\Support\Str;
 use Illuminate\Validation\Rules\Password;
 use Jenssegers\Agent\Agent;
 use Laravel\Sanctum\PersonalAccessToken;
+use function RectorPrefix202407\React\Promise\all;
 
 class ApplicationAuthenticationController extends ApiController
 {
@@ -162,8 +163,10 @@ class ApplicationAuthenticationController extends ApiController
 
         $venue = Venue::where('subdomain', $validatedRequest['subdomain'])->firstOrFail();
 
-        $member = Member::where('email', $validatedRequest['email'])->first();
-        if (!$member) return $this->success();
+        $member = Member::where('email', $validatedRequest['email'])
+            ->where('venue_id', $venue->id)->first();
+
+        if (!$member) return $this->error(['email' => 'E-mail adres niet gevonden']);
 
         $token = Str::random(64);
         $member->password_reset_token = Hash::make($token . $member->email);
@@ -180,17 +183,25 @@ class ApplicationAuthenticationController extends ApiController
 
     public function resetPassword(Request $request)
     {
+        ray($request->all());
         $validatedRequest = $request->validate([
             'token' => 'required',
-            'password' => 'required', 'string', Password::min(8)->mixedCase()->numbers()->symbols()->uncompromised(),
+            'password' => Password::min(8)->mixedCase()->numbers()->symbols(), 'string',
+            'password_confirmation' => 'required|same:password',
             'email' => 'required|email:rfc,dns',
+            'subdomain' => 'required|exists:venues,subdomain',
         ]);
 
-        $member = Member::where('email', $validatedRequest['email'])->first();
+        ray('tot hier');
 
-        if ($member->password_reset_token_expires_at < Carbon::now()) return $this->error('Token is verlopen');
+        $venue = Venue::where('subdomain', $validatedRequest['subdomain'])->firstOrFail();
+
+        $member = Member::where('email', $validatedRequest['email'])
+            ->where('venue_id', $venue->id)->first();
 
         if (!$member || !Hash::check($validatedRequest['token'] . $validatedRequest['email'], $member->password_reset_token)) return $this->error(['Email of token onjuist']);
+
+        if ($member->password_reset_token_expires_at < Carbon::now()) return $this->error('Token is verlopen');
 
         $member->password = Hash::make($validatedRequest['password']);
         $member->password_reset_token = null;

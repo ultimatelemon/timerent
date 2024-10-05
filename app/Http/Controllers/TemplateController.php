@@ -127,8 +127,8 @@ class TemplateController extends ApiController implements HasMiddleware
     public function update(StoreTemplate $request, Venue $venue, Template $template): JsonResponse
     {
         $validatedRequest = $request->validated();
-        $template = $validatedRequest['template'];
-        foreach ($template as $temp) {
+        $templateRequest = $validatedRequest['template'];
+        foreach ($templateRequest as $temp) {
             foreach($temp['ranges'] as $range) {
                 $rest = array_filter($temp['ranges'], function($t) use ($range) {
                     return $t['from'] !== $range['from'];

@@ -2,9 +2,12 @@
 
 namespace App\Http\Requests\Application;
 
+use App\Models\Venue;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules\Password;
+use function Symfony\Component\String\s;
 
 class StoreMember extends FormRequest
 {
@@ -23,10 +26,20 @@ class StoreMember extends FormRequest
      */
     public function rules(): array
     {
+        $subdomain = $this->input('subdomain');
+        $venue = Venue::where('subdomain', $subdomain)->first();
+
         return [
             'subdomain' => 'required|exists:venues,subdomain',
             'name' => 'required|string|min:2|max:48',
-            'email' => 'required|string|email|unique:members,email|email:rfc,dns',
+            'email' => [
+                'required',
+                'string',
+                'email:rfc,dns',
+                Rule::unique('members', 'email')->where(function ($query) use ($venue) {
+                    return $venue ? $query->where('venue_id', $venue->id) : $query;
+                })
+            ],
             'password' => 'required', 'string', Password::min(8)->mixedCase()->numbers()->symbols()->uncompromised(),
         ];
     }

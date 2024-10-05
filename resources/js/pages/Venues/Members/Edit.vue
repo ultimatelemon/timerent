@@ -19,10 +19,12 @@
         <div class=" px-4 py-6 sm:col-span-1 sm:px-0 mr-0 sm:mr-12">
           <dt class="text-sm font-semibold leading-6 text-gray-900 pb-2">Naam</dt>
           <input v-on:keyup.enter="postData" class="text-sm" v-model="formData.name">
+          <span v-if="errors.name" class="text-sm text-red-500">{{ errors.name[0] }}</span>
         </div>
         <div class="border-t border-gray-100 md:border-none px-4 py-6 sm:col-span-1 sm:px-0 mr-0 sm:mr-12">
           <dt class="text-sm font-semibold leading-6 text-gray-900 pb-2">Email</dt>
           <input v-on:keyup.enter="postData" class="text-sm" v-model="formData.email">
+          <span v-if="errors.email" class="text-sm text-red-500">{{ errors.email[0] }}</span>
         </div>
         <div class="border-t border-gray-100 md:border-none px-4 py-6 sm:col-span-1 sm:px-0 mr-0 sm:mr-12">
           <dt class="text-sm font-semibold leading-6 text-gray-900 pb-2">Groep</dt>
@@ -30,6 +32,7 @@
             <option :value="null">Geen groep</option>
             <option :value="group.id" v-for="group in groups">{{group.name}}</option>
           </select>
+          <span v-if="errors.group_id" class="text-sm text-red-500">{{ errors.group_id[0] }}</span>
         </div>
         <div class="invisible border-t border-gray-100 md:border-none px-4 py-6 sm:col-span-1 sm:px-0 mr-0 sm:mr-12">
 <!--          <dt class="text-sm font-semibold leading-6 text-gray-900 pb-2">Email</dt>-->
@@ -38,10 +41,12 @@
         <div class="border-t border-gray-100 px-4 py-6 sm:col-span-1 sm:px-0 mr-0 sm:mr-12">
           <dt class="text-sm font-semibold leading-6 text-gray-900 pb-2">Loyality Points <span class="font-normal text-xs">* Not implemented yet</span></dt>
           <input v-on:keyup.enter="postData" type="number" class="text-sm" v-model="formData.loyality_points">
+          <span v-if="errors.loyality_points" class="text-sm text-red-500">{{ errors.loyality_points[0] }}</span>
         </div>
         <div class="border-t border-gray-100 px-4 py-6 sm:col-span-1 sm:px-0 mr-0 sm:mr-12">
           <dt class="text-sm font-semibold leading-6 text-gray-900 pb-2">Notities (alleen zichtbaar voor je medewerkers)</dt>
           <textarea class="text-sm input p-2" v-model="formData.notes"></textarea>
+          <span v-if="errors.notes" class="text-sm text-red-500">{{ errors.notes[0] }}</span>
         </div>
         <div class="border-t border-gray-100 px-4 py-6 sm:col-span-1 sm:px-0">
           <dt class="text-sm font-semibold leading-6 text-gray-900">Registratie datum</dt>
@@ -73,7 +78,7 @@
               </svg>
             </div>
           </div>
-          <p v-if="errors.pay_on_invoice" class="mt-2 text-sm text-red-600" id="description-error">{{ errors.pay_on_invoice[0] }}</p>
+          <span v-if="errors.pay_on_invoice" class="text-sm text-red-500">{{ errors.pay_on_invoice[0] }}</span>
         </div>
         <div class="border-t border-gray-100 px-4 py-6 sm:col-span-2 sm:px-0">
           <dt class="text-sm font-semibold leading-6 text-gray-900">Acties</dt>

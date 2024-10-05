@@ -16,7 +16,7 @@ class ReservationResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        $hours = Setting::where([['key', '=', 'cancellation_hours'], ['venue_id', '=', $this->venue->id]])->firstOrFail()->value;
+        $hours = $this->venue->cancellation_hours;
 
         return [
             'id' => $this->id,

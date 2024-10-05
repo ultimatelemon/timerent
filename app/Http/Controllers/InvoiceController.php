@@ -78,7 +78,8 @@ class InvoiceController extends ApiController implements HasMiddleware
     public function download(Venue $venue, Invoice $invoice): JsonResponse
     {
         $keys = ['name', 'address', 'postal_code', 'city', 'phone_number_support', 'coc_number', 'tax_number'];
-        $business = Setting::whereIn('key', $keys)->where('venue_id', $invoice->venue_id)->get()->pluck('value', 'key')->toArray();
+        $venue = Venue::findOrFail($invoice->venue_id);
+        $business = $venue->only($keys);
         $pdf = Pdf::loadView('application.pdf.invoice', compact('invoice', 'business'));
 
         return $this->success($pdf->outputHtml());

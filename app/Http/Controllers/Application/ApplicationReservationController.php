@@ -12,7 +12,6 @@ use App\Models\Invoice;
 use App\Models\Product;
 use App\Models\Reservation;
 use App\Models\ReservationTimeblock;
-use App\Models\Setting;
 use App\Models\Unit;
 use App\Models\Venue;
 use App\Notifications\Application\ApplicationReservationCancelled;
@@ -45,7 +44,7 @@ class ApplicationReservationController extends ApiController
         $validatedRequest = $request->validated();
         $venue = Venue::where('subdomain', $validatedRequest['subdomain'])->firstOrFail();
         if(!PaymentHelper::hasPaymentsEnabled($venue)) return $this->error(['error' => 'Er is nog geen betaalprovider gekoppeld.']);
-        $payment_provider = Setting::where([['key', '=', 'payment_provider'], ['venue_id', '=', $venue->id]])->firstOrFail()->value;
+        $payment_provider = $venue->payment_service_provider;
 
         $total = collect($validatedRequest['timeblocks'])->map(function ($x) {
             return $x['timeblock']['price'];
@@ -210,16 +209,16 @@ class ApplicationReservationController extends ApiController
     public function cancel(Reservation $reservation, Request $request)
     {
         $reservation = $request->member->reservations()->where('id', $reservation->id)->firstOrFail();
-        $hours = Setting::where([['key', '=', 'cancellation_hours'], ['venue_id', '=', $reservation->venue->id]])->firstOrFail()->value;
+        $hours = $reservation->venue->cancellation_hours;
         $cancelAllowed = Carbon::parse($reservation->date)->setHour(intval(explode(':', explode(' ', $reservation->timeblocks->first()->from)[1])[0]))->setMinute(0)->setSecond(0) >= Carbon::now()->addHours(intval($hours));
         if(!$cancelAllowed) return $this->error(['message' => "Annulering is niet meer mogelijk, het is langer dan $hours uur voor de reservering."]);
 
-        $psp = Setting::where([['key', '=', 'payment_provider'], ['venue_id', '=', $reservation->venue->id]])->firstOrFail()->value;
+        $psp = $reservation->venue->payment_service_provider;
         if($psp !== $reservation->payment_provider) $this->error(['message' => "Annulering niet mogelijk, betalingsmethode is gewijzigd. Neem contact met ons op."]);
 
         switch($psp) {
             case 'mollie':
-                $key = Setting::where([['key', '=', 'payment_api_key'], ['venue_id', '=', $reservation->venue->id]])->firstOrFail()->value;
+                $key = $reservation->venue->payment_api_key;
                 $client = new MolliePaymentClient(Crypt::decrypt($key));
                 $refunded = $client->refundPayment($reservation->payment_id);
                 $reservation->payment_status = PaymentStatus::Refunded;

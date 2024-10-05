@@ -55,7 +55,7 @@ class MollieWebhookController extends ApiController
             $reservation = Reservation::where('payment_id', $request->get('id'))->firstOrFail();
             $venue = $reservation->venue;
 
-            $mollie_key = Setting::where([['venue_id', '=', $venue->id], ['key', '=', 'payment_api_key']])->firstOrFail()->value;
+            $mollie_key = $venue->payment_api_key;
             $client = new MolliePaymentClient(Crypt::decrypt($mollie_key));
 
             $payment = $client->getPayment($request->id);

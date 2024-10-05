@@ -54,10 +54,10 @@
           <select class="input" name="role_id" id="role_id" v-model="formData.role_id">
             <option v-for="role in roles" :value="role.id">{{ role.name }}</option>
           </select>
-          <p v-if="errors?.errors?.email" class="text-red-500 pt-3">{{ errors.errors.role_id }}</p>
+          <p v-if="errors?.errors?.role_id" class="text-red-500 pt-3">{{ errors.errors.role_id[0] }}</p>
         </div>
         <div class="flex justify-end gap-5">
-          <button class="btn btn-secondary" @click="newEmployeeModal = false;">Annuleren</button>
+          <button class="btn btn-secondary" @click="newEmployeeModal = false; errors = []">Annuleren</button>
           <button @click="addEmployee" :class="loading ? 'btn btn-secondary opacity-50 cursor-not-allowed' : 'btn btn-primary'"><i v-if="loading" class="fa fa-spinner mr-2 animate-spin"></i> Toevoegen</button>
         </div>
       </div>
@@ -74,7 +74,7 @@
           <p v-if="errors?.errors?.email" class="text-red-500 pt-3">{{ errors.errors.role_id }}</p>
         </div>
         <div class="flex justify-end gap-5">
-          <button class="btn btn-secondary" @click="currentEmployee = null; this.formData.role_id = null">Annuleren</button>
+          <button class="btn btn-secondary" @click="currentEmployee = null; this.formData.role_id = null; errors = []">Annuleren</button>
           <button @click="updateEmployee" :class="loading ? 'btn btn-secondary opacity-50 cursor-not-allowed' : 'btn btn-primary'"><i v-if="loading" class="fa fa-spinner mr-2 animate-spin"></i> Opslaan</button>
         </div>
       </div>

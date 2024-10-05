@@ -15,17 +15,18 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controllers\HasMiddleware;
 use Illuminate\Routing\Controllers\Middleware;
+use Illuminate\Support\Facades\Validator;
 
 class UserController extends ApiController
 {
 
-//    public static function middleware(): array
-//    {
-//        return [
-//            new Middleware('hasPermissions:VIEW_USERS', only: ['index', 'show']),
-//            new Middleware('hasPermissions:MANAGE_USERS', only: ['store', 'update', 'destroy']),
-//        ];
-//    }
+    public static function middleware(): array
+    {
+        return [
+            new Middleware('hasPermissions:VIEW_USERS', only: ['index', 'show']),
+            new Middleware('hasPermissions:MANAGE_USERS', only: ['store', 'update', 'destroy']),
+        ];
+    }
 
     /**
      * Return the current user object
@@ -119,6 +120,17 @@ class UserController extends ApiController
         if(UserVenue::where(['user_id' => $user->id, 'venue_id' => $venue->id])->exists()) return $this->error(['exists' => 'Gebruiker is al gekoppeld']);
 
         UserVenue::create(['user_id' => $user->id, 'venue_id' => $venue->id, 'role_id' => $validated['role_id']]);
+
+        return $this->success();
+    }
+
+    public function update(Request $request, Venue $venue, User $user): JsonResponse
+    {
+        $validated = Validator::make($request->all(), [
+            'role_id' => 'required|exists:roles,id',
+        ])->validated();
+
+        UserVenue::where(['user_id' => $user->id, 'venue_id' => $venue->id])->update(['role_id' => $validated['role_id']]);
 
         return $this->success();
     }

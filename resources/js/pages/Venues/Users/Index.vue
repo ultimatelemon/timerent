@@ -25,7 +25,7 @@
             </tr>
             </thead>
             <tbody class="divide-y divide-gray-200 bg-white">
-            <tr v-for="user in users" :key="user.id" class="even:bg-gray-50 hover:bg-gray-100 hover:cursor-pointer">
+            <tr v-for="user in users" @click="() => { if(!user.owner) { this.currentEmployee = user; this.formData.role_id = user.role.id }}" :key="user.id" class="even:bg-gray-50 hover:bg-gray-100 hover:cursor-pointer">
               <td class="whitespace-nowrap px-2 py-2 text-sm font-medium text-gray-900">{{ user.user.name }}</td>
               <td class="whitespace-nowrap px-2 py-2 text-sm font-medium text-gray-900">{{ user.user.email }}</td>
               <td class="whitespace-nowrap px-2 py-2 text-sm font-medium text-gray-900">{{ user.owner ? 'Eigenaar' : user.role.name }}</td>
@@ -40,7 +40,7 @@
       </div>
     </div>
 
-    <Modal v-if="newEmployeeModal">
+    <Modal v-if="newEmployeeModal && !currentEmployee">
       <div class="p-4 space-y-8">
         <div class="border-b font-semibold pb-2">Een medewerker toevoegen</div>
         <div class="mb-6">
@@ -62,6 +62,23 @@
         </div>
       </div>
     </Modal>
+
+    <Modal v-if="currentEmployee && !newEmployeeModal">
+      <div class="p-4 space-y-8">
+        <div class="border-b font-semibold pb-2">{{ currentEmployee.user.name }}'s rol aanpassen</div>
+        <div class="mb-4">
+          <label for="role_id">Medewerkers rol</label>
+          <select class="input" name="role_id" id="role_id" v-model="formData.role_id">
+            <option v-for="role in roles" :value="role.id">{{ role.name }}</option>
+          </select>
+          <p v-if="errors?.errors?.email" class="text-red-500 pt-3">{{ errors.errors.role_id }}</p>
+        </div>
+        <div class="flex justify-end gap-5">
+          <button class="btn btn-secondary" @click="currentEmployee = null; this.formData.role_id = null">Annuleren</button>
+          <button @click="updateEmployee" :class="loading ? 'btn btn-secondary opacity-50 cursor-not-allowed' : 'btn btn-primary'"><i v-if="loading" class="fa fa-spinner mr-2 animate-spin"></i> Opslaan</button>
+        </div>
+      </div>
+    </Modal>
   </div>
 </template>
 
@@ -79,6 +96,8 @@ export default {
       users: [],
       roles: [],
       loading: false,
+
+      currentEmployee: null,
 
       formData: {
         email: null,
@@ -137,6 +156,15 @@ export default {
           })
           .finally(() => {
             this.loading = false;
+          })
+    },
+
+    updateEmployee() {
+      axios.put('/venues/' + this.$route.params.venue + '/users/' + this.currentEmployee.user.id, this.formData)
+          .then(response => {
+            this.formData.role_id = null;
+            this.currentEmployee = null;
+            this.fetchData();
           })
     },
 

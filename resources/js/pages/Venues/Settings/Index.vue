@@ -144,7 +144,7 @@
       <div></div>
 
       <div>
-        <label for="coc_number" class="block text-sm font-medium leading-6 text-gray-900"> KVK nummer <span class="text-xs">(zichtbaar voor klanten)</span> <span class="required-star">*</span></label>
+        <label for="coc_number" class="block text-sm font-medium leading-6 text-gray-900"> KVK nummer <span class="required-star">*</span></label>
         <div class="relative mt-2 rounded-md shadow-sm">
           <input v-model="formData.coc_number" type="text" name="coc_number" id="coc_number"
                  v-on:keyup.enter="postData"
@@ -162,7 +162,7 @@
         <p v-if="errors.coc_number" class="mt-2 text-sm text-red-600" id="name-error">{{ errors.coc_number[0] }}</p>
       </div>
       <div>
-        <label for="tax_number" class="block text-sm font-medium leading-6 text-gray-900"> BTW Nummer <span class="text-xs">(zichtbaar voor klanten)</span> <span class="required-star">*</span></label>
+        <label for="tax_number" class="block text-sm font-medium leading-6 text-gray-900"> BTW Nummer <span class="required-star">*</span></label>
         <div class="relative mt-2 rounded-md shadow-sm">
           <input v-model="formData.tax_number" type="text" name="tax_number" id="tax_number"
                  v-on:keyup.enter="postData"

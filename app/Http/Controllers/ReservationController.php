@@ -48,8 +48,11 @@ class ReservationController extends ApiController implements HasMiddleware
         if($request->has('max'))
             $reservations->max($request->max);
 
+        if($request->has('status') && $request->status === 'paid')
+            $reservations = $reservations->where('payment_status', PaymentStatus::Paid);
+
         if($request->has('date') && $request->date === 'today')
-            $reservations->where('date', Carbon::today());
+            $reservations = $reservations->where('date', Carbon::today());
 
         $reservations = $reservations->orderBy('date', 'asc');
 

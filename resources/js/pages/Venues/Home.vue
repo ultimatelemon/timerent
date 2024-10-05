@@ -215,7 +215,7 @@ export default {
     },
 
     fetchReservations() {
-      axios.get('/venues/' + this.$route.params.venue + '/reservations?date=today')
+      axios.get('/venues/' + this.$route.params.venue + '/reservations?date=today&status=paid')
           .then(response => {
             this.reservations = response.data.data;
           })

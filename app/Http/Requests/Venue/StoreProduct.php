@@ -22,12 +22,12 @@ class StoreProduct extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => 'required|string',
-            'description' => 'string|nullable',
-            'price' => 'integer|required',
+            'name' => 'required|string|max:32',
+            'description' => 'string|nullable|max:64',
+            'price' => 'min:1|max:9999999|integer|required',
             'is_active' => 'required|boolean',
             'tax_percentage' => 'required|integer|in:0,9,21',
-            'max_per_day' => 'required|integer|min:0',
+            'max_per_day' => 'min:0|max:9999|required|integer',
             'price_per_timeblock' => 'required|boolean',
             'units' => 'nullable',
             'units.*' => 'string|distinct|exists:units,id',

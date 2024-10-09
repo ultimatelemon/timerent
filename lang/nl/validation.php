@@ -107,7 +107,7 @@ return [
         'numeric' => 'The :attribute field must be at least :min.',
         'string' => 'Dit veld moet minimaal :min karakters bevatten.',
     ],
-    'min_digits' => 'The :attribute field must have at least :min digits.',
+    'min_digits' => 'Dit veld moet minimaal :min getallen bevatten.',
     'missing' => 'The :attribute field must be missing.',
     'missing_if' => 'The :attribute field must be missing when :other is :value.',
     'missing_unless' => 'The :attribute field must be missing unless :other is :value.',

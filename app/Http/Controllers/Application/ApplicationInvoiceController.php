@@ -15,7 +15,7 @@ class ApplicationInvoiceController extends ApiController
     {
         if(!$request->member->reservations()->where('id', $invoice->reservation_id)->first()) return $this->error();
 
-        $keys = ['name', 'address', 'phone_number_support'];
+        $keys = ['name', 'address', 'phone_number_support', 'postal_code', 'city', 'coc_number', 'tax_number'];
         $venue = Venue::findOrFail($invoice->venue_id);
         $business = $venue->only($keys);
         $pdf = Pdf::loadView('application.pdf.invoice', compact('invoice', 'business'));

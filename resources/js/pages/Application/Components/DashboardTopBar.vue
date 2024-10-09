@@ -3,7 +3,10 @@
     <div class="py-6 flex justify-between items-center">
 <!--      <a href="/" class="text-xl font-semibold cursor-pointer">{{ venue.name }}</a>-->
       <a class="text-sm" href="/dashboard">Ingelogd als, <b>{{member.name}}</b></a>
-      <button @click="logout" class="btn btn-danger btn-lg"><i class="fa fa-right-from-bracket"></i></button>
+      <div class="space-x-4">
+        <a href="/" class="btn btn-primary btn-lg">Terug</a>
+        <button @click="logout" class="btn btn-danger btn-lg"><i class="fa fa-right-from-bracket"></i></button>
+      </div>
     </div>
     <div class="flex gap-6 text-sm">
       <div>

@@ -136,7 +136,7 @@ class MemberController extends ApiController
                     return $query->where('venue_id', $venue->id);
                 })->ignore($request->member->id)
             ],
-            'phone_number' => 'required|numeric|max_digits:10',
+            'phone_number' => 'required|numeric|min_digits:10|max_digits:12',
         ]);
 
         $member = Member::findOrFail($request->member->id);

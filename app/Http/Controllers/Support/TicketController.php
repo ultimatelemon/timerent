@@ -21,7 +21,7 @@ class TicketController extends ApiController
      */
     public function index(Request $request, Venue $venue): JsonResponse
     {
-        $tickets = $venue->tickets()->where('closed_at', null)->orWhere('status', '!=', 'solved');
+        $tickets = $venue->tickets()->where('closed_at', null)->where('status', '!=', 'solved');
 
         if($request->has('q'))
             $tickets = $tickets->where('title', 'ILIKE', "%{$request->q}%");

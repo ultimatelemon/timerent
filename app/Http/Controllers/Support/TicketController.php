@@ -92,7 +92,7 @@ class TicketController extends ApiController
     public function update(Venue $venue, Ticket $ticket, Request $request): JsonResponse
     {
         $validatedRequest = Validator::make($request->all(), [
-            'message' => 'max:511',
+            'message' => 'required|max:511',
         ])->validated();
         $message = new TicketMessage;
         $message->ticket_id = $ticket->id;

@@ -26,9 +26,9 @@
                    name="title"
                    id="title"
                    v-model="formData.title"
-                   :class="'ring-red-300'"
                    placeholder="Waar gaat je vraag over?"
             />
+            <span v-if="errors.title" class="text-red-500 text-sm">{{ errors.title[0] }}</span>
           </div>
           <div>
             <label for="ticket_type" class="block text-sm font-medium leading-6 text-gray-900">Type <span
@@ -40,6 +40,7 @@
               <option value="feedback">Feedback</option>
               <option value="critical">Critical</option>
             </select>
+            <span v-if="errors.type" class="text-red-500 text-sm">{{ errors.type[0] }}</span>
           </div>
           <div>
             <label for="message" class="block text-sm font-medium leading-6 text-gray-900">Je bericht <span
@@ -52,6 +53,8 @@
                       class="input"
                       placeholder="Beschrijf hier zo duidelijk mogelijk je vraag zodat we je zo goed en snel mogelijk kunnen helpen :)"
             ></textarea>
+            <div class="text-xs flex justify-end mt-2" :class="formData.message.split('').length > 511 ? 'text-red-500' : ''">{{ formData.message.split('').length }}/<span>511</span></div>
+            <span v-if="errors.message" class="text-red-500 text-sm">{{ errors.message[0] }}</span>
           </div>
         </div>
       </div>

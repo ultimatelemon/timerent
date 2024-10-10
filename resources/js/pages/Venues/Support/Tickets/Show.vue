@@ -62,12 +62,12 @@
         </div>
       </div>
     </div>
-
     <div class="mt-12">
       <div>
         <label for="comment" class="block text-sm font-medium leading-6 text-gray-900">Bericht toevoegen aan ticket</label>
         <div class="mt-2 space-y-4 flex flex-col">
-          <textarea v-model="message" rows="4" autofocus name="comment" id="comment" placeholder="Voeg hier een bericht toe aan je ticket" class="block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" />
+          <textarea v-model="message" rows="4" autofocus name="comment" id="comment" placeholder="Voeg hier een bericht toe aan je ticket" class="block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" :class="errors.message ? 'ring-red-500' : ''" />
+          <span v-if="errors.message" class="text-red-500 text-sm">{{ errors.message[0] }}</span>
           <button @click="postData" :class="loading ? 'btn-secondary' : 'btn-primary'" class="btn place-self-end"><i v-if="loading" class="fa fa-spinner text-sm mr-2 animate-spin"></i>Plaatsen</button>
         </div>
       </div>
@@ -102,6 +102,7 @@ export default {
       loading: false,
       message: null,
       sortedMessages: [],
+      errors: [],
     }
   },
 
@@ -123,9 +124,11 @@ export default {
           .then(() => {
             this.fetchData();
             this.message = null;
+            this.errors = [];
           })
           .catch(e => {
-            //
+            console.log(e.response.data);
+            this.errors = e.response.data.errors;
           })
           .finally(() => {
             this.loading = false;

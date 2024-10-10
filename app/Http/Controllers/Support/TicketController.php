@@ -55,9 +55,9 @@ class TicketController extends ApiController
     public function store(Request $request, Venue $venue): JsonResponse
     {
         $validatedRequest = Validator::make($request->all(), [
-            'title' => 'required|string',
+            'title' => 'required|string|max:128',
             'type' => 'required|string',
-            'message' => 'required|string'
+            'message' => 'required|string|max:511'
         ])->validated();
 
         $ticket = new Ticket;

@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('venues', function (Blueprint $table) {
             $table->uuid('id')->primary();
-//            $table->string('human_id', 13)->unique();
+            $table->string('support_code', 6)->nullable();
 
             $table->string('name');
             $table->text('description')->nullable();

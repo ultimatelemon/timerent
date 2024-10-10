@@ -92,6 +92,10 @@ Route::middleware('auth:sanctum')->group(function () {
         // Templates
         Route::get('/venues/{venue}/templates/list', [TemplateController::class, 'list']);
 
+        // Tickets
+        Route::post('/venues/{venue}/tickets/{ticket}/close', [TicketController::class, 'close']);
+        Route::get('/venues/{venue}/tickets/archive', [TicketController::class, 'archive']);
+
         Route::resource('venues',                   VenueController::class)->except(['create', 'edit']);
         Route::resource('venues.units',             UnitController::class)->except(['create', 'edit']);
         Route::resource('venues.templates',         TemplateController::class)->except(['create', 'edit']);

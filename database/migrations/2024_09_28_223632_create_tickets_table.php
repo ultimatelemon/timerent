@@ -15,13 +15,12 @@ return new class extends Migration
             $table->uuid('id')->primary();
             $table->foreignUuid('venue_id')->constrained();
             $table->string('title');
-            $table->string('message');
             $table->string('status')->default('open');
             $table->string('type');
             $table->foreignUuid('emplooye_id')->nullable()->references('id')->on('employees');
             $table->foreignUuid('user_id')->nullable()->constrained();
             $table->timestamp('first_responded_at')->nullable();
-            $table->timestamp('closed_at')->nullable();
+            $table->timestamp('closed_at');
             $table->timestamps();
         });
     }

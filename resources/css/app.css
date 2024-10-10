@@ -39,7 +39,18 @@ input:not([type="checkbox"]) { @apply block w-full rounded-md border-0 px-3 py-1
 .alert-success { @apply text-emerald-600 bg-emerald-200 }
 .alert-danger { @apply text-red-600 bg-red-200 }
 
+.badge { @apply inline-flex items-center rounded-md px-2 py-1 text-xs font-medium bg-gray-100 text-gray-600 }
+.badge-danger { @apply inline-flex items-center rounded-md px-2 py-1 text-xs font-medium bg-red-100 text-red-600 }
+.badge-success { @apply inline-flex items-center rounded-md px-2 py-1 text-xs font-medium bg-green-100 text-green-600 }
+.badge-primary { @apply inline-flex items-center rounded-md px-2 py-1 text-xs font-medium bg-indigo-100 text-indigo-600 }
+.badge-warning { @apply inline-flex items-center rounded-md px-2 py-1 text-xs font-medium bg-orange-100 text-orange-600 }
+.badge-yellow { @apply inline-flex items-center rounded-md px-2 py-1 text-xs font-medium bg-yellow-100 text-yellow-600 }
+.badge-blue { @apply inline-flex items-center rounded-md px-2 py-1 text-xs font-medium bg-blue-100 text-blue-600 }
+.badge-purple { @apply inline-flex items-center rounded-md px-2 py-1 text-xs font-medium bg-purple-100 text-purple-600 }
+.badge-pink { @apply inline-flex items-center rounded-md px-2 py-1 text-xs font-medium bg-pink-100 text-pink-600 }
+
 .required-star { @apply text-xl text-red-500 }
+.codeblock { @apply bg-gray-500 rounded text-white px-1 }
 
 div.flatpickr-calendar {
     box-shadow: none !important;

@@ -34,13 +34,15 @@
                 <span v-if="ticket.type === 'critical'">Critical</span>
               </td>
               <td class="whitespace-nowrap px-2 py-2 text-sm font-medium text-gray-900">
-                <span class="badge badge-success" v-if="ticket.status === 'open'">Open</span>
-                <span class="badge" v-if="ticket.status === 'pending_employee_response'">Waiting for Timerent response</span>
-                <span class="badge badge-warning" v-if="ticket.status === 'pending_customer_response'">Waiting for your response</span>
-                <span class="badge badge-success" v-if="ticket.status === 'solved'">Solved</span>
-                <span class="badge badge-warning" v-if="ticket.status === 'in_progress'">In progress</span>
-                <span class="badge badge-danger" v-if="ticket.status === 'escalated'">Escalated</span>
-                <span class="badge badge-warning" v-if="ticket.status === 'on_hold'">On hold</span>
+                <span class="label label-info" v-if="ticket.status === 'open'">Open</span>
+                <span class="label label-warning" v-if="ticket.status === 'in_progress'">In progress</span>
+                <span class="label label-warning" v-if="ticket.status === 'pending_customer_response'">Waiting for your reply</span>
+                <span class="label label-primary" v-if="ticket.status === 'pending_employee_response'">Waiting for Timerent reply</span>
+                <span class="label label-success" v-if="ticket.status === 'solved'">Solved</span>
+                <span class="label label-danger" v-if="ticket.status === 'escalated'">Escalated</span>
+                <span class="label label-info" v-if="ticket.status === 'on_hold'">On hold</span>
+                <span class="label label-success" v-if="ticket.status === 'cancelled'">Cancelled</span>
+                <span class="label label-info" v-if="ticket.status === 'reopened_by_employee'">Reopened by Timerent</span>
               </td>
               <td class="whitespace-nowrap px-2 py-2 text-sm font-medium text-gray-900">{{ ticket.user.name }}</td>
             </tr>

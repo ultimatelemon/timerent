@@ -15,7 +15,7 @@ return new class extends Migration
             $table->uuid('id')->primary();
             $table->uuid('ticket_id');
             $table->uuid('user_id');
-            $table->string('message');
+            $table->longText('message');
             $table->string('role_name')->nullable();
             $table->boolean('is_employee')->default(false);
             $table->timestamps();

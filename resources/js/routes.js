@@ -133,6 +133,7 @@ export const routes = [
         children: [
             { path: '', component: () => import('./pages/Venues/Support/Tickets/Index.vue'), name: 'venues.support.tickets.index' },
             { path: 'create', component: () => import('./pages/Venues/Support/Tickets/Create.vue'), name: 'venues.support.tickets.create' },
+            { path: 'archive', component: () => import('./pages/Venues/Support/Tickets/Archive.vue'), name: 'venues.support.tickets.archive' },
             { path: ':ticket', component: () => import('./pages/Venues/Support/Tickets/Show.vue'), name: 'venues.support.tickets.show' },
         ]
     },

@@ -108,7 +108,7 @@ app.config.globalProperties.$filters = {
         let date = DateTime.fromISO(value);
         let minute = date.minute;
         let hour = date.hour;
-        if(date.minute <= 9) minute = date.minute+"0";
+        if(date.minute <= 9) minute = "0"+date.minute;
         if(date.hour <= 9) hour = "0"+date.hour;
         return `${date.day} ${month} ${date.year} om ${hour}:${minute}`;
     },

@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers\Support;
 
+use App\Enums\TicketStatus;
 use App\Http\Controllers\ApiController;
 use App\Http\Resources\Support\TicketResource;
 use App\Models\Support\Ticket;
 use App\Models\Support\TicketMessage;
 use App\Models\Venue;
+use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -19,7 +21,22 @@ class TicketController extends ApiController
      */
     public function index(Request $request, Venue $venue): JsonResponse
     {
-        $tickets = $venue->tickets();
+        $tickets = $venue->tickets()->where('closed_at', null)->orWhere('status', '!=', 'solved');
+
+        if($request->has('q'))
+            $tickets = $tickets->where('title', 'ILIKE', "%{$request->q}%");
+
+        $tickets = $tickets->paginate(env('POSTS_PER_PAGE'));
+
+        return $this->success(
+            TicketResource::collection($tickets),
+            collect($tickets)->only(['from', 'to', 'total', 'per_page', 'last_page', 'current_page'])->toArray(),
+        );
+    }
+
+    public function archive(Request $request, Venue $venue): JsonResponse
+    {
+        $tickets = $venue->tickets()->where('closed_at', '!=', null)->orWhere('status', '=', 'solved');
 
         if($request->has('q'))
             $tickets = $tickets->where('title', 'ILIKE', "%{$request->q}%");
@@ -47,10 +64,16 @@ class TicketController extends ApiController
         $ticket->venue_id = $venue->id;
         $ticket->title = $validatedRequest['title'];
         $ticket->type = $validatedRequest['type'];
-        $ticket->message = $validatedRequest['message'];
         $ticket->user_id = Auth::user()->id;
         $ticket->save();
         $venue->tickets()->save($ticket);
+
+        $message = new TicketMessage;
+        $message->ticket_id = $ticket->id;
+        $message->user_id = $request->user()->id;
+        $message->message = $validatedRequest['message'];
+        $message->is_employee = false;
+        $message->save();
 
         return $this->success();
     }
@@ -66,9 +89,20 @@ class TicketController extends ApiController
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Ticket $ticket)
+    public function update(Venue $venue, Ticket $ticket, Request $request): JsonResponse
     {
-        //
+        $validatedRequest = Validator::make($request->all(), [
+            'message' => 'max:511',
+        ])->validated();
+        $message = new TicketMessage;
+        $message->ticket_id = $ticket->id;
+        $message->user_id = $request->user()->id;
+        $message->message = $validatedRequest['message'];
+        $message->save();
+
+        $ticket->update(['status' => TicketStatus::PENDING_EMPLOYEE_RESPONSE]);
+
+        return $this->success();
     }
 
     /**
@@ -77,5 +111,11 @@ class TicketController extends ApiController
     public function destroy(Ticket $ticket)
     {
         //
+    }
+
+    public function close(Venue $venue, Ticket $ticket, Request $request): JsonResponse
+    {
+        $ticket->update(['closed_at' => Carbon::now()]);
+        return $this->success();
     }
 }

@@ -153,6 +153,7 @@
                 </li>
               </ul>
             </li>
+
             <li class="mt-auto cursor-pointer">
               <div class="text-xs font-semibold leading-6 text-gray-400">Externe navigatie</div>
               <ul role="list" class="-mx-2 mt-2 space-y-1">
@@ -422,7 +423,7 @@ export default {
             },
             {
               name: 'Gesloten vragen',
-              link: {name: 'venues.groups.index', params: {venue: this.$store.state.venue.id}},
+              link: {name: 'venues.support.tickets.archive', params: {venue: this.$store.state.venue.id}},
               icon: UserCircleIcon,
               permission: ['VIEW_GROUPS'],
             }

@@ -2,12 +2,12 @@
   <div>
     <div class="mb-12 flex justify-between">
       <div>
-        <div class="font-semibold text-lg">Support tickets</div>
-        <div class="text-sm">Bekijk hier je open tickets of maak een nieuw ticket aan.</div>
+        <div class="font-semibold text-lg">Gesloten support tickets</div>
+        <div class="text-sm">Bekijk hier je gesloten tickets</div>
       </div>
-      <div>
-        <button @click="$router.push({ name: 'venues.support.tickets.create' })" class="btn btn-primary">Ticket aanmaken</button>
-      </div>
+<!--      <div>-->
+<!--        <button @click="$router.push({ name: 'venues.support.tickets.create' })" class="btn btn-primary">Ticket aanmaken</button>-->
+<!--      </div>-->
     </div>
 
     <div class="mt-8 flow-root">
@@ -46,7 +46,7 @@
             </tr>
             <tr v-else class="text-center">
               <td colspan="12" class="pt-12">
-                Er zijn geen open tickets gevonden 🥳
+                Er zijn geen gesloten tickets gevonden
               </td>
             </tr>
             </tbody>
@@ -81,7 +81,7 @@ export default {
 
   methods: {
     fetchDataByPage(page) {
-      axios.get('/venues/' + this.$route.params.venue + '/tickets?page=' + page
+      axios.get('/venues/' + this.$route.params.venue + '/tickets/archive?page=' + page
         + (this.searchQuery ? '&q=' + this.searchQuery : '')
       )
           .then(response => {

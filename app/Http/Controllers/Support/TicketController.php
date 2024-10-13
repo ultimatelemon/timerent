@@ -116,6 +116,7 @@ class TicketController extends ApiController
     public function close(Venue $venue, Ticket $ticket, Request $request): JsonResponse
     {
         $ticket->update(['closed_at' => Carbon::now()]);
+        $ticket->update(['status' => TicketStatus::SOLVED]);
         return $this->success();
     }
 }

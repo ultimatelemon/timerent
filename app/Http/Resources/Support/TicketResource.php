@@ -2,7 +2,6 @@
 
 namespace App\Http\Resources\Support;
 
-use App\Http\Resources\TicketMessageResource;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -27,6 +26,7 @@ class TicketResource extends JsonResource
             ],
             'messages' => TicketMessageResource::collection($this->ticket_messages),
             'created_at' => $this->created_at,
+            'closed_at' => $this->closed_at,
         ];
     }
 }

@@ -58,7 +58,7 @@
         </dl>
         <div class="mt-6 border-t border-gray-900/5 px-6 py-6">
 <!--          <a href="#" class="text-sm font-semibold leading-6 text-gray-900">Download receipt <span aria-hidden="true">&rarr;</span></a>-->
-          <button @click="closeTicket()" class="btn btn-danger">Ticket sluiten</button>
+          <button v-if="!ticket.closed_at" @click="closeTicket()" class="btn btn-danger">Ticket sluiten</button>
         </div>
       </div>
     </div>

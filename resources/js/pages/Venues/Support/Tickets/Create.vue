@@ -53,7 +53,7 @@
                       class="input"
                       placeholder="Beschrijf hier zo duidelijk mogelijk je vraag zodat we je zo goed en snel mogelijk kunnen helpen :)"
             ></textarea>
-            <div class="text-xs flex justify-end mt-2" :class="formData.message.split('').length > 511 ? 'text-red-500' : ''">{{ formData.message.split('').length }}/<span>511</span></div>
+            <div class="text-xs flex justify-end mt-2" :class="formData.message && formData.message.split('').length > 511 ? 'text-red-500' : ''">{{ formData.message.split('').length }}/<span>511</span></div>
             <span v-if="errors.message" class="text-red-500 text-sm">{{ errors.message[0] }}</span>
           </div>
         </div>
@@ -83,7 +83,7 @@ export default {
       formData: {
         title: null,
         type: null,
-        message: null,
+        message: '',
       },
     }
   },

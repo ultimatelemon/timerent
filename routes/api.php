@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AuthenticationController;
 use App\Http\Controllers\GroupController;
+use App\Http\Controllers\InformationMessageController;
 use App\Http\Controllers\InvoiceController;
 use App\Http\Controllers\Management\PaymentProviderController;
 use App\Http\Controllers\Management\PlanController;
@@ -43,6 +44,7 @@ Route::get('/subdomain/check', [VenueController::class, 'checkSubdomain']);
 
 
 Route::middleware('auth:sanctum')->group(function () {
+    Route::get('/information-messages', [InformationMessageController::class, 'index']);
     Route::post('/sanctum/logout', [\App\Http\Controllers\AuthenticationController::class, 'revokeToken']);
 
     Route::get('/users/current', [\App\Http\Controllers\User\UserController::class, 'current']);

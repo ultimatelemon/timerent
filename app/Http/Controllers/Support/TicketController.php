@@ -36,7 +36,7 @@ class TicketController extends ApiController
 
     public function archive(Request $request, Venue $venue): JsonResponse
     {
-        $tickets = $venue->tickets()->where('closed_at', '!=', null)->orWhere('status', '=', 'solved');
+        $tickets = $venue->tickets()->where('closed_at', '!=', null);
 
         if($request->has('q'))
             $tickets = $tickets->where('title', 'ILIKE', "%{$request->q}%");

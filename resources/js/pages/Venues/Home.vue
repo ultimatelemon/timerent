@@ -280,7 +280,7 @@ export default {
       let percentage = (changeInAmount / oldValue) * 100;
       if (percentage.toString() === 'Infinity') return 100;
       if (percentage.toString() === 'NaN') return 0;
-      return percentage;
+      return percentage.toFixed(0);
     },
 
     fetchReservations() {

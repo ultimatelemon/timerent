@@ -32,7 +32,7 @@ class StripeWebhookController extends ApiController
                     captureMessage('Venue Subscription: Subscription geannuleerd');
                     $time = Carbon::parse($payload['data']['object']['canceled_at']);
                     $venue->canceled_at = $time;
-                    $venue->stripe_current_period_ends_at = Carbon::createFromTimestamp($payload['data']['object']['current_period_end']);
+                    $venue->stripe_current_period_ends_at = Carbon::createFromTimestamp($payload['data']['object']['current_period_end'])->setHour(23)->setMinute(59)->setSecond(59);
                     $venue->save();
                 }
 

@@ -38,7 +38,7 @@ class StripeCallbackController extends Controller
 
         $session = $this->client->checkout->sessions->retrieve($session_id, ['expand' => ['subscription']]);
         if($session->subscription) {
-            $period_end = Carbon::createFromTimestamp($session->subscription->current_period_end)->setHour(23)->setMinute()->toDateTimeString();
+            $period_end = Carbon::createFromTimestamp($session->subscription->current_period_end)->setHour(23)->setMinute(59)->setSecond(59)->toDateTimeString();
 
             $venue = Venue::where('stripe_subscription_id', $session->id)->firstOrFail();
             $venue->stripe_subscription_id = $session->subscription->id;

@@ -6,15 +6,14 @@ use App\Http\Controllers\Controller;
 use App\Models\Invoice;
 use App\Models\Reservation;
 use App\Models\Venue;
-use App\Notifications\ReservationConfirmation;
+use App\Notifications\Application\ReservationConfirmation;
+use App\Notifications\OnboardEmail;
 use App\Notifications\Traits\EmailNotifiable;
 use App\WebPayment\PaymentStatus;
 use Carbon\Carbon;
-use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Notification;
 use Stripe\Exception\ApiErrorException;
 use Stripe\StripeClient;
 
@@ -44,6 +43,10 @@ class StripeCallbackController extends Controller
             $venue->stripe_subscription_id = $session->subscription->id;
             $venue->stripe_current_period_ends_at = $period_end;
             $venue->save();
+
+            $user = $venue->user_venues->where('owner', true)->first()->user;
+            $venue->user_venues->where('owner', true)->first()->user->notify(new OnboardEmail($venue, $user));
+
         } else {
             //TODO: FIx this in ApplicationCallbackController
             if($session->payment_status === 'paid') {

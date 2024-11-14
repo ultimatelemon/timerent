@@ -47,18 +47,24 @@
             <div class="mb-4">
               <label>Naam <span class="required-star">*</span></label>
               <input v-model="name" type="text" class="input" placeholder="Wat is de naam van je vestiging?">
+              <span v-if="errors.name" class="text-red-500 text-sm">{{errors.name[0]}}</span>
             </div>
+
             <div class="mb-4">
               <label>Subdomein <span class="required-star">*</span></label>
               <input v-model="subdomain" type="text" class="input" placeholder="Alleen a-z, geen spaties of speciale tekens">
+              <span v-if="errors.subdomain" class="text-red-500 text-sm">{{errors.subdomain[0]}}</span>
             </div>
+
             <div class="mb-4 flex flex-col">
               <label for="plan">Abonnement <span class="required-star">*</span></label>
               <select name="plan" id="plan" v-model="plan_id">
                 <option :value="null" :disabled="true">Kies een abonnement</option>
                 <option :value="plan.id" v-for="plan in plans" :selected="plan">{{ plan.name  }}</option>
               </select>
+              <span v-if="errors.plan_id" class="text-red-500 text-sm">{{errors.plan_id[0]}}</span>
             </div>
+
             <div class="flex justify-end px-5 py-3">
               <button :class="loading ? 'btn-secondary' : 'btn-primary'" class="btn ml-auto" @click="addVenue"><i v-if="loading" class="fa fa-spinner animate-spin mr-2"></i> Aanmaken</button>
             </div>
@@ -171,6 +177,9 @@ export default {
             this.errors = error.response.data.errors;
             this.errorMessage = error.response.data.message;
             console.log(this.errors);
+          })
+          .finally(() => {
+            this.loading = false;
           })
     },
 

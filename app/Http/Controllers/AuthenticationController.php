@@ -2,27 +2,20 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Controllers\Stripe\StripeCustomerController;
 use App\Http\Requests\Authentication\LoginRequest;
 use App\Http\Requests\Authentication\StoreUser;
 use App\Models\User;
-use App\Notifications\EmailVerified;
-use App\Notifications\PasswordResetRequest;
-use App\Notifications\PasswordResetted;
+use App\Notifications\Auth\EmailVerified;
+use App\Notifications\Auth\PasswordResetRequest;
+use App\Notifications\Auth\PasswordResetted;
 use Carbon\Carbon;
 use Illuminate\Auth\Events\Registered;
-use Illuminate\Auth\Notifications\VerifyEmail;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Notifications\Notification;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Mail;
-use Illuminate\Validation\Rules\Password;
 use Illuminate\Support\Str;
+use Illuminate\Validation\Rules\Password;
 use Jenssegers\Agent\Agent;
-use Resend\Laravel\Facades\Resend;
-use Stripe\Exception\ApiErrorException;
 
 class AuthenticationController extends ApiController
 {

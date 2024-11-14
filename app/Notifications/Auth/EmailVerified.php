@@ -1,31 +1,21 @@
 <?php
 
-namespace App\Notifications;
+namespace App\Notifications\Auth;
 
-use App\Models\Member;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
-class ApplicationPasswordResetted extends Notification
+class EmailVerified extends Notification
 {
     use Queueable;
 
     /**
      * Create a new notification instance.
      */
-
-    /**
-     * The member instance
-     *
-     * @var Member
-     */
-    private Member $member;
-
-    public function __construct(Member $member)
+    public function __construct()
     {
-        $this->member = $member;
+        //
     }
 
     /**
@@ -44,9 +34,11 @@ class ApplicationPasswordResetted extends Notification
     public function toMail(object $notifiable): MailMessage
     {
         return (new MailMessage)
-            ->subject('Je wachtwoord is gereset')
-            ->line('Je wachtwoord is succesvol gereset!')
-            ->line('Heb je dit niet zelf gedaan? Dan raden wij je aan om zo snel mogelijk actie te ondernemen.');
+            ->subject('Je e-mail is geverifieerd.')
+            ->line('Je email is succesvol geverifieerd.')
+            ->line('Je kunt nu aan de slag met alles wat Timerent te bieden heeft!')
+            ->line('Heb je nog vragen omtrent je omgeving, betaling of andere dingen, neem gerust contact met ons op.')
+            ->line('Wij wensen je heel veel succes!');
     }
 
     /**

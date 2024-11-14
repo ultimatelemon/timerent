@@ -1,38 +1,30 @@
 <?php
 
-namespace App\Notifications;
+namespace App\Notifications\Auth;
 
-use App\Models\User;
+use App\Models\Member;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
-class PasswordResetRequest extends Notification
+class ApplicationPasswordResetted extends Notification
 {
     use Queueable;
 
     /**
-     * The user instance
-     *
-     * @var User
-     */
-    private User $user;
-
-    /**
-     * The url to reset the password
-     *
-     * @var string
-     */
-    private string $url;
-
-    /**
      * Create a new notification instance.
      */
-    public function __construct(User $user, string $url)
+
+    /**
+     * The member instance
+     *
+     * @var Member
+     */
+    private Member $member;
+
+    public function __construct(Member $member)
     {
-        $this->user = $user;
-        $this->url = $url;
+        $this->member = $member;
     }
 
     /**
@@ -51,11 +43,9 @@ class PasswordResetRequest extends Notification
     public function toMail(object $notifiable): MailMessage
     {
         return (new MailMessage)
-            ->subject('Reset je wachtwoord')
-            ->line('Er is een wachtwoord reset aangevraagd voor jouw account.')
-            ->action('Reset je wachtwoord', url($this->url))
-            ->line('Heb je zelf geen verzoek aangevraagd? Dan hoef je verder geen actie te ondernemen')
-            ->line('* Deze link is 2 uur geldig');
+            ->subject('Je wachtwoord is gereset')
+            ->line('Je wachtwoord is succesvol gereset!')
+            ->line('Heb je dit niet zelf gedaan? Dan raden wij je aan om zo snel mogelijk actie te ondernemen.');
     }
 
     /**

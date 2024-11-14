@@ -5,26 +5,20 @@ namespace App\Http\Controllers\Application;
 use App\Http\Controllers\ApiController;
 use App\Http\Requests\Application\ApplicationLoginRequest;
 use App\Http\Requests\Application\StoreMember;
-use App\Http\Requests\Authentication\LoginRequest;
 use App\Models\Member;
-use App\Models\User;
 use App\Models\Venue;
 use App\Notifications\Application\ApplicationEmailVerification;
 use App\Notifications\Application\ApplicationEmailVerified;
-use App\Notifications\ApplicationPasswordResetRequest;
-use App\Notifications\ApplicationPasswordResetted;
-use App\Notifications\EmailVerified;
+use App\Notifications\Auth\ApplicationPasswordResetRequest;
+use App\Notifications\Auth\ApplicationPasswordResetted;
 use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rules\Password;
 use Jenssegers\Agent\Agent;
 use Laravel\Sanctum\PersonalAccessToken;
-use function RectorPrefix202407\React\Promise\all;
 
 class ApplicationAuthenticationController extends ApiController
 {

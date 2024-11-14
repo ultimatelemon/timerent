@@ -38,10 +38,6 @@ class VenueController extends ApiController
         $plan = Plan::findOrFail($request->plan_id);
         $subscription_url = (new StripeSubscriptionController())->create($venue, $plan);
 
-        Artisan::call('venue:seed', [
-            'venue_id' => $venue->id,
-        ]);
-
         return $this->success($subscription_url);
     }
 

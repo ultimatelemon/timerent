@@ -5,10 +5,8 @@ namespace App\Http\Controllers;
 use App\Http\Resources\ReservationResource;
 use App\Models\Invoice;
 use App\Models\Reservation;
-use App\Models\Setting;
-use App\Models\User;
 use App\Models\Venue;
-use App\Notifications\ReservationConfirmation;
+use App\Notifications\Application\ReservationConfirmation;
 use App\Notifications\Traits\EmailNotifiable;
 use App\WebPayment\Mollie\MolliePaymentClient;
 use App\WebPayment\PaymentStatus;
@@ -18,7 +16,6 @@ use Illuminate\Http\Request;
 use Illuminate\Routing\Controllers\HasMiddleware;
 use Illuminate\Routing\Controllers\Middleware;
 use Illuminate\Support\Facades\Crypt;
-use Illuminate\Support\Facades\Notification;
 
 class ReservationController extends ApiController implements HasMiddleware
 {

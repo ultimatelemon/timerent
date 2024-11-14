@@ -3,19 +3,14 @@
 namespace App\Http\Controllers\Mollie;
 
 use App\Http\Controllers\ApiController;
-use App\Http\Controllers\Controller;
 use App\Models\Invoice;
 use App\Models\Reservation;
-use App\Models\Setting;
-use App\Notifications\ReservationConfirmation;
+use App\Notifications\Application\ReservationConfirmation;
 use App\Notifications\Traits\EmailNotifiable;
 use App\WebPayment\Mollie\MolliePaymentClient;
 use Carbon\Carbon;
-use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Crypt;
-use Illuminate\View\View;
-use Mollie\Api\MollieApiClient;
 use function Sentry\captureMessage;
 
 class MollieWebhookController extends ApiController

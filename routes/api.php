@@ -23,8 +23,18 @@ use App\Http\Controllers\User\UserVenueController;
 use App\Http\Controllers\VenueController;
 use App\Http\Controllers\WeekController;
 use App\Models\Reservation;
+use App\Models\User;
+use App\Models\Venue;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+
+if(env('APP_ENV') === 'local') {
+    Route::get('emailtest', function() {
+        $venue = Venue::findOrFail('9cfdc635-8ca8-4b44-998b-f0eec7b7bf31');
+        $user = User::findOrFail('9ca9cc11-1ae7-4538-9e33-ba5217285c43');
+        ray($venue->user_venues->where('owner', true)->first()->user);
+    });
+}
 
 
 Route::post('/stripe/webhook', [StripeWebhookController::class, 'handle']);

@@ -1,30 +1,22 @@
 <?php
 
-namespace App\Notifications;
+namespace App\Notifications\Auth;
 
-use App\Models\User;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
+use Illuminate\Support\Facades\Hash;
 
-class PasswordResetted extends Notification
+class VerifyEmail extends Notification
 {
     use Queueable;
 
     /**
-     * The user instance
-     *
-     * @var User
-     */
-    private User $user;
-
-    /**
      * Create a new notification instance.
      */
-    public function __construct(User $user)
+    public function __construct()
     {
-        $this->user = $user;
+        //
     }
 
     /**
@@ -43,9 +35,12 @@ class PasswordResetted extends Notification
     public function toMail(object $notifiable): MailMessage
     {
         return (new MailMessage)
-            ->subject('Je wachtwoord is gereset')
-            ->line('Je wachtwoord is succesvol gereset!')
-            ->line('Heb je dit niet zelf gedaan? Dan raden wij je aan om zo snel mogelijk actie te ondernemen.');
+            ->subject('Verifieer je e-mail bij Timerent')
+            ->line('Welkom bij Timerent.')
+            ->line('Verifieer je email door op de onderstaande knop te drukken.')
+            ->action('Je email verifieren', url(env('APP_URL') . '/email/verify?user=' . $notifiable->id . '&token=' . Hash::make($notifiable->email . $notifiable->email_verification_token)))
+            ->line('Heb je zelf geen account aangemaakt? Dan hoef je verder geen actie te ondernemen')
+            ->line('* Deze link is 2 uur geldig');
     }
 
     /**

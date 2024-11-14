@@ -41,6 +41,14 @@ class InvoiceController extends ApiController implements HasMiddleware
             $invoices = $invoices->where('id', 'ILIKE', "%{$request->q}%")
                 ->orWhere('email', 'ILIKE', "%{$request->q}%");
 
+        if($request->has('s') != null) {
+            if($request->s == "paid")
+                $invoices = $invoices->where('paid_at', '!=', null);
+
+            if($request->s == "open")
+                $invoices = $invoices->where('paid_at', null);
+        }
+
         $invoices = $invoices->orderBy('created_at', 'asc');
 
         $invoices = $invoices->paginate(env('POSTS_PER_PAGE'));

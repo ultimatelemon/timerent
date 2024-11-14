@@ -40,10 +40,9 @@ class ApplicationReservationController extends ApiController
      */
     public function store(StoreReservation $request): JsonResponse
     {
-        ray($request->all());
         $validatedRequest = $request->validated();
         $venue = Venue::where('subdomain', $validatedRequest['subdomain'])->firstOrFail();
-        if(!PaymentHelper::hasPaymentsEnabled($venue)) return $this->error(['error' => 'Er is nog geen betaalprovider gekoppeld.']);
+        if(!PaymentHelper::hasPaymentsEnabled($venue)) return $this->error(['error' => 'Er is nog geen betaalprovider gekoppeld of API token is ongeldig.']);
         $payment_provider = $venue->payment_service_provider;
 
         $total = collect($validatedRequest['timeblocks'])->map(function ($x) {
@@ -171,6 +170,8 @@ class ApplicationReservationController extends ApiController
                 break;
 
             case 'mollie':
+                ray($venue->payment_api_key)->red();
+                ray(Crypt::decrypt($venue->payment_api_key))->green();
                 $client = new MolliePaymentClient(Crypt::decrypt($venue->payment_api_key));
                 $payment = $client->startPayment('Reservering via Timerent.nl', $total, env('APP_URL') . '/confirmation/' . $reservation->id, env('MOLLIE_WEBHOOK'), $validatedRequest['email'], $venue);
                 $reservation->update(['payment_id' => $payment->id]);

@@ -19,6 +19,7 @@ class InvoiceResource extends JsonResource
             'number' => strtoupper(explode('-', $this->id)[0]),
             'email' => $this->email,
             'payment_amount' => $this->payment_amount,
+            'reservation_id' => $this->reservation->id,
             'tax_low' => $this->tax_low,
             'tax_high' => $this->tax_high,
             'paid_at' => $this->paid_at,

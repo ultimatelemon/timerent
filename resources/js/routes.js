@@ -76,7 +76,6 @@ export const routes = [
         children: [
             { path: '', component: () => import('./pages/Venues/Finance/Reports/Index.vue'), name: 'venues.finance.reports.index' },
             { path: 'invoices', component: () => import('./pages/Venues/Finance/Invoices/Index.vue'), name: 'venues.finance.invoices.index' },
-            // { path: ':reservation', component: () => import('./pages/Venues/Reservations/Edit.vue'), name: 'venues.reservations.edit' },
         ]
     },
 
@@ -85,7 +84,7 @@ export const routes = [
         component: Wrapper,
         children: [
             { path: '', component: () => import('./pages/Venues/Finance/Invoices/Index.vue'), name: 'venues.finance.invoices.index' },
-            // { path: ':reservation', component: () => import('./pages/Venues/Reservations/Edit.vue'), name: 'venues.reservations.edit' },
+            { path: ':invoice', component: () => import('./pages/Venues/Finance/Invoices/Show.vue'), name: 'venues.finance.invoices.show' },
         ]
     },
 

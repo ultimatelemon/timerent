@@ -58,7 +58,7 @@
             </thead>
             <tbody class="divide-y divide-gray-200 bg-white">
             <tr v-if="invoices.length > 0" v-for="invoice in invoices" :key="invoices.id"
-                class="even:bg-gray-50 hover:bg-gray-100 hover:cursor-pointer">
+                class="even:bg-gray-50 hover:bg-gray-100 hover:cursor-pointer" @click="$router.push({name: 'venues.finance.invoices.show', params: {invoice: invoice.id}})">
               <td class="whitespace-nowrap py-2 pl-4 pr-3 text-sm text-gray-500 sm:pl-0 font-semibold">
                 #{{ invoice.number }}
               </td>

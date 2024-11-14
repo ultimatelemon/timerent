@@ -93,4 +93,17 @@ class InvoiceController extends ApiController implements HasMiddleware
         return $this->success($pdf->outputHtml());
     }
 
+
+    /**
+     * Display the invoice
+     *
+     * @param Venue $venue
+     * @param Invoice $invoice
+     * @return JsonResponse
+     */
+    public function show(Venue $venue, Invoice $invoice): JsonResponse
+    {
+        return $this->success(new InvoiceResource($invoice));
+    }
+
 }

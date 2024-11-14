@@ -72,11 +72,11 @@
               <td class="whitespace-nowrap py-2 pl-4 pr-3 text-sm text-gray-500">
                 {{ $filters.currency(invoice.tax_high + invoice.tax_low) }}
               </td>
-              <td class="whitespace-nowrap py-2 pl-4 pr-3 text-sm text-gray-500 label label-success"
-                  v-if="invoice.paid_at">Voldaan
+              <td class="whitespace-nowrap py-2 pl-4 pr-3 text-sm text-gray-500" v-if="invoice.paid_at">
+                <span class="label label-success">Voldaan</span>
               </td>
-              <td class="whitespace-nowrap py-2 pl-4 pr-3 text-sm text-gray-500 label label-danger" v-else>Niet
-                voldaan
+              <td class="whitespace-nowrap py-2 pl-4 pr-3 text-sm text-gray-500" v-else>
+                <span class="label label-danger">Niet voldaan</span>
               </td>
             </tr>
             <tr v-else class="text-center">

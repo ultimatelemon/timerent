@@ -26,7 +26,7 @@ class ReservationHelper
 
         if(!$timeblock || $to < $timeblock->from) return true;
 
-        if($timeblock->reservation->canceled_at) return false;
+        if($timeblock->reservation->canceled_at) return true;
 
         $reservedStatus = [
             PaymentStatus::Paid->value,

@@ -7,6 +7,7 @@ use App\Http\Controllers\InvoiceController;
 use App\Http\Controllers\Management\PaymentProviderController;
 use App\Http\Controllers\Management\PlanController;
 use App\Http\Controllers\Member\MemberController;
+use App\Http\Controllers\ModuleController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\ReservationController;
@@ -53,8 +54,8 @@ Route::post('/venuepayments/mollie/webhook', [\App\Http\Controllers\Mollie\Molli
 
 Route::get('/subdomain/check', [VenueController::class, 'checkSubdomain']);
 
-
 Route::middleware('auth:sanctum')->group(function () {
+    Route::get('/modules', [ModuleController::class, 'index']);
     Route::get('/information-messages', [InformationMessageController::class, 'index']);
     Route::post('/sanctum/logout', [\App\Http\Controllers\AuthenticationController::class, 'revokeToken']);
 

@@ -137,6 +137,8 @@ export const routes = [
         ]
     },
 
+    { path: '/store/:venue/modules', component: () => import('./pages/Venues/Modules/Index.vue'), name: 'venues.modules.index', meta: { title: "pages.modules" } },
+
 
 
     // Payments

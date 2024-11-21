@@ -428,7 +428,17 @@ export default {
               permission: ['VIEW_TICKETS'],
             }
           ]
-        }
+        },
+        {
+          name: 'Modules',
+          permission: [],
+          children: [
+            {
+              name: 'Alle modules',
+              link: {name: 'venues.modules.index', params: {venue: this.$store.state.venue.id}},
+            }
+          ]
+        },
       ]
     },
 

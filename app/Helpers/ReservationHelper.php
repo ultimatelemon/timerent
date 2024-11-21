@@ -11,6 +11,8 @@ class ReservationHelper
 
     public static function checkIfTimeblockIsAvailable($unit_id, $from, $to, $reservation_id = null): bool
     {
+        //TODO: Count on rows? E.g. boat rental can have 4 of one type boat. So it can be rented 4 times. (Need to check with subscriptions)
+
         if($from < Carbon::now()) return false;
 
         $timeblock = ReservationTimeblock::where([

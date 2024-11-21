@@ -67,7 +67,7 @@ class ReservationConfirmation extends Notification
         $keys = ['name', 'address', 'postal_code', 'city', 'phone_number_support', 'coc_number', 'tax_number'];
         $business = $this->reservation->venue->only($keys);
 
-        $pdf = Pdf::loadView('application.email.invoice', compact('invoice', 'business'));
+        $pdf = Pdf::loadView('emails.invoice', compact('invoice', 'business'));
 
         $mailMessage->attachData($pdf->output(), 'Factuur-' . $invoice->number, [
             'mime' => 'application/pdf',

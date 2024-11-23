@@ -49,7 +49,6 @@ class WeekController extends ApiController implements HasMiddleware
             ['year', '=', $validatedRequest['year']],
             ['week', '=', $validatedRequest['week']],
         ])->first();
-        ray($week);
 
         if($validatedRequest['template_id'] !== null) {
             if($week) $week->update($validatedRequest);

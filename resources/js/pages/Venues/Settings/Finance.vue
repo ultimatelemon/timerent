@@ -69,6 +69,16 @@
       </div>
     </div>
 
+    <Modal v-if="openPaymentsSetupModal">
+      <div class="p-3 space-y-3">
+        <h1 class="font-semibold">Rond je verificatie af</h1>
+        <p class="text-sm">Klik op de knop om je verificatie in 1 keer af te ronden.</p>
+        <div class="flex justify-end">
+          <a :href="paymentsSetupURL" @click="openPaymentsSetupModal = false; paymentsSetupURL = null;" target="_blank" class="btn btn-primary">Afronden</a>
+        </div>
+      </div>
+    </Modal>
+
     <div class="mt-8 flex justify-end">
       <button @click="postData" class="btn btn-lg"
               :class="(this.loading ? 'btn-secondary opacity-50 cursor-not-allowed' : 'btn-primary')">
@@ -80,8 +90,11 @@
 
 <script>
 
+import Modal from "../../Components/Modals/Modal.vue";
+
 export default {
   name: "Finance",
+  components: {Modal},
   data() {
     return {
 
@@ -93,6 +106,9 @@ export default {
       errors: [],
 
       current_psp: null,
+
+      openPaymentsSetupModal: false,
+      paymentsSetupURL: null,
 
       formData: {
         payment_service_provider: null,
@@ -114,6 +130,24 @@ export default {
           .catch(e => {
             this.errors = e.response.data.errors;
             this.success = false;
+          })
+          .finally(() => {
+            this.loading = false;
+          })
+    },
+
+    setupTimerentPayments() {
+      if(this.loading) return;
+      this.loading = true;
+
+      axios.post('/venue/' + this.$route.params.venue + '/payments/setup')
+          .then(response => {
+            console.log(response.data.data);
+            this.openPaymentsSetupModal = true;
+            this.paymentsSetupURL = response.data.data;
+          })
+          .catch(e => {
+            console.log("ERR", e.response.data);
           })
           .finally(() => {
             this.loading = false;

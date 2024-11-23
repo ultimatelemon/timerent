@@ -83,8 +83,8 @@ class StripeConnectController extends ApiController
     {
         $accountLink = $this->client->accountLinks->create([
             'account' => $venue->stripe_connect_id,
-            'refresh_url' => env('APP_URL'),
-            'return_url' => env('APP_URL') . '/timerentpayments/success?v=' . $venue->id,
+            'refresh_url' => config('env.app_url'),
+            'return_url' => config('env.app_url') . '/timerentpayments/success?v=' . $venue->id,
             'type' => 'account_onboarding',
         ]);
         return $accountLink->url;

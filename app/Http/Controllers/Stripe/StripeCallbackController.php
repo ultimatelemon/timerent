@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Stripe;
 
+use App\Events\InvoiceGenerated;
 use App\Http\Controllers\Controller;
 use App\Models\Invoice;
 use App\Models\Reservation;
@@ -57,6 +58,8 @@ class StripeCallbackController extends Controller
                 $invoice = Invoice::where('reservation_id', $reservation->id)->firstOrFail();
                 $invoice->paid_at = Carbon::now();
                 $invoice->save();
+
+                new InvoiceGenerated($invoice);
 
                 // TODO: Mail confirmation
                 $emailNotifiable = new EmailNotifiable($reservation->email);

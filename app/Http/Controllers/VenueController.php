@@ -63,13 +63,11 @@ class VenueController extends ApiController
     public function setupTimerentPayments(Venue $venue): JsonResponse
     {
         $currentAccount = $venue->stripe_connect_id;
-
         $connectedAccount = (new StripeConnectController())->storeConnectedAccount($venue);
         $venue->update(['stripe_connect_id' => $connectedAccount->id]);
         $onboardingUrl = (new StripeConnectController())->accountLink($venue);
 
         if ($currentAccount) (new StripeConnectController())->deleteConnectedAccount($currentAccount, $venue);
-
         return $this->success($onboardingUrl);
     }
 

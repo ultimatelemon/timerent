@@ -20,6 +20,9 @@ return Application::configure(basePath: dirname(__DIR__))
             'unitLimit' => \App\Http\Middleware\UnitLimit::class,
         ]);
     })
+    ->withEvents(discover: [
+        __DIR__.'/../app/Modules/Moneybird/Listeners/ProcessInvoice.php',
+    ])
     ->withExceptions(function (Exceptions $exceptions) {
         Integration::handles($exceptions);
     })->create();

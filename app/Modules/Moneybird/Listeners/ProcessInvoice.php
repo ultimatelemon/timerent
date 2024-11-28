@@ -19,6 +19,6 @@ class ProcessInvoice
      */
     public function handle(InvoiceGenerated $event): void
     {
-        ray($event);
+        $invoice = $event->invoice;
     }
 }

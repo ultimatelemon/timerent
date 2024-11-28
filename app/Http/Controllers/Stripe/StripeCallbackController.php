@@ -59,7 +59,7 @@ class StripeCallbackController extends Controller
                 $invoice->paid_at = Carbon::now();
                 $invoice->save();
 
-                new InvoiceGenerated($invoice);
+                event(new InvoiceGenerated($invoice));
 
                 // TODO: Mail confirmation
                 $emailNotifiable = new EmailNotifiable($reservation->email);

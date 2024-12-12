@@ -325,7 +325,7 @@ export default {
 
   watch: {
     date: function() {
-      this.year = DateTime.fromFormat(this.date, 'dd-MM-yyyy').year;
+      this.year = DateTime.fromFormat(this.date, 'dd-MM-yyyy').weekYear;
       this.week = DateTime.fromFormat(this.date, 'dd-MM-yyyy').weekNumber;
       this.day = (DateTime.fromFormat(this.date, 'dd-MM-yyyy').weekday);
       this.selected = [];

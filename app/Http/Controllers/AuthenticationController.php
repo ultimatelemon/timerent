@@ -31,18 +31,19 @@ class AuthenticationController extends ApiController
         $user = User::where('email', strtolower($validatedRequest['email']))->first();
 
         if(!$user || !Hash::check($request->password, $user->password))
-            return $this->error([__('Wrong email or password')], 400);
+            return $this->error([__('Ongeldig email of wachtwoord')], 400);
 
         if(!$user->email_verified_at)
-            return $this->error(['email_verification' => __('Email not verified')], 400);
+            return $this->error(['email_verification' => __('Email is niet geverifieerd')], 400);
 
         $agent = new Agent();
-        $sa = $agent->device().', '.$agent->platform().' ('.$agent->browser().')';
-        $device_name = $request->get('device_name', $sa);
+        $device_name = $request->get('device_name', $agent->device().', '.$agent->platform().' ('.$agent->browser().')');
 
         $token = $user->createToken($device_name);
-        $token->accessToken->expires_at = ($request->minutes !== null ? Carbon::now()->addMinutes($request->minutes) : null);
-        $token->accessToken->save();
+        if($request->filled('minutes')) {
+            $token->accessToken->expires_at = now()->addMinutes($request->minutes);
+            $token->accessToken->save();
+        }
 
         return $this->success(['token' => $token->plainTextToken]);
     }
@@ -55,9 +56,10 @@ class AuthenticationController extends ApiController
      */
     public function revokeToken(Request $request): JsonResponse
     {
-        if($request->has('id') && $request->get('id') != null) {
-            $token = $request->user()->tokens()->where('id', $request->get('id'))->firstOrFail();
-            $token->delete();
+        $id = $request->get('id');
+
+        if($id) {
+            $request->user()->tokens()->findOrFail($id)->delete();
         } else {
             $request->user()->currentAccessToken()->delete();
         }
@@ -72,15 +74,16 @@ class AuthenticationController extends ApiController
      */
     public function createUser(StoreUser $request): JsonResponse
     {
-        $validatedRequest = $request->validated();
-        $user = new User();
-        $user->password = Hash::make($validatedRequest['password']);
-        $user->email = strtolower($validatedRequest['email']);
-        $user->name = $validatedRequest['name'];
-        $user->role_id = '509ab95a-9dbc-4857-a142-c3a1fa9a9812';
-        $user->email_verification_token = Str::random(64);
-        $user->email_verification_token_expires_at = Carbon::now()->addHours(2);
-        $user->save();
+        $validated = $request->validated();
+
+        $user = User::create([
+            'password' => Hash::make($validated['password']),
+            'email' => strtolower($validated['email']),
+            'name' => $validated['name'],
+            'role_id' => '509ab95a-9dbc-4857-a142-c3a1fa9a9812',
+            'email_verification_token' => Str::random(64),
+            'email_verification_token_expires_at' => now()->addHours(2),
+        ]);
 
         event(new Registered($user));
 
@@ -102,15 +105,15 @@ class AuthenticationController extends ApiController
         ]);
 
         $user = User::findOrFail($validatedRequest['user']);
-        ray($user);
         if($user->email_verified_at) return $this->error();
         if($user->email_verification_token_expires_at < Carbon::now()) return $this->error();
 
         Hash::check($user->email . $user->email_verification_token, $validatedRequest['token']);
-        $user->email_verified_at = Carbon::now();
-        $user->email_verification_token = null;
-        $user->email_verification_token_expires_at = null;
-        $user->save();
+        $user->update([
+            'email_verified_at' => now(),
+            'email_verification_token' => null,
+            'email_verification_token_expires_at' => null,
+        ]);
 
         $user->notify(new EmailVerified($user));
 
@@ -147,13 +150,13 @@ class AuthenticationController extends ApiController
             'email' => 'required|exists:users,email|email:rfc,dns',
         ]);
 
-        $user = User::where('email', $request->email)->first();
-        if(!$user) return $this->error();
+        $user = User::where('email', $request->email)->firstOrFail();
 
         $token = Str::random(64);
-        $user->password_reset_token = Hash::make($token . $user->email);
-        $user->password_reset_token_expires_at = Carbon::now()->addHours(2);
-        $user->save();
+        $user->update([
+            'password_reset_token' => Hash::make($token . $user->email),
+            'password_reset_token_expires_at' => now()->addHours(2),
+        ]);
 
         $url = env('APP_URL') . '/password-reset?user=' . $user->id . '&token=' . $token;
 
@@ -174,10 +177,11 @@ class AuthenticationController extends ApiController
         if (!$user || $user->password_reset_token_expires_at < Carbon::now()) return $this->error($user->password_reset_token_expires_at);
         if (!Hash::check($validatedRequest['token'] . $validatedRequest['email'], $user->password_reset_token)) return $this->error(['Email of token onjuist']);
 
-        $user->password = Hash::make($validatedRequest['password']);
-        $user->password_reset_token = null;
-        $user->password_reset_token_expires_at = null;
-        $user->save();
+        $user->update([
+            'password' => Hash::make($validatedRequest['password']),
+            'password_reset_token' => null,
+            'password_reset_token_expires_at' => null,
+        ]);
 
         $user->notify(new PasswordResetted($user));
 

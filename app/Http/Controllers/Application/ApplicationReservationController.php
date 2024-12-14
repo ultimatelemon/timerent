@@ -40,29 +40,24 @@ class ApplicationReservationController extends ApiController
      */
     public function store(StoreReservation $request): JsonResponse
     {
-        $validatedRequest = $request->validated();
-        $venue = Venue::where('subdomain', $validatedRequest['subdomain'])->firstOrFail();
+        $validated = $request->validated();
+        $venue = Venue::where('subdomain', $validated['subdomain'])->firstOrFail();
         if(!PaymentHelper::hasPaymentsEnabled($venue)) return $this->error(['error' => 'Er is nog geen betaalprovider gekoppeld of API token is ongeldig.']);
         $payment_provider = $venue->payment_service_provider;
 
-        $total = collect($validatedRequest['timeblocks'])->map(function ($x) {
-            return $x['timeblock']['price'];
-        })->sum();
+        $total = collect($validated['timeblocks'])->sum(fn($x) => $x['timeblock']['price']);
 
-        $taxLow = 0;
-        $taxHigh = 0;
+        $taxLow = $taxHigh = 0;
 
-        $date = Carbon::now()->setDateFrom($validatedRequest['date'])->toDateString();
+        $date = Carbon::now()->setDateFrom($validated['date'])->toDateString();
 
         $reservation = Reservation::create([
-            'name' => $validatedRequest['name'],
-            'phone_number' => $validatedRequest['phone_number'],
-            'email' => strtolower($validatedRequest['email']),
-            'comments' => $validatedRequest['comments'],
+            'name' => $validated['name'],
+            'phone_number' => $validated['phone_number'],
+            'email' => strtolower($validated['email']),
+            'comments' => $validated['comments'],
             'date' => $date,
-
             'venue_id' => $venue->id,
-
             'payment_provider' => $payment_provider,
             'payment_amount' => $total,
             'tax_high' => $taxHigh,
@@ -70,66 +65,49 @@ class ApplicationReservationController extends ApiController
             'payment_status' => PaymentStatus::Open,
         ]);
 
-        $timeblockUnitIds = array_map(function($timeblock) {
-            return $timeblock['unit_id'];
-        }, $validatedRequest['timeblocks']);
+        $timeblockUnitIds = array_column($validated['timeblocks'], 'unit_id');
 
-        foreach($validatedRequest['products'] as $p) {
-            $prod = Product::findOrFail($p);
+        foreach($validated['products'] as $productId) {
+            $prod = Product::findOrFail($productId);
+
             if(ProductHelper::checkIfProductMaxIsBookedToday($prod, $date, $reservation)) {
                 $reservation->forceDelete();
                 return $this->error(['error' => "Product '$prod->name' is maximaal gereserveerd voor vandaag"]);
             }
 
-            if($prod->units) {
-                foreach ($prod->units as $unit) {
-                    if(!in_array($unit->id, $timeblockUnitIds)) {
-                        $reservation->forceDelete();
-                        return $this->error(['error' => "Product '$prod->name' is alleen te reserveren bij bijhorende unit(s)"]);
-                    }
-                }
+            if($prod->units->pluck('id')->diff($timeblockUnitIds)->isNotEmpty()) {
+                $reservation->forceDelete();
+                return $this->error(['error' => "Product '$prod->name' is alleen te reserveren bij bijhorende unit(s)"]);
             }
+
+            $total += $prod->price * ($prod->time_per_timeblock ? count($validated['timeblocks']) : 1);
+            $taxLow += $prod->tax_percentage === 9 ? round($prod->price - ($prod->price / 1.09)) : 0;
+            $taxHigh += $prod->tax_percentage === 21 ? round($prod->price - ($prod->price / 1.21)) : 0;
+            $reservation->update([
+                'payment_amount' => $total,
+                'tax_high' => $taxHigh,
+                'tax_low' => $taxLow,
+            ]);
 
             $reservation->products()->save($prod);
-            if($prod->price_per_timeblock) {
-                $total += $prod->price * count($validatedRequest['timeblocks']);
-            } else {
-                $total += $prod->price;
-            }
-
-            if($prod->tax_percentage === 21) {
-                $taxHigh += round(($prod->price - ($prod->price / 1.21)));
-                $reservation->update(['tax_high' => $taxHigh]);
-            }
-            if($prod->tax_percentage === 9) {
-                $taxLow += round(($prod->price - ($prod->price / 1.09)));
-                $reservation->update(['tax_low' => $taxLow]);
-            }
-
-            $reservation->update(['payment_amount' => $total]);
         }
 
         $timeblocks = [];
-        foreach ($validatedRequest['timeblocks'] as $timeblock) {
+        foreach ($validated['timeblocks'] as $timeblock) {
 
-            $from = Carbon::create($validatedRequest['date'])->setHour(intval(explode(':', $timeblock['timeblock']['from'])[0]))->setMinute(intval(explode(':', $timeblock['timeblock']['from'])[1]));
-            $to = Carbon::create($validatedRequest['date'])->setHour(intval(explode(':', $timeblock['timeblock']['to'])[0]))->setMinute(intval(explode(':', $timeblock['timeblock']['to'])[1]));
+            $from = Carbon::create($validated['date'])->setHour(intval(explode(':', $timeblock['timeblock']['from'])[0]))->setMinute(intval(explode(':', $timeblock['timeblock']['from'])[1]));
+            $to = Carbon::create($validated['date'])->setHour(intval(explode(':', $timeblock['timeblock']['to'])[0]))->setMinute(intval(explode(':', $timeblock['timeblock']['to'])[1]));
 
             if (!ReservationHelper::checkIfTimeblockIsAvailable($timeblock['timeblock']['unit_id'], $from, $to)) return $this->error(['error' => '1 of meerdere tijdblokken zijn niet beschikbaar.']);
 
-            $unit = Unit::where([
-                ['id', $timeblock['timeblock']['unit_id']],
-                ['venue_id', $venue->id],
-            ])->firstOrFail();
+            $unit = Unit::where('id', $timeblock['timeblock']['unit_id'])->where('venue_id', $venue->id)->firstOrFail();
+            $taxHigh += $unit->tax_percentage === 21 ? round($timeblock['timeblock']['price'] - ($timeblock['timeblock']['price'] / 1.21)) : 0;
+            $taxLow += $unit->tax_percentage === 9 ? round($timeblock['timeblock']['price'] - ($timeblock['timeblock']['price'] / 1.09)) : 0;
 
-            if($unit->tax_percentage === 21) {
-                $taxHigh += round(($timeblock['timeblock']['price'] - ($timeblock['timeblock']['price'] / 1.21)));
-                $reservation->update(['tax_high' => $taxHigh]);
-            }
-            if($unit->tax_percentage === 9) {
-                $taxLow += round(($timeblock['timeblock']['price'] - ($timeblock['timeblock']['price'] / 1.09)));
-                $reservation->update(['tax_low' => $taxLow]);
-            }
+            $reservation->update([
+                'tax_low' => $taxLow,
+                'tax_high' => $taxHigh,
+            ]);
 
             $timeblocks[] = [
                 'id' => Str::uuid(),
@@ -146,25 +124,25 @@ class ApplicationReservationController extends ApiController
 
         ReservationTimeblock::insert($timeblocks);
 
-        $invoice = new Invoice;
-        $invoice->name = $reservation->name;
-        $invoice->email = $reservation->email;
-        $invoice->phone_number = $reservation->phone_number;
-        $invoice->payment_amount = $reservation->payment_amount;
-        $invoice->tax_low = $reservation->tax_low;
-        $invoice->tax_high = $reservation->tax_high;
-        $invoice->payment_status = $reservation->payment_status;
-        $invoice->sent_at = Carbon::now();
-        $invoice->reservation_id = $reservation->id;
-        $invoice->venue_id = $reservation->venue_id;
-        $invoice->save();
+        $invoice = Invoice::create([
+            'name' => $reservation->name,
+            'email' => $reservation->email,
+            'phone_number' => $reservation->phone_number,
+            'payment_amount' => $reservation->payment_amount,
+            'tax_high' => $reservation->tax_high,
+            'tax_low' => $reservation->tax_low,
+            'payment_status' => $reservation->payment_status,
+            'sent_at' => now(),
+            'reservation_id' => $reservation->id,
+            'venue_id' => $venue->id,
+        ]);
 
         // Todo; PSP modules,
         $paymentUrl = '';
         switch($payment_provider) {
             case 'timerent':
                 $client = new TimerentPaymentClient(env('STRIPE_SECRET'));
-                $payment = $client->startPayment('Reservering via Timerent.nl', $total, 'http://'.$request->getHttpHost().'/callback/success?session_id={CHECKOUT_SESSION_ID}', 'http://'.$request->getHttpHost() .'/callback/success?session_id={CHECKOUT_SESSION_ID}', $validatedRequest['email'], $venue);
+                $payment = $client->startPayment('Reservering via Timerent.nl', $total, 'http://'.$request->getHttpHost().'/callback/success?session_id={CHECKOUT_SESSION_ID}', 'http://'.$request->getHttpHost() .'/callback/success?session_id={CHECKOUT_SESSION_ID}', $validated['email'], $venue);
                 $reservation->update(['payment_id' => $payment->id]);
                 $paymentUrl = $payment->getPaymentUrl();
                 break;
@@ -173,7 +151,7 @@ class ApplicationReservationController extends ApiController
                 ray($venue->payment_api_key)->red();
                 ray(Crypt::decrypt($venue->payment_api_key))->green();
                 $client = new MolliePaymentClient(Crypt::decrypt($venue->payment_api_key));
-                $payment = $client->startPayment('Reservering via Timerent.nl', $total, env('APP_URL') . '/confirmation/' . $reservation->id, env('MOLLIE_WEBHOOK'), $validatedRequest['email'], $venue);
+                $payment = $client->startPayment('Reservering via Timerent.nl', $total, env('APP_URL') . '/confirmation/' . $reservation->id, env('MOLLIE_WEBHOOK'), $validated['email'], $venue);
                 $reservation->update(['payment_id' => $payment->id]);
                 $paymentUrl = $payment->getPaymentUrl();
         }

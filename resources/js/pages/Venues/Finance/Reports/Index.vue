@@ -74,6 +74,48 @@
       </div>
     </div>
 
+    <div>
+      <div class="font-semibold text-lg">Maandrapportages</div>
+      <div class="text-sm">Elke maand staat er een maandrapportage voor je klaar voor de boekhouding.</div>
+    </div>
+
+    <div class="mt-8 flow-root">
+      <div class="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
+        <div class="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
+          <table class="min-w-full divide-y divide-gray-300">
+            <thead>
+            <tr>
+              <th scope="col" class="whitespace-nowrap py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-0">Periode</th>
+              <th scope="col" class="whitespace-nowrap px-2 py-3.5 text-left text-sm font-semibold text-gray-900">Jaar</th>
+              <th scope="col" class="whitespace-nowrap px-2 py-3.5 text-left text-sm font-semibold text-gray-900">Totale omzet</th>
+              <th scope="col" class="whitespace-nowrap px-2 py-3.5 text-left text-sm font-semibold text-gray-900">Klanten aantal</th>
+              <th scope="col" class="whitespace-nowrap px-2 py-3.5 text-left text-sm font-semibold text-gray-900">Reservering aantal</th>
+            </tr>
+            </thead>
+            <tbody class="divide-y divide-gray-200 bg-white">
+            <tr v-if="month_reports.length > 0" v-for="month_report in month_reports" :key="month_report.id" class="even:bg-gray-50 hover:bg-gray-100 hover:cursor-pointer" @click="this.$router.push({name: 'venues.reservations.edit', params: {venue: this.$route.params.venue, reservation: reservation.id}})">
+              <td class="whitespace-nowrap py-2 pl-4 pr-3 text-sm text-gray-500 sm:pl-0">{{ month_report.month }}</td>
+              <td class="whitespace-nowrap px-2 py-2 text-sm font-medium text-gray-900">{{ month_report.year }}</td>
+              <td class="whitespace-nowrap px-2 py-2 text-sm font-medium text-gray-900">{{ $filters.currency(month_report.total_revenue) }}</td>
+              <td class="whitespace-nowrap px-2 py-2 text-sm font-medium text-gray-900">{{ month_report.customer_count }}</td>
+              <td class="whitespace-nowrap px-2 py-2 text-sm font-medium text-gray-900">{{ month_report.reservation_count }}</td>
+              <td class="whitespace-nowrap px-2 py-2 text-sm font-medium text-gray-900">
+                <button @click.stop="downloadMonthReport(month_report.id, month_report.month, month_report.year)" class="btn btn-primary"><i class="fa fa-download"></i></button>
+              </td>
+            </tr>
+            <tr v-else class="text-center">
+              <td colspan="12" class="pt-12">Er zijn voor jou nog geen maandrapportages beschikbaar</td>
+            </tr>
+            </tbody>
+          </table>
+          <div v-if="pagination">
+            <pagination :pagination="pagination" @changed="fetchDataByPage"></pagination>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
 <!--    <div v-if="charts" class="grid grid-cols-4 gap-4 font-semibold">-->
 <!--      <div>-->
 <!--        <p>Reserveringen per dag</p>-->
@@ -99,10 +141,12 @@
 import flatPickr from "vue-flatpickr-component";
 import 'flatpickr/dist/flatpickr.css';
 import {DateTime} from "luxon";
+import Pagination from "../../../Components/Pagination.vue";
+import html2pdf from "html2pdf.js";
 
 export default {
   name: "Index",
-  components: {flatPickr},
+  components: {Pagination, flatPickr},
   data(unit) {
     return {
       test: 0,
@@ -117,6 +161,9 @@ export default {
           firstDayOfWeek: 1
         },
       },
+
+      month_reports: [],
+      pagination: null,
 
       statistics: {
         reservations_count: 0,
@@ -167,11 +214,30 @@ export default {
             this.charts = response.data.data.charts;
             console.log(response.data.data.reservations_count)
           })
+    },
+
+    fetchMonthReports() {
+      axios.get('/venues/' + this.$route.params.venue + '/month-reports')
+          .then(response => {
+            this.month_reports = response.data.data;
+            this.pagination = response.data.pagination;
+          })
+    },
+
+    downloadMonthReport(id, month, year) {
+      axios.post('/venues/' + this.$route.params.venue + `/month-reports/${id}/download`)
+          .then(response => {
+            html2pdf(response.data.data, {
+              filename: `Maandrapport-${month}${year}`,
+              margin: 1,
+            })
+          })
     }
   },
 
   mounted() {
     this.fetchReports();
+    this.fetchMonthReports()
   },
 
   watch: {

@@ -8,6 +8,7 @@ use App\Http\Controllers\Management\PaymentProviderController;
 use App\Http\Controllers\Management\PlanController;
 use App\Http\Controllers\Member\MemberController;
 use App\Http\Controllers\ModuleController;
+use App\Http\Controllers\MonthReportController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\ReservationController;
@@ -34,6 +35,11 @@ if(env('APP_ENV') === 'local') {
         $venue = Venue::findOrFail('9cfdc635-8ca8-4b44-998b-f0eec7b7bf31');
         $user = User::findOrFail('9ca9cc11-1ae7-4538-9e33-ba5217285c43');
         ray($venue->user_venues->where('owner', true)->first()->user);
+    });
+
+    Route::get('/monthjob', function () {
+        \App\Jobs\GenerateMonthlyReports::dispatch();
+        return response()->json('success');
     });
 }
 
@@ -110,6 +116,9 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('/venues/{venue}/tickets/{ticket}/close', [TicketController::class, 'close']);
         Route::get('/venues/{venue}/tickets/archive', [TicketController::class, 'archive']);
 
+        // Month Reports
+        Route::post('/venues/{venue}/month-reports/{monthReportId}/download', [MonthReportController::class, 'download']);
+
         Route::resource('venues',                   VenueController::class)->except(['create', 'edit']);
         Route::resource('venues.units',             UnitController::class)->except(['create', 'edit']);
         Route::resource('venues.templates',         TemplateController::class)->except(['create', 'edit']);
@@ -121,8 +130,9 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::resource('venues.members',           MemberController::class)->except(['create', 'edit']);
         Route::resource('venues.invoices',          InvoiceController::class)->except(['create', 'edit']);
         Route::resource('venues.roles',             RoleController::class)->except(['create', 'edit']);
-        Route::resource('venues.groups',             GroupController::class)->except(['create', 'edit']);
-        Route::resource('venues.tickets',             TicketController::class)->except(['create', 'edit']);
+        Route::resource('venues.groups',            GroupController::class)->except(['create', 'edit']);
+        Route::resource('venues.tickets',           TicketController::class)->except(['create', 'edit']);
+        Route::resource('venues.month-reports',     MonthReportController::class)->except(['create', 'edit']);
     });
 
 });

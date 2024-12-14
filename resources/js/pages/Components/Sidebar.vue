@@ -429,16 +429,16 @@ export default {
             }
           ]
         },
-        {
-          name: 'Modules',
-          permission: [],
-          children: [
-            {
-              name: 'Alle modules',
-              link: {name: 'venues.modules.index', params: {venue: this.$store.state.venue.id}},
-            }
-          ]
-        },
+        // {
+        //   name: 'Modules',
+        //   permission: [],
+        //   children: [
+        //     {
+        //       name: 'Alle modules',
+        //       link: {name: 'venues.modules.index', params: {venue: this.$store.state.venue.id}},
+        //     }
+        //   ]
+        // },
       ]
     },
 

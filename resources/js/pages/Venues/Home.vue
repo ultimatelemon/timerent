@@ -1,7 +1,7 @@
 <template>
   <div>
     <h1 class="font-semibold text-xl">{{ greeting }}</h1>
-    <h3 class="text-base leading-6 text-gray-900">Bekijk hier een overzicht van deze week t.o.v. vorige week</h3>
+    <h3 class="text-base leading-6 text-gray-900 dark:text-slate-400">Bekijk hier een overzicht van deze week t.o.v. vorige week</h3>
 
     <div class="mt-6">
 
@@ -16,14 +16,14 @@
         <!--      <div class="col-span-1 md:col-span-2 bg-gray-100 rounded-md h-64 relative overflow-hidden"><div class="load-activity"></div></div>-->
         <!--      <div class="col-span-1 md:col-span-2 bg-gray-100 rounded-md h-64 relative overflow-hidden"><div class="load-activity"></div></div>-->
       </div>
-      <dl v-else class="mt-5 grid grid-cols-1 divide-y divide-gray-200 overflow-hidden rounded-lg bg-white shadow md:grid-cols-3 md:divide-x md:divide-y-0">
-        <div class="px-4 py-5 sm:p-6">
-          <dt class="text-base font-normal text-gray-900">Omzet</dt>
+      <dl v-else class="mt-5 grid grid-cols-1 divide-y divide-gray-200 dark:divide-slate-950 overflow-hidden rounded-lg bg-white shadow md:grid-cols-3 md:divide-x md:divide-y-0 dark:bg-slate-900">
+        <div class="px-4 py-5 sm:p-6 dark:bg-slate-800">
+          <dt class="text-base font-normal text-gray-900 dark:text-white">Omzet</dt>
           <dd class="mt-1 flex items-baseline justify-between md:block lg:flex">
-            <div class="flex items-baseline text-2xl font-semibold text-indigo-600">
+            <div class="flex items-baseline text-2xl font-semibold text-indigo-600 dark:text-white">
               {{ $filters.currency(statistics.revenue.now) }}
               <span
-                  class="ml-2 text-sm font-medium text-gray-500">was {{ $filters.currency(statistics.revenue.previous_week) }}</span>
+                  class="ml-2 text-sm font-medium text-gray-500 dark:text-slate-400">was {{ $filters.currency(statistics.revenue.previous_week) }}</span>
             </div>
 
             <div
@@ -56,13 +56,13 @@
             </div>
           </dd>
         </div>
-        <div class="px-4 py-5 sm:p-6">
-          <dt class="text-base font-normal text-gray-900">Aantal reserveringen</dt>
+        <div class="px-4 py-5 sm:p-6 dark:bg-slate-800">
+          <dt class="text-base font-normal text-gray-900 dark:text-white">Aantal reserveringen</dt>
           <dd class="mt-1 flex items-baseline justify-between md:block lg:flex">
-            <div class="flex items-baseline text-2xl font-semibold text-indigo-600">
+            <div class="flex items-baseline text-2xl font-semibold text-indigo-600 dark:text-white">
               {{ statistics.reservations.now }}
               <span
-                  class="ml-2 text-sm font-medium text-gray-500">was {{ statistics.reservations.previous_week }}</span>
+                  class="ml-2 text-sm font-medium text-gray-500 dark:text-slate-400">was {{ statistics.reservations.previous_week }}</span>
             </div>
 
             <div
@@ -95,13 +95,13 @@
             </div>
           </dd>
         </div>
-        <div class="px-4 py-5 sm:p-6">
-          <dt class="text-base font-normal text-gray-900">Gemiddelde besteding</dt>
+        <div class="px-4 py-5 sm:p-6 dark:bg-slate-800">
+          <dt class="text-base font-normal text-gray-900 dark:text-white">Gemiddelde besteding</dt>
           <dd class="mt-1 flex items-baseline justify-between md:block lg:flex">
-            <div class="flex items-baseline text-2xl font-semibold text-indigo-600">
+            <div class="flex items-baseline text-2xl font-semibold text-indigo-600 dark:text-white">
               {{ $filters.currency(statistics.average_spending.now) }}
               <span
-                  class="ml-2 text-sm font-medium text-gray-500">was {{ $filters.currency(statistics.average_spending.previous_week) }}</span>
+                  class="ml-2 text-sm font-medium text-gray-500 dark:text-slate-400">was {{ $filters.currency(statistics.average_spending.previous_week) }}</span>
             </div>
 
             <div
@@ -138,24 +138,24 @@
 
       <div>
         <div class="mb-4">
-          <h1 class="font-semibold mt-12">TRI Berichten</h1>
-          <span class="text-sm text-gray-600">TRI, ook wel Timerent Informatie zijn (belangrijke) berichten vanuit het Timerent team voor jou.</span>
+          <h1 class="font-semibold mt-12 dark:text-white">TRI Berichten</h1>
+          <span class="text-sm text-gray-600 dark:text-slate-400">TRI, ook wel Timerent Informatie zijn (belangrijke) berichten vanuit het Timerent team voor jou.</span>
         </div>
-        <div class="col-span-1 md:col-span-2 overflow-hidden rounded-lg bg-white shadow">
+        <div class="col-span-1 md:col-span-2 overflow-hidden rounded-lg bg-white shadow dark:bg-slate-800">
           <div class="divide-y divide-gray-200">
             <div class="flow-root">
               <div class="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
                 <div class="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
-                  <table class="min-w-full divide-y divide-gray-300">
+                  <table class="min-w-full divide-y divide-gray-300 dark:divide-slate-950">
                     <thead>
                     <tr>
-                      <th scope="col" class="whitespace-nowrap px-2 py-3.5 text-left text-sm font-semibold text-gray-900">ID</th>
-                      <th scope="col" class="whitespace-nowrap px-2 py-3.5 text-left text-sm font-semibold text-gray-900">Titel</th>
-                      <th scope="col" class="whitespace-nowrap px-2 py-3.5 text-left text-sm font-semibold text-gray-900">Datum</th>
-                      <th scope="col" class="whitespace-nowrap px-2 py-3.5 text-left text-sm font-semibold text-gray-900">Type</th>
+                      <th scope="col" class="whitespace-nowrap px-2 py-3.5 text-left text-sm font-semibold text-gray-900 dark:text-white">ID</th>
+                      <th scope="col" class="whitespace-nowrap px-2 py-3.5 text-left text-sm font-semibold text-gray-900 dark:text-white">Titel</th>
+                      <th scope="col" class="whitespace-nowrap px-2 py-3.5 text-left text-sm font-semibold text-gray-900 dark:text-white">Datum</th>
+                      <th scope="col" class="whitespace-nowrap px-2 py-3.5 text-left text-sm font-semibold text-gray-900 dark:text-white">Type</th>
                     </tr>
                     </thead>
-                    <tbody class="divide-y divide-gray-200 bg-white">
+                    <tbody class="divide-y divide-gray-200 bg-white dark:bg-slate-800">
                     <tr v-if="tri.length > 0" @click="currentTRI = t;" v-for="t in tri" :key="t.id" class="even:bg-gray-50 hover:bg-gray-100 hover:cursor-pointer">
                       <td class="whitespace-nowrap px-2 py-2 text-sm text-gray-900 font-semibold">#{{ t.id.split('-')[0].toUpperCase() }}</td>
                       <td class="whitespace-nowrap px-2 py-2 text-sm font-medium text-gray-900">{{ t.title }}</td>
@@ -203,26 +203,26 @@
 
       <div>
         <h1 class="font-semibold mt-12 mb-4">Reserveringen van vandaag</h1>
-        <div class="col-span-1 md:col-span-2 overflow-hidden rounded-lg bg-white shadow">
-          <div class="divide-y divide-gray-200">
+        <div class="col-span-1 md:col-span-2 overflow-hidden rounded-lg bg-white shadow dark:bg-slate-800">
+          <div class="divide-y divide-gray-200 dark:divide-slate-950">
             <div class="flow-root">
               <div class="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
                 <div class="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
-                  <table class="min-w-full divide-y divide-gray-300">
+                  <table class="min-w-full divide-y divide-gray-300 dark:divide-slate-950">
                     <thead>
                     <tr>
-                      <th scope="col" class="whitespace-nowrap px-2 py-3.5 text-left text-sm font-semibold text-gray-900">Reservering</th>
-                      <th scope="col" class="whitespace-nowrap px-2 py-3.5 text-left text-sm font-semibold text-gray-900">Naam</th>
-                      <th scope="col" class="whitespace-nowrap px-2 py-3.5 text-left text-sm font-semibold text-gray-900">Email</th>
-                      <th scope="col" class="whitespace-nowrap px-2 py-3.5 text-left text-sm font-semibold text-gray-900">Unit &mdash; Tijd</th>
+                      <th scope="col" class="whitespace-nowrap px-2 py-3.5 text-left text-sm font-semibold text-gray-900 dark:text-white">Reservering</th>
+                      <th scope="col" class="whitespace-nowrap px-2 py-3.5 text-left text-sm font-semibold text-gray-900 dark:text-white">Naam</th>
+                      <th scope="col" class="whitespace-nowrap px-2 py-3.5 text-left text-sm font-semibold text-gray-900 dark:text-white">Email</th>
+                      <th scope="col" class="whitespace-nowrap px-2 py-3.5 text-left text-sm font-semibold text-gray-900 dark:text-white">Unit &mdash; Tijd</th>
                     </tr>
                     </thead>
-                    <tbody class="divide-y divide-gray-200 bg-white">
+                    <tbody class="divide-y divide-gray-200 bg-white dark:bg-slate-800">
                     <tr v-if="reservations.length > 0" v-for="reservation in reservations" :key="reservation.id" @click="this.$router.push({name: 'venues.reservations.edit', params: {venue: this.venue_id, reservation: reservation.id}})" class="even:bg-gray-50 hover:bg-gray-100 hover:cursor-pointer">
-                      <td class="whitespace-nowrap px-2 py-2 text-sm text-gray-900 font-semibold">#{{ reservation.number }}</td>
-                      <td class="whitespace-nowrap px-2 py-2 text-sm font-medium text-gray-900">{{ reservation.name }}</td>
-                      <td class="whitespace-nowrap px-2 py-2 text-sm font-medium text-gray-900">{{ reservation.email }}</td>
-                      <td class="whitespace-nowrap px-2 py-2 text-sm font-medium text-gray-900" v-for="block in group(reservation)">{{ block[0]['unit_name'] }} &mdash; {{ $filters.humanTime(block[0].from) }} - {{ $filters.humanTime(block[block.length - 1].to) }}</td>
+                      <td class="whitespace-nowrap px-2 py-2 text-sm text-gray-900 font-semibold dark:text-white">#{{ reservation.number }}</td>
+                      <td class="whitespace-nowrap px-2 py-2 text-sm font-medium text-gray-900 dark:text-white">{{ reservation.name }}</td>
+                      <td class="whitespace-nowrap px-2 py-2 text-sm font-medium text-gray-900 dark:text-white">{{ reservation.email }}</td>
+                      <td class="whitespace-nowrap px-2 py-2 text-sm font-medium text-gray-900 dark:text-white" v-for="block in group(reservation)">{{ block[0]['unit_name'] }} &mdash; {{ $filters.humanTime(block[0].from) }} - {{ $filters.humanTime(block[block.length - 1].to) }}</td>
                     </tr>
                     <tr v-else>
                       <td class="text-center py-24" colspan="12">

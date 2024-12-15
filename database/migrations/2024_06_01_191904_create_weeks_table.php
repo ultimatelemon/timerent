@@ -20,7 +20,14 @@ return new class extends Migration
             $table->foreignUuid('unit_id')->constrained()->cascadeOnDelete();
             $table->unique(['venue_id', 'year', 'week', 'unit_id']);
 
+            $table->string('template_name');
             $table->foreignUuid('template_id')->constrained()->cascadeOnDelete();
+            $table->json('template');
+
+            $table->integer('price');
+            $table->integer('interval');
+
+            $table->boolean('changed_from_origin')->default(false);
 
             $table->softDeletes();
             $table->timestamps();

@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Casts\JsonCast;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -11,18 +12,27 @@ class Week extends Model
 {
     use HasFactory, HasUuids, SoftDeletes;
 
+    protected $casts = [
+        'template' => JsonCast::class
+    ];
+
     protected $fillable = [
         'year',
         'week',
         'template_id',
         'venue_id',
-        'unit_id'
+        'unit_id',
+        'template',
+        'template_name',
+        'changed_from_origin',
+        'price',
+        'interval'
     ];
 
-    public function template()
-    {
-        return $this->belongsTo(Template::class);
-    }
+//    public function template()
+//    {
+//        return $this->belongsTo(Template::class);
+//    }
 
     public function unit()
     {

@@ -3,7 +3,7 @@
     <div class="mb-12 flex justify-between">
       <div>
         <div class="font-semibold text-lg">Medewerkers</div>
-        <div class="text-sm">Beheer hier de medewerkers voor je onderneming</div>
+        <div class="text-sm dark:text-slate-400">Beheer hier de medewerkers voor je onderneming</div>
       </div>
       <div>
         <button class="btn btn-primary" @click="newEmployeeModal = true;">Medewerker toevoegen</button>
@@ -45,7 +45,7 @@
         <div class="border-b font-semibold pb-2">Een medewerker toevoegen</div>
         <div class="mb-6">
           <label for="email">Email</label>
-          <input v-model="formData.email" type="text" id="email" name="email" placeholder="info@timerent.nl" v-on:keyup.enter="addEmployee" />
+          <input class="input" v-model="formData.email" type="text" id="email" name="email" placeholder="info@timerent.nl" v-on:keyup.enter="addEmployee" />
           <p v-if="errors?.errors?.email" class="text-red-500 pt-3">Dit email adres is nog niet geregistreerd op timerentapp.nl</p>
           <p v-if="errors?.errors?.exists" class="text-red-500 pt-3">{{ errors.errors.exists }}</p>
         </div>

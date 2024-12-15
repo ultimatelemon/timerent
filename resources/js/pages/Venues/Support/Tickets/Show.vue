@@ -3,13 +3,13 @@
     <div class="mb-12">
       <div>
         <div class="font-semibold text-lg">Ticket details #{{ticket.human_id}}</div>
-        <div class="text-sm">Bekijk hier de ticket of voeg een nieuw bericht toe aan je ticket.</div>
+        <div class="text-sm dark:text-slate-400">Bekijk hier de ticket of voeg een nieuw bericht toe aan je ticket.</div>
       </div>
     </div>
 
     <div class="lg:col-start-3 lg:row-end-1">
       <h2 class="sr-only">Summary</h2>
-      <div class="rounded-lg bg-gray-50 shadow-sm ring-1 ring-gray-900/5">
+      <div class="rounded-lg bg-gray-50 shadow-sm ring-1 ring-gray-900/5 dark:bg-slate-800">
         <dl class="flex flex-wrap">
           <div class="flex-auto pl-6 pt-6">
             <dt class="text-sm font-semibold leading-6 text-gray-900">Titel</dt>
@@ -59,14 +59,17 @@
         <div class="mt-6 border-t border-gray-900/5 px-6 py-6">
 <!--          <a href="#" class="text-sm font-semibold leading-6 text-gray-900">Download receipt <span aria-hidden="true">&rarr;</span></a>-->
           <button v-if="!ticket.closed_at" @click="closeTicket()" class="btn btn-danger">Ticket sluiten</button>
+          <div v-else class="text-sm text-red-500">
+            Dit ticket is gesloten, je kunt hier niet meer op reageren.
+          </div>
         </div>
       </div>
     </div>
-    <div class="mt-12">
+    <div v-if="!ticket.closed_at" class="mt-12">
       <div>
         <label for="comment" class="block text-sm font-medium leading-6 text-gray-900">Bericht toevoegen aan ticket</label>
         <div class="mt-2 space-y-4 flex flex-col">
-          <textarea v-model="message" rows="4" autofocus name="comment" id="comment" placeholder="Voeg hier een bericht toe aan je ticket" class="block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" :class="errors.message ? 'ring-red-500' : ''" />
+          <textarea v-model="message" rows="4" autofocus name="comment" id="comment" placeholder="Voeg hier een bericht toe aan je ticket" class="block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 input" :class="errors.message ? 'ring-red-500' : ''" />
           <span v-if="errors.message" class="text-red-500 text-sm">{{ errors.message[0] }}</span>
           <button @click="postData" :class="loading ? 'btn-secondary' : 'btn-primary'" class="btn place-self-end"><i v-if="loading" class="fa fa-spinner text-sm mr-2 animate-spin"></i>Plaatsen</button>
         </div>

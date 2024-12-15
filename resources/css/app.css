@@ -8,10 +8,16 @@
 
 .bx { @apply h-6 w-6 shrink-0 text-gray-400 group-hover:text-indigo-600 text-2xl inline-flex justify-center }
 
+dt { @apply dark:text-white }
+dd { @apply dark:text-slate-400 }
+th { @apply dark:text-white }
+td { @apply dark:bg-slate-800 dark:text-white }
+tbody { @apply dark:divide-slate-950 }
 button, .btn, input, textarea, select { @apply outline-none focus:outline-none }
+label { @apply dark:text-white }
 input { font-size: 16px !important; }
 input * { font-size: 16px !important; }
-.input { @apply min-h-9 block w-full rounded-md border-0 px-3 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 }
+.input { @apply dark:bg-slate-800 dark:ring-slate-950 min-h-9 block w-full rounded-md border-0 px-3 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 dark:text-white }
 input:not([type="checkbox"]) { @apply block w-full rounded-md border-0 px-3 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6  }
 .input-icon { @apply border-gray-300 transition duration-150 ease-in-out sm:text-sm sm:leading-5 rounded-md shadow-sm h-10 w-10 flex items-center justify-center hover:shadow cursor-pointer border }
 
@@ -22,7 +28,7 @@ input:not([type="checkbox"]) { @apply block w-full rounded-md border-0 px-3 py-1
 .btn-lg { @apply px-6 py-3.5 text-sm; }
 .btn-primary { @apply bg-indigo-500 text-white hover:bg-indigo-800 }
 .btn-primary-disabled { @apply bg-indigo-900 text-white }
-.btn-secondary { @apply bg-gray-200 hover:opacity-90; }
+.btn-secondary { @apply bg-gray-200 hover:opacity-90 dark:bg-slate-700; }
 .btn-danger { @apply bg-red-500 text-white hover:bg-red-800 }
 .btn-warning { @apply bg-orange-500 text-white hover:bg-orange-800 }
 .btn-success { @apply bg-green-500 text-white hover:bg-green-800 }
@@ -51,6 +57,26 @@ input:not([type="checkbox"]) { @apply block w-full rounded-md border-0 px-3 py-1
 
 .required-star { @apply text-xl text-red-500 }
 .codeblock { @apply bg-gray-500 rounded text-white px-1 }
+.tooltip-wrapper {
+    position: relative;
+    display: inline-block;
+    /*border-bottom: 1px dotted black;*/
+}
+.tooltip-wrapper .tooltip-text {
+    visibility: hidden;
+    min-width: 120px;
+    background-color: black;
+    color: #fff;
+    text-align: center;
+    border-radius: 6px;
+    padding: 5px 0;
+    position: absolute;
+    left: -10rem;
+    z-index: 1;
+}
+.tooltip-wrapper:hover .tooltip-text {
+    visibility: visible;
+}
 
 div.flatpickr-calendar {
     box-shadow: none !important;
@@ -61,6 +87,17 @@ div.flatpickr-calendar {
     background: #4a2c98 !important;
     border-color: #4a2c98 !important;
 }
+
+input.numInput { @apply dark:bg-slate-800 dark:text-white dark:hover:bg-slate-800 }
+span.flatpickr-time-separator { @apply dark:bg-slate-800 dark:text-white }
+div.flatpickr-months { @apply dark:bg-slate-800 dark:text-white }
+.flatpickr-current-month { @apply dark:text-white }
+span.flatpickr-next-month { @apply dark:text-white }
+.flatpickr-weekdays { @apply dark:text-white dark:bg-slate-800 }
+.flatpickr-weekday { @apply dark:text-white }
+.dayContainer { @apply dark:bg-slate-800 }
+.flatpickr-day { @apply dark:text-white dark:hover:bg-slate-800 }
+.flatpickr-day.prevMonthDay { @apply dark:text-slate-400 }
 
 .cur-year {
     display: none !important;

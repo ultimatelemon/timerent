@@ -44,7 +44,15 @@ export const routes = [
         ]
     },
 
-    { path: '/store/:venue/calendar', component: () => import('./pages/Venues/Calendar/Index.vue'), name: 'venues.calendar.index' },
+    {
+        path: '/store/:venue/calendar',
+        component: Wrapper,
+        children: [
+            { path: '', component: () => import('./pages/Venues/Calendar/Index.vue'), name: 'venues.calendar.index' },
+            { path: 'weeks/:week', component: () => import('./pages/Venues/Calendar/Weeks/Edit.vue'), name: 'venues.calendar.weeks.edit' },
+            { path: ':product', component: () => import('./pages/Venues/Products/Edit.vue'), name: 'venues.products.edit' },
+        ]
+    },
 
     {
         path: '/store/:venue/products',

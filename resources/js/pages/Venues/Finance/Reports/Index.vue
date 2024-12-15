@@ -3,7 +3,7 @@
     <div class="mb-12 flex justify-between">
       <div>
         <div class="font-semibold text-lg">Rapportage</div>
-        <div class="text-sm">Krijg hier inzicht in de financien van je onderneming</div>
+        <div class="text-sm dark:text-slate-400">Krijg hier inzicht in de financien van je onderneming</div>
       </div>
       <div>
 
@@ -37,46 +37,46 @@
     </div>
 
     <div class="mb-8 grid grid-cols-1 lg:grid-cols-4 gap-8">
-      <div class="shadow rounded-lg overflow-x-auto bg-gray-50 p-4">
-        <h2 class="text-sm text-gray-600">Omzet (incl. btw)</h2>
+      <div class="shadow rounded-lg overflow-x-auto bg-gray-50 p-4 dark:bg-slate-800">
+        <h2 class="text-sm text-gray-600 dark:text-white">Omzet (incl. btw)</h2>
         <p class="font-semibold text-3xl">{{ $filters.currency(statistics.revenue_incl) }}</p>
       </div>
-      <div class="shadow rounded-lg overflow-x-auto bg-gray-50 p-4">
-        <h2 class="text-sm text-gray-600">Omzet (excl. btw)</h2>
+      <div class="shadow rounded-lg overflow-x-auto bg-gray-50 p-4 dark:bg-slate-800">
+        <h2 class="text-sm text-gray-600 dark:text-white">Omzet (excl. btw)</h2>
         <p class="font-semibold text-3xl">{{ $filters.currency(statistics.revenue_excl) }}</p>
       </div>
-      <div class="shadow rounded-lg overflow-x-auto bg-gray-50 p-4">
-        <h2 class="text-sm text-gray-600">BTW laag (9%)</h2>
+      <div class="shadow rounded-lg overflow-x-auto bg-gray-50 p-4 dark:bg-slate-800">
+        <h2 class="text-sm text-gray-600 dark:text-white">BTW laag (9%)</h2>
         <p class="font-semibold text-3xl">{{ $filters.currency(statistics.tax_low) }}</p>
       </div>
-      <div class="shadow rounded-lg overflow-x-auto bg-gray-50 p-4">
-        <h2 class="text-sm text-gray-600">BTW hoog (21%)</h2>
+      <div class="shadow rounded-lg overflow-x-auto bg-gray-50 p-4 dark:bg-slate-800">
+        <h2 class="text-sm text-gray-600 dark:text-white">BTW hoog (21%)</h2>
         <p class="font-semibold text-3xl">{{ $filters.currency(statistics.tax_high) }}</p>
       </div>
     </div>
 
-    <div class="mb-12 grid grid-cols-1 lg:grid-cols-4 gap-8">
-      <div class="shadow rounded-lg overflow-x-auto bg-gray-50 p-4">
-        <h2 class="text-sm text-gray-600">Klantenaantal</h2>
+    <div class="mb-12 grid grid-cols-1 lg:grid-cols-4 gap-8 ">
+      <div class="shadow rounded-lg overflow-x-auto bg-gray-50 p-4 dark:bg-slate-800">
+        <h2 class="text-sm text-gray-600 dark:text-white">Klantenaantal</h2>
         <p class="font-semibold text-3xl">{{ statistics.customer_count }}</p>
       </div>
-      <div class="shadow rounded-lg overflow-x-auto bg-gray-50 p-4">
-        <h2 class="text-sm text-gray-600">Totaal reserveringen</h2>
+      <div class="shadow rounded-lg overflow-x-auto bg-gray-50 p-4 dark:bg-slate-800">
+        <h2 class="text-sm text-gray-600 dark:text-white">Totaal reserveringen</h2>
         <p class="font-semibold text-3xl">{{ statistics.reservations_count }}</p>
       </div>
-      <div class="shadow rounded-lg overflow-x-auto bg-gray-50 p-4">
-        <h2 class="text-sm text-gray-600">Gemiddelde klantbesteding (incl. btw)</h2>
+      <div class="shadow rounded-lg overflow-x-auto bg-gray-50 p-4 dark:bg-slate-800">
+        <h2 class="text-sm text-gray-600 dark:text-white">Gemiddelde klantbesteding (incl. btw)</h2>
         <p class="font-semibold text-3xl">{{ $filters.currency(statistics.revenue_incl / statistics.customer_count || 0) }}</p>
       </div>
-      <div class="shadow rounded-lg overflow-x-auto bg-gray-50 p-4">
-        <h2 class="text-sm text-gray-600">Gemiddelde besteding (incl. btw)</h2>
+      <div class="shadow rounded-lg overflow-x-auto bg-gray-50 p-4 dark:bg-slate-800">
+        <h2 class="text-sm text-gray-600 dark:text-white">Gemiddelde besteding (incl. btw)</h2>
         <p class="font-semibold text-3xl">{{ $filters.currency((statistics.revenue_incl / statistics.reservations_count || 0)) }}</p>
       </div>
     </div>
 
     <div>
       <div class="font-semibold text-lg">Maandrapportages</div>
-      <div class="text-sm">Elke maand staat er een maandrapportage voor je klaar voor de boekhouding.</div>
+      <div class="text-sm dark:text-slate-400">Elke maand staat er een maandrapportage voor je klaar voor de boekhouding.</div>
     </div>
 
     <div class="mt-8 flow-root">
@@ -104,7 +104,7 @@
               </td>
             </tr>
             <tr v-else class="text-center">
-              <td colspan="12" class="pt-12">Er zijn voor jou nog geen maandrapportages beschikbaar</td>
+              <td colspan="12" class="py-12">Er zijn voor jou nog geen maandrapportages beschikbaar</td>
             </tr>
             </tbody>
           </table>

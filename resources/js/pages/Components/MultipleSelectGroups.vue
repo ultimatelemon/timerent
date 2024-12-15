@@ -1,9 +1,9 @@
 <template>
   <div class="w-72">
     <Listbox v-model="selectedGroups" multiple>
-      <div class="relative mt-1">
+      <div class="relative mt-1 ">
         <ListboxButton
-            class="relative h-8 w-full cursor-pointer rounded-lg bg-white pl-3 pr-10 text-left shadow-md focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm"
+            class="relative dark:bg-slate-800 h-8 w-full cursor-pointer rounded-lg bg-white pl-3 pr-10 text-left shadow-md focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm"
         >
           <span class="block truncate">{{ selectedGroups.map(g => g.name).join(', ') }}</span>
           <span
@@ -22,7 +22,7 @@
             leave-to-class="opacity-0"
         >
           <ListboxOptions
-              class="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm"
+              class="absolute dark:bg-slate-800 z-10 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm"
           >
             <ListboxOption
                 v-slot="{ active, selected }"
@@ -34,7 +34,7 @@
               <li
                   :class="[
                   active ? 'bg-indigo-700 text-white' : 'text-gray-900',
-                  'group relative cursor-pointer select-none py-2 pl-10 pr-4',
+                  'group relative cursor-pointer select-none py-2 pl-10 pr-4 dark:text-white',
                 ]"
               >
                 <span
@@ -47,7 +47,7 @@
                     v-if="selected"
                     class="absolute inset-y-0 left-0 flex items-center pl-3 text-indigo-700 group-hover:text-white"
                 >
-                  <CheckIcon class="h-5 w-5" aria-hidden="true" />
+                  <CheckIcon class="h-5 w-5 dark:text-white dark:hover:text-white" aria-hidden="true" />
                 </span>
               </li>
             </ListboxOption>

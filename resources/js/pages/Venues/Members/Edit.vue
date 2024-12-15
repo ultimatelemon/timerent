@@ -2,7 +2,7 @@
   <div v-if="member">
     <div class="mb-12">
       <div class="font-semibold text-lg">Member: #{{ member.id.split('-')[0].toUpperCase() }}</div>
-      <div class="text-sm">Beheer de huidige gebruiker</div>
+      <div class="text-sm dark:text-slate-400">Beheer de huidige gebruiker</div>
     </div>
 
     <div class="flex gap-6 text-sm border-b border-gray-200 pb-8">
@@ -18,12 +18,12 @@
       <dl class="grid grid-cols-1 sm:grid-cols-2">
         <div class=" px-4 py-6 sm:col-span-1 sm:px-0 mr-0 sm:mr-12">
           <dt class="text-sm font-semibold leading-6 text-gray-900 pb-2">Naam <span class="required-star">*</span></dt>
-          <input v-on:keyup.enter="postData" class="text-sm" v-model="formData.name">
+          <input v-on:keyup.enter="postData" class="text-sm input" v-model="formData.name">
           <span v-if="errors.name" class="text-sm text-red-500">{{ errors.name[0] }}</span>
         </div>
         <div class="border-t border-gray-100 md:border-none px-4 py-6 sm:col-span-1 sm:px-0 mr-0 sm:mr-12">
           <dt class="text-sm font-semibold leading-6 text-gray-900 pb-2">Email <span class="required-star">*</span></dt>
-          <input v-on:keyup.enter="postData" class="text-sm" v-model="formData.email">
+          <input v-on:keyup.enter="postData" class="text-sm input" v-model="formData.email">
           <span v-if="errors.email" class="text-sm text-red-500">{{ errors.email[0] }}</span>
         </div>
         <div class="border-t border-gray-100 md:border-none px-4 py-6 sm:col-span-1 sm:px-0 mr-0 sm:mr-12">
@@ -40,7 +40,7 @@
         </div>
         <div class="border-t border-gray-100 px-4 py-6 sm:col-span-1 sm:px-0 mr-0 sm:mr-12">
           <dt class="text-sm font-semibold leading-6 text-gray-900 pb-2">Loyality Points <span class="font-normal text-xs">* Not implemented yet</span></dt>
-          <input v-on:keyup.enter="postData" type="number" class="text-sm" v-model="formData.loyality_points">
+          <input v-on:keyup.enter="postData" type="number" class="text-sm input" v-model="formData.loyality_points">
           <span v-if="errors.loyality_points" class="text-sm text-red-500">{{ errors.loyality_points[0] }}</span>
         </div>
         <div class="border-t border-gray-100 px-4 py-6 sm:col-span-1 sm:px-0 mr-0 sm:mr-12">

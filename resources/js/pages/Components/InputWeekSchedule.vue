@@ -1,7 +1,11 @@
 <template>
   <div class="space-y-6">
     <div class="xl:flex justify-between border-b border-gray-900/10 pb-8" v-for="(template, i) in modelValue">
-      <div class="w-full pb-5 xl:pb-0">{{ dayOfWeek(i) }}</div>
+      <div class="w-full pb-5 xl:pb-0">{{ dayOfWeek(i) }} <span class="text-gray-500 text-sm" v-if="year && weekNumber">({{ getDateFromWeek(year, weekNumber, i) }})</span>
+        <span v-if="weekNumber === 52 && year === 2024 && i === 2" class="ml-2 text-green-600 text-sm">Eerste kerstdag</span>
+        <span v-if="weekNumber === 52 && year === 2024 && i === 3" class="ml-2 text-green-600 text-sm">Tweede kerstdag</span>
+<!--        <span class="ml-2">{{ $filters.festiveDay(year, weekNumber, i) }}</span>-->
+      </div>
       <div class="w-full space-y-6">
         <div v-for="(range, j) in template.ranges" class="space-y-6">
           <div>
@@ -9,13 +13,13 @@
               <flat-pickr
                   :config="config"
                   v-model="range.from"
-                  class="block w-full rounded-md p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                  class="input block w-full rounded-md p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
               />
               <span class="text-center pt-2">-</span>
               <flat-pickr
                   :config="config"
                   v-model="range.to"
-                  class="block w-full rounded-md p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                  class="input block w-full rounded-md p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
               />
               <button v-if="j === 0" :class='j !== 0 ? "hidden" : "hidden"' @click="addRangeToDay(template.ranges)" class="btn">
                 <component :is="PlusIcon" class="icon-btn"></component>
@@ -39,10 +43,16 @@
 import flatPickr from 'vue-flatpickr-component';
 import 'flatpickr/dist/flatpickr.css';
 import {LockClosedIcon, PlusIcon, XMarkIcon} from "@heroicons/vue/16/solid/index.js";
+import {DateTime} from "luxon";
 
 export default {
   name: "InputWeekSchedule",
-  props: ['modelValue'],
+  computed: {
+    DateTime() {
+      return DateTime
+    }
+  },
+  props: ['modelValue', 'year', 'weekNumber'],
   data() {
     return {
       config: {
@@ -76,7 +86,14 @@ export default {
 
     saveData() {
       console.log("DATA", this.modelValue)
-    }
+    },
+
+    getDateFromWeek(weekYear, weekNumber, weekday) {
+      const startOfWeek = DateTime.fromObject({weekYear, weekNumber, weekday: 1});
+      const targetDate = startOfWeek.plus({days: weekday})
+
+      return targetDate.toFormat('dd-MM-yyyy');
+    },
   },
   watch: {
     modelValue: {

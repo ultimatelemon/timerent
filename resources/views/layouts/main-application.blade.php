@@ -36,8 +36,22 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
 {{--    <link rel="stylesheet"--}}
 {{--          href="https://cdn.jsdelivr.net/npm/boxicons@latest/css/boxicons.min.css">--}}
+
+    <script>
+        window.addEventListener('DOMContentLoaded', () => {
+            // Check if the theme is stored in localStorage
+            const theme = localStorage.getItem('theme');
+
+            // Apply the theme if it's found
+            if (theme === 'dark') {
+                document.documentElement.classList.add('dark'); // Enable dark mode
+            } else {
+                document.documentElement.classList.remove('dark'); // Default to light mode
+            }
+        });
+    </script>
 </head>
-<body class="h-full">
+<body class="min-h-full dark:bg-slate-900 dark:text-white">
 <div id="app" class="h-full">
     <side-bar></side-bar>
 </div>

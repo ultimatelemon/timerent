@@ -88,4 +88,9 @@ class Venue extends Model
     {
         return $this->hasMany(Ticket::class);
     }
+
+    public function month_reports(): HasMany
+    {
+        return $this->hasMany(MonthReport::class);
+    }
 }

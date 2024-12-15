@@ -7,7 +7,7 @@
     <body class="h-full">
     ```
   -->
-  <div v-if="user && current_venue">
+  <div v-if="user && current_venue" class="">
     <TransitionRoot as="template" :show="sidebarOpen">
       <Dialog class="relative z-50 lg:hidden" @close="sidebarOpen = false">
         <TransitionChild as="template" enter="transition-opacity ease-linear duration-300" enter-from="opacity-0"
@@ -32,7 +32,7 @@
                 </div>
               </TransitionChild>
               <!-- Sidebar component, swap this element with another sidebar if you like -->
-              <div class="flex grow flex-col gap-y-5 overflow-y-auto bg-white px-6 pb-2">
+              <div class="flex grow flex-col gap-y-5 overflow-y-auto bg-white px-6 pb-2 dark:bg-slate-900">
                 <div class="flex h-16 shrink-0 items-center">
                   <img class="h-8 w-auto" src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600"
                        alt="Your Company"/>
@@ -45,15 +45,15 @@
                         <li v-for="item in navigation" :key="item.name">
                           <div>
                             <router-link :to="item.link" v-if="!item.children && (item.permission.length > 0 ? (user.owner ? true : hasCommon(item.permission, role.flags)) : true)"
-                                         active-class="bg-gray-100"
-                                         class="hover:bg-gray-100 block rounded-md py-2 pl-10 pr-2 text-sm font-semibold leading-6 text-gray-700">
+                                         active-class="bg-gray-100 dark:bg-slate-800"
+                                         class="hover:bg-gray-100 block rounded-md py-2 pl-10 pr-2 text-sm font-semibold leading-6 text-gray-700 dark:bg-slate-800 dark:text-white dark:hover:bg-slate-800">
                               {{
                                 item.name
                               }}
                             </router-link>
                             <Disclosure as="div" v-if="item.children && (item.permission.length > 0 ? (user.owner ? true : hasCommon(item.permission, role.flags)) : true)" :to="item.link" v-slot="{ open }">
                               <DisclosureButton
-                                  :class="[item.current ? 'bg-gray-50' : 'hover:bg-gray-50', 'flex w-full items-center gap-x-3 rounded-md p-2 text-left text-sm font-semibold leading-6 text-gray-700']">
+                                  :class="[item.current ? 'bg-gray-50' : 'hover:bg-gray-50', 'flex w-full items-center gap-x-3 rounded-md p-2 text-left text-sm font-semibold leading-6 text-gray-700 dark:text-white dark:hover:bg-slate-800']">
                                 <ChevronRightIcon
                                     :class="[open ? 'rotate-90 text-gray-500' : 'text-gray-400', 'h-5 w-5 shrink-0']"
                                     aria-hidden="true"/>
@@ -74,11 +74,11 @@
                       </ul>
                     </li>
                     <li class="mt-auto">
-                      <div class="text-xs font-semibold leading-6 text-gray-400">Externe navigatie</div>
+                      <div class="text-xs font-semibold leading-6 text-gray-400 dark:text-white">Externe navigatie</div>
                       <ul role="list" class="-mx-2 mt-2 space-y-1">
                         <li v-for="item in externalNaviation" :key="item.name">
                           <a :href="item.href"
-                             class="text-gray-700 hover:text-indigo-600 hover:bg-gray-50 group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold" target="_blank">
+                             class="text-gray-700 hover:text-indigo-600 hover:bg-gray-50 group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold dark:hover:bg-slate-800 dark:text-slate-400" target="_blank">
                             <span class="truncate">{{ item.name }}</span>
                           </a>
                         </li>
@@ -89,9 +89,9 @@
                           class="flex items-center border-t gap-x-4 px-6 py-3 text-sm font-semibold leading-6 text-gray-900 hover:bg-gray-50 justify-between">
                         <!--                <img class="h-8 w-8 rounded-full bg-gray-50" src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="" />-->
                         <div class="flex flex-col">
-                          <span class="sr-only">Your profile</span>
-                          <span aria-hidden="true">{{ user.user.name }}</span>
-                          <span aria-hidden="true" class="font-light text-xs">{{ user.user.email }}</span>
+                          <span class="sr-only dark:text-white">Your profile</span>
+                          <span class="dark:text-white" aria-hidden="true">{{ user.user.name }}</span>
+                          <span aria-hidden="true" class="font-light text-xs dark:text-white">{{ user.user.email }}</span>
                         </div>
                         <div>
                           <i>
@@ -112,7 +112,7 @@
     <!-- Static sidebar for desktop -->
     <div class="hidden lg:fixed lg:inset-y-0 lg:z-50 lg:flex lg:w-72 lg:flex-col">
       <!-- Sidebar component, swap this element with another sidebar if you like -->
-      <div class="flex grow flex-col gap-y-5 overflow-y-auto border-r border-gray-200 bg-white px-6">
+      <div class="flex grow flex-col gap-y-5 overflow-y-auto border-r border-gray-200 bg-white px-6 dark:bg-slate-900 dark:text-white dark:border-slate-950">
         <div class="flex h-16 shrink-0 items-center">
           <img class="h-8 w-auto" src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600"
                alt="Your Company"/>
@@ -125,25 +125,25 @@
                 <li v-for="item in navigation" :key="item.name">
                   <div>
                     <router-link :to="item.link" v-if="!item.children && (item.permission.length > 0 ? (user.owner ? true : hasCommon(item.permission, role.flags)) : true)"
-                                 active-class="bg-gray-100"
-                                 class="hover:bg-gray-100 block rounded-md py-2 pl-10 pr-2 text-sm font-semibold leading-6 text-gray-700">
+                                 active-class="bg-gray-100 dark:bg-slate-800"
+                                 class="hover:bg-gray-100 block rounded-md py-2 pl-10 pr-2 text-sm font-semibold leading-6 text-gray-700 dark:text-white dark:hover:bg-slate-800">
                       {{
                         item.name
                       }}
                     </router-link>
                     <Disclosure as="div" v-if="item.children && (item.permission.length > 0 ? (user.owner ? true : hasCommon(item.permission, role.flags)) : true)" :to="item.link" v-slot="{ open }">
                       <DisclosureButton
-                          :class="[item.current ? 'bg-gray-50' : 'hover:bg-gray-50', 'flex w-full items-center gap-x-3 rounded-md p-2 text-left text-sm font-semibold leading-6 text-gray-700']">
+                          :class="[item.current ? 'bg-gray-50' : 'hover:bg-gray-50', 'dark:text-white flex w-full items-center gap-x-3 rounded-md p-2 text-left text-sm font-semibold leading-6 text-gray-700 dark:hover:bg-slate-800']">
                         <ChevronRightIcon
-                            :class="[open ? 'rotate-90 text-gray-500' : 'text-gray-400', 'h-5 w-5 shrink-0']"
+                            :class="[open ? 'rotate-90 text-gray-500' : 'text-gray-400', 'h-5 w-5 shrink-0 dark:text-white']"
                             aria-hidden="true"/>
                         {{ item.name }}
                       </DisclosureButton>
                       <DisclosurePanel as="ul" class="mt-1 px-2">
                         <li v-for="subItem in item.children" :key="subItem.name">
                           <router-link @click="!open" :to="subItem.link"
-                                       active-class="bg-gray-100"
-                                       class="hover:bg-gray-100 block rounded-md py-2 pl-9 pr-2 text-sm leading-6 text-gray-700">
+                                       active-class="bg-gray-100 dark:bg-slate-800"
+                                       class="hover:bg-gray-100 block rounded-md py-2 pl-9 pr-2 text-sm leading-6 text-gray-700 dark:text-white dark:hover:bg-slate-800">
                             {{ subItem.name }}
                           </router-link>
                         </li>
@@ -155,11 +155,11 @@
             </li>
 
             <li class="mt-auto cursor-pointer">
-              <div class="text-xs font-semibold leading-6 text-gray-400">Externe navigatie</div>
+              <div class="text-xs font-semibold leading-6 text-gray-400 dark:text-white">Externe navigatie</div>
               <ul role="list" class="-mx-2 mt-2 space-y-1">
                 <li v-for="item in externalNaviation" :key="item.name">
                   <a :href="item.href"
-                     class="text-gray-700 hover:text-indigo-600 hover:bg-gray-50 group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold" target="_blank">
+                     class="text-gray-700 hover:text-indigo-600 hover:bg-gray-50 group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold dark:text-slate-400 dark:hover:bg-slate-800" target="_blank">
                     <span class="truncate">{{ item.name }}</span>
                   </a>
                 </li>
@@ -167,12 +167,12 @@
             </li>
             <li class="-mx-6 mt-auto cursor-pointer" @click="logout">
               <div
-                  class="flex items-center border-t gap-x-4 px-6 py-3 text-sm font-semibold leading-6 text-gray-900 hover:bg-gray-50 justify-between">
+                  class="flex items-center border-t gap-x-4 px-6 py-3 text-sm font-semibold leading-6 text-gray-900 hover:bg-gray-50 justify-between dark:border-slate-950">
                 <!--                <img class="h-8 w-8 rounded-full bg-gray-50" src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="" />-->
                 <div class="flex flex-col">
-                  <span class="sr-only">Your profile</span>
-                  <span aria-hidden="true">{{ user.user.name }}</span>
-                  <span aria-hidden="true" class="font-light text-xs">{{ user.user.email }}</span>
+                  <span class="sr-only dark:text-white">Your profile</span>
+                  <span class="dark:text-white" aria-hidden="true">{{ user.user.name }}</span>
+                  <span aria-hidden="true" class="font-light text-xs dark:text-white">{{ user.user.email }}</span>
                 </div>
                 <div>
                   <i>
@@ -187,19 +187,19 @@
     </div>
 
 
-    <div class="sticky top-0 z-40 flex items-center gap-x-6 bg-white px-4 py-4 shadow-sm sm:px-6 lg:hidden">
-      <button type="button" class="-m-2.5 p-2.5 text-gray-700 lg:hidden" @click="sidebarOpen = true">
+    <div class="sticky top-0 z-40 flex items-center gap-x-6 bg-white px-4 py-4 shadow-sm sm:px-6 lg:hidden dark:bg-slate-900">
+      <button type="button" class="-m-2.5 p-2.5 text-gray-700 lg:hidden dark:text-white" @click="sidebarOpen = true">
         <span class="sr-only">Open sidebar</span>
         <component :is="Bars3Icon" class="h-6 w-6"></component>
       </button>
-      <div class="flex-1 text-sm font-semibold leading-6 text-gray-900">Dashboard</div>
+      <div class="flex-1 text-sm font-semibold leading-6 text-gray-900 dark:text-white">Dashboard</div>
       <a href="#">
         <span class="sr-only">Your profile</span>
         <!--        <img class="h-8 w-8 rounded-full bg-gray-50" src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="" />-->
       </a>
     </div>
 
-    <main class="py-10 lg:pl-72">
+    <main class="py-10 lg:pl-72 dark:bg-slate-900">
       <div class="px-4 sm:px-6 lg:px-8">
         <router-view></router-view>
       </div>

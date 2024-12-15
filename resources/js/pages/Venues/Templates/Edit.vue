@@ -19,7 +19,7 @@
                  placeholder="Mijn nieuwe template"
                  v-on:keyup.enter="postData"
                  :class="errors.name ? 'ring-red-300' : ''"
-                 class="block w-full rounded-md border-0 py-1.5 pr-10 ring-1 ring-inset focus:ring-2 focus:ring-inset focus:ring-indigo-500 sm:text-sm sm:leading-6"
+                 class="block w-full rounded-md border-0 py-1.5 pr-10 ring-1 ring-inset focus:ring-2 focus:ring-inset focus:ring-indigo-500 sm:text-sm sm:leading-6 input"
                  aria-invalid="true" aria-describedby="name-error"/>
           <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
             <svg v-if="errors.name" class="h-5 w-5 text-red-500" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
@@ -40,7 +40,7 @@
                  placeholder="30"
                  v-on:keyup.enter="postData"
                  :class="errors.interval ? 'ring-red-300' : ''"
-                 class="block w-full rounded-md border-0 py-1.5 pr-10 ring-1 ring-inset focus:ring-2 focus:ring-inset focus:ring-indigo-500 sm:text-sm sm:leading-6"
+                 class="block w-full rounded-md border-0 py-1.5 pr-10 ring-1 ring-inset focus:ring-2 focus:ring-inset focus:ring-indigo-500 sm:text-sm sm:leading-6 input"
                  aria-invalid="true" aria-describedby="interval-error"/>
           <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
             <svg v-if="errors.interval" class="h-5 w-5 text-red-500" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">

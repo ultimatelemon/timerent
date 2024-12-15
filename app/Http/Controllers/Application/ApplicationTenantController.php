@@ -7,6 +7,7 @@ use App\Http\Controllers\ApiController;
 use App\Http\Resources\ProductResource;
 use App\Http\Resources\UnitResource;
 use App\Http\Resources\VenueResource;
+use App\Models\Template;
 use App\Models\Venue;
 use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
@@ -15,13 +16,13 @@ use Illuminate\Support\Facades\Validator;
 
 class ApplicationTenantController extends ApiController
 {
-    public function getVenueBySubdomain($subdomain)
+    public function getVenueBySubdomain($subdomain): JsonResponse
     {
         $venue = Venue::where('subdomain', $subdomain)->firstOrFail();
         return $this->success(new VenueResource($venue));
     }
 
-    public function getUnitAvailabilityByday(Venue $venue, Request $request)
+    public function getUnitAvailabilityByday(Venue $venue, Request $request): JsonResponse
     {
         $validatedRequest = Validator::make($request->all(), [
             'year' => 'required|numeric|digits_between:4,4',
@@ -42,7 +43,11 @@ class ApplicationTenantController extends ApiController
         $availability = [];
 
         foreach ($weeks as $week) {
-            $ranges = $week->template->template[$day]['ranges'];
+            $originTemplate = Template::findOrFail($week->template_id);
+
+            $ranges = $originTemplate->template[$day]['ranges'];
+            if($week->changed_from_origin) $ranges = $week->template[$day]['ranges'];
+
             $availabilityForWeek = [
                 'unit' => [
                     'id' => $week->unit->id,
@@ -55,8 +60,8 @@ class ApplicationTenantController extends ApiController
                         ];
                     })
                 ],
-                'price' => $week->template->price,
-                'interval' => $week->template->interval,
+                'price' => ($week->changed_from_origin ? $week->price : $originTemplate->price),
+                'interval' => ($week->changed_from_origin ? $week->interval : $originTemplate->interval),
                 'week_id' => $week->id,
                 'timeblocks' => [],
             ];
@@ -67,14 +72,14 @@ class ApplicationTenantController extends ApiController
 
                 while ($from < $to) {
                     $availabilityForWeek['timeblocks'][] = [
-                        'available' => ReservationHelper::checkIfTimeblockIsAvailable($week->unit->id, $from->toDateTimeString(), Carbon::parse($from)->addMinutes($week->template->interval - 1)->toDateTimeString()),
+                        'available' => ReservationHelper::checkIfTimeblockIsAvailable($week->unit->id, $from->toDateTimeString(), Carbon::parse($from)->addMinutes(($week->changed_from_origin ? $week->interval : $originTemplate->interval) - 1)->toDateTimeString()),
                         'from' => Carbon::parse($from)->toTimeString('minute'),
-                        'to' => Carbon::parse($from)->addMinutes($week->template->interval - 1)->toTimeString('minute'),
-                        'interval' => $week->template->interval,
-                        'price' => $week->template->price,
+                        'to' => Carbon::parse($from)->addMinutes(($week->changed_from_origin ? $week->interval : $originTemplate->interval) - 1)->toTimeString('minute'),
+                        'interval' => ($week->changed_from_origin ? $week->interval : $originTemplate->interval),
+                        'price' => ($week->changed_from_origin ? $week->price : $originTemplate->price),
                         'unit_id' => $week->unit->id,
                     ];
-                    $from = Carbon::parse($from)->addMinutes($week->template->interval);
+                    $from = Carbon::parse($from)->addMinutes(($week->changed_from_origin ? $week->interval : $originTemplate->interval));
                 }
             }
             $availability[] = $availabilityForWeek;

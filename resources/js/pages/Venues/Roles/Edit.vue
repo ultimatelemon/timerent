@@ -2,7 +2,7 @@
   <div v-if="venue">
     <div class="mb-12">
       <div class="font-semibold text-lg">{{ role ? role.name : 'Nieuwe rol' }}</div>
-      <div class="text-sm">Beheer hier de rol</div>
+      <div class="text-sm dark:text-slate-400">Beheer hier de rol</div>
     </div>
 
     <div class="mb-12 alert alert-danger" v-if="errors.bitfield">
@@ -18,7 +18,7 @@
           <input v-model="formData.name" type="text" name="name" id="name"
                  v-on:keyup.enter="postData"
                  :class="errors.name ? 'ring-red-300' : ''"
-                 class="block w-full rounded-md border-0 py-1.5 pr-10 ring-1 ring-inset focus:ring-2 focus:ring-inset focus:ring-indigo-500 sm:text-sm sm:leading-6"
+                 class="block w-full rounded-md border-0 py-1.5 pr-10 ring-1 ring-inset focus:ring-2 focus:ring-inset focus:ring-indigo-500 sm:text-sm sm:leading-6 input"
                  aria-invalid="true" aria-describedby="name-error"/>
           <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
             <svg v-if="errors.name" class="h-5 w-5 text-red-500" viewBox="0 0 20 20" fill="currentColor"

@@ -3,7 +3,7 @@
     <div class="mb-12 flex justify-between">
       <div>
         <div class="font-semibold text-lg">Member: #{{ member.id.split('-')[0].toUpperCase() }}</div>
-        <div class="text-sm">Beheer de huidige gebruiker</div>
+        <div class="text-sm dark:text-slate-400">Beheer de huidige gebruiker</div>
       </div>
     </div>
     <div class="flex gap-6 text-sm border-b border-gray-100 pb-8">
@@ -16,7 +16,7 @@
     </div>
     <div class="mt-6 mb-12">
       <div class="font-semibold mb-2">Filteren</div>
-      <input v-model="searchQuery" type="text" placeholder="Zoek op ID">
+      <input class="input" v-model="searchQuery" type="text" placeholder="Zoek op ID">
     </div>
     <div class="mt-8 flow-root">
       <div class="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8 ">

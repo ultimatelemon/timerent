@@ -3,12 +3,12 @@
     <div class="mb-12 flex justify-between">
       <div>
         <div class="font-semibold text-lg">Members</div>
-        <div class="text-sm">Beheer hier je klanten die geregistreerd zijn op jouw platform</div>
+        <div class="text-sm dark:text-slate-400">Beheer hier je klanten die geregistreerd zijn op jouw platform</div>
       </div>
     </div>
     <div class="mb-12">
       <div class="font-semibold mb-2">Filteren</div>
-      <input v-model="searchQuery" type="text" placeholder="Zoek op naam of email">
+      <input class="input" v-model="searchQuery" type="text" placeholder="Zoek op naam of email">
     </div>
     <div class="mt-8 flow-root">
       <div class="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">

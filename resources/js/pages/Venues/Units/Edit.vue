@@ -2,7 +2,7 @@
   <div v-if="venue">
     <div class="mb-12">
       <div class="font-semibold text-lg">{{ unit ? unit.name : 'Nieuwe unit' }}</div>
-      <div class="text-sm">Beheer hier de unit</div>
+      <div class="text-sm dark:text-slate-400">Beheer hier de unit</div>
       <p v-if="this.$route.params.unit == null && venue.unit_count >= venue.plan.unit_limit" class="text-red-500 pt-2"><b>Let op:</b> Je hebt op dit moment <b>{{venue.unit_count}}</b> units aangemaakt. Het limiet voor dit abonnement is <b>{{venue.plan.unit_limit}}</b>. Bij het aanmaken van een nieuwe unit worden er kosten in rekening gebracht.</p>
     </div>
 
@@ -14,7 +14,7 @@
           <input v-model="formData.name" type="text" name="name" id="name"
                  v-on:keyup.enter="postData"
                  :class="errors.name ? 'ring-red-300' : ''"
-                 class="block w-full rounded-md border-0 py-1.5 pr-10 ring-1 ring-inset focus:ring-2 focus:ring-inset focus:ring-indigo-500 sm:text-sm sm:leading-6"
+                 class="block w-full rounded-md border-0 py-1.5 pr-10 ring-1 ring-inset focus:ring-2 focus:ring-inset focus:ring-indigo-500 sm:text-sm sm:leading-6 input"
                  aria-invalid="true" aria-describedby="name-error"/>
           <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
             <svg v-if="errors.name" class="h-5 w-5 text-red-500" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
@@ -32,7 +32,7 @@
           <input v-model="formData.description" type="text" name="description" id="description"
                  v-on:keyup.enter="postData"
                  :class="errors.description ? 'ring-red-300' : ''"
-                 class="block w-full rounded-md border-0 py-1.5 pr-10 ring-1 ring-inset focus:ring-2 focus:ring-inset focus:ring-indigo-500 sm:text-sm sm:leading-6"
+                 class="block w-full rounded-md border-0 py-1.5 pr-10 ring-1 ring-inset focus:ring-2 focus:ring-inset focus:ring-indigo-500 sm:text-sm sm:leading-6 input"
                  aria-invalid="true" aria-describedby="description-error"/>
           <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
             <svg v-if="errors.description" class="h-5 w-5 text-red-500" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
@@ -52,7 +52,7 @@
 
       <div>
         <label for="tax_percentage" class="block text-sm font-medium leading-6 text-gray-900">Belasting tarief <span class="required-star">*</span></label>
-        <select v-model="formData.tax_percentage" id="location" name="location" class="mt-2 block w-full rounded-md border-0 py-1.5 pl-3 pr-10 text-gray-900 ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600 sm:text-sm sm:leading-6">
+        <select v-model="formData.tax_percentage" id="location" name="location" class="input mt-2 block w-full rounded-md border-0 py-1.5 pl-3 pr-10 text-gray-900 ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600 sm:text-sm sm:leading-6">
           <option :value="0">0%</option>
           <option :value="9">9%</option>
           <option :value="21">21%</option>

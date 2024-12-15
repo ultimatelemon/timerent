@@ -2,7 +2,7 @@
   <div>
     <div>
       <div class="font-semibold text-lg">Algemene instellingen</div>
-      <div class="text-sm">Beheer hier de algemene instellingen voor je onderneming</div>
+      <div class="text-sm dark:text-slate-400">Beheer hier de algemene instellingen voor je onderneming</div>
     </div>
 
     <div v-if="success" class="my-12 alert alert-success">
@@ -17,7 +17,7 @@
           <input v-model="formData.name" type="text" name="name" id="name"
                  v-on:keyup.enter="postData"
                  :class="errors.name ? 'ring-red-300' : ''"
-                 class="block w-full rounded-md border-0 py-1.5 pr-10 ring-1 ring-inset focus:ring-2 focus:ring-inset focus:ring-indigo-500 sm:text-sm sm:leading-6"
+                 class="block w-full rounded-md border-0 py-1.5 pr-10 ring-1 ring-inset focus:ring-2 focus:ring-inset focus:ring-indigo-500 sm:text-sm sm:leading-6 input"
                  aria-invalid="true" aria-describedby="name-error"/>
           <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
             <svg v-if="errors.name" class="h-5 w-5 text-red-500" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
@@ -35,7 +35,7 @@
           <input v-model="formData.address" type="text" name="address" id="address"
                  v-on:keyup.enter="postData"
                  :class="errors.address ? 'ring-red-300' : ''"
-                 class="block w-full rounded-md border-0 py-1.5 pr-10 ring-1 ring-inset focus:ring-2 focus:ring-inset focus:ring-indigo-500 sm:text-sm sm:leading-6"
+                 class="block w-full rounded-md border-0 py-1.5 pr-10 ring-1 ring-inset focus:ring-2 focus:ring-inset focus:ring-indigo-500 sm:text-sm sm:leading-6 input"
                  aria-invalid="true" aria-describedby="name-error"/>
           <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
             <svg v-if="errors.address" class="h-5 w-5 text-red-500" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
@@ -54,7 +54,7 @@
           <input v-model="formData.postal_code" type="text" name="postal_code" id="postal_code"
                  v-on:keyup.enter="postData"
                  :class="errors.postal_code ? 'ring-red-300' : ''"
-                 class="block w-full rounded-md border-0 py-1.5 pr-10 ring-1 ring-inset focus:ring-2 focus:ring-inset focus:ring-indigo-500 sm:text-sm sm:leading-6"
+                 class="block w-full rounded-md border-0 py-1.5 pr-10 ring-1 ring-inset focus:ring-2 focus:ring-inset focus:ring-indigo-500 sm:text-sm sm:leading-6 input"
                  aria-invalid="true" aria-describedby="name-error"/>
           <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
             <svg v-if="errors.postal_code" class="h-5 w-5 text-red-500" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
@@ -72,7 +72,7 @@
           <input v-model="formData.city" type="text" name="city" id="city"
                  v-on:keyup.enter="postData"
                  :class="errors.city ? 'ring-red-300' : ''"
-                 class="block w-full rounded-md border-0 py-1.5 pr-10 ring-1 ring-inset focus:ring-2 focus:ring-inset focus:ring-indigo-500 sm:text-sm sm:leading-6"
+                 class="block w-full rounded-md border-0 py-1.5 pr-10 ring-1 ring-inset focus:ring-2 focus:ring-inset focus:ring-indigo-500 sm:text-sm sm:leading-6 input"
                  aria-invalid="true" aria-describedby="name-error"/>
           <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
             <svg v-if="errors.city" class="h-5 w-5 text-red-500" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
@@ -91,7 +91,7 @@
           <input v-model="formData.email" type="email" name="email" id="email"
                  v-on:keyup.enter="postData"
                  :class="errors.email ? 'ring-red-300' : ''"
-                 class="block w-full rounded-md border-0 py-1.5 pr-10 ring-1 ring-inset focus:ring-2 focus:ring-inset focus:ring-indigo-500 sm:text-sm sm:leading-6"
+                 class="block w-full rounded-md border-0 py-1.5 pr-10 ring-1 ring-inset focus:ring-2 focus:ring-inset focus:ring-indigo-500 sm:text-sm sm:leading-6 input"
                  aria-invalid="true" aria-describedby="name-error"/>
           <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
             <svg v-if="errors.email" class="h-5 w-5 text-red-500" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
@@ -109,7 +109,7 @@
           <input v-model="formData.phone_number" type="text" name="phone_number" id="phone_number"
                  v-on:keyup.enter="postData"
                  :class="errors.phone_number ? 'ring-red-300' : ''"
-                 class="block w-full rounded-md border-0 py-1.5 pr-10 ring-1 ring-inset focus:ring-2 focus:ring-inset focus:ring-indigo-500 sm:text-sm sm:leading-6"
+                 class="block w-full rounded-md border-0 py-1.5 pr-10 ring-1 ring-inset focus:ring-2 focus:ring-inset focus:ring-indigo-500 sm:text-sm sm:leading-6 input"
                  aria-invalid="true" aria-describedby="name-error"/>
           <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
             <svg v-if="errors.phone_number" class="h-5 w-5 text-red-500" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
@@ -128,7 +128,7 @@
           <input v-model="formData.phone_number_support" type="text" name="phone_number_support" id="phone_number_support"
                  v-on:keyup.enter="postData"
                  :class="errors.phone_number_support ? 'ring-red-300' : ''"
-                 class="block w-full rounded-md border-0 py-1.5 pr-10 ring-1 ring-inset focus:ring-2 focus:ring-inset focus:ring-indigo-500 sm:text-sm sm:leading-6"
+                 class="block w-full rounded-md border-0 py-1.5 pr-10 ring-1 ring-inset focus:ring-2 focus:ring-inset focus:ring-indigo-500 sm:text-sm sm:leading-6 input"
                  aria-invalid="true" aria-describedby="name-error"/>
           <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
             <svg v-if="errors.phone_number_support" class="h-5 w-5 text-red-500" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
@@ -149,7 +149,7 @@
           <input v-model="formData.coc_number" type="text" name="coc_number" id="coc_number"
                  v-on:keyup.enter="postData"
                  :class="errors.coc_number ? 'ring-red-300' : ''"
-                 class="block w-full rounded-md border-0 py-1.5 pr-10 ring-1 ring-inset focus:ring-2 focus:ring-inset focus:ring-indigo-500 sm:text-sm sm:leading-6"
+                 class="block w-full rounded-md border-0 py-1.5 pr-10 ring-1 ring-inset focus:ring-2 focus:ring-inset focus:ring-indigo-500 sm:text-sm sm:leading-6 input"
                  aria-invalid="true" aria-describedby="name-error"/>
           <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
             <svg v-if="errors.coc_number" class="h-5 w-5 text-red-500" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
@@ -167,7 +167,7 @@
           <input v-model="formData.tax_number" type="text" name="tax_number" id="tax_number"
                  v-on:keyup.enter="postData"
                  :class="errors.tax_number ? 'ring-red-300' : ''"
-                 class="block w-full rounded-md border-0 py-1.5 pr-10 ring-1 ring-inset focus:ring-2 focus:ring-inset focus:ring-indigo-500 sm:text-sm sm:leading-6"
+                 class="block w-full rounded-md border-0 py-1.5 pr-10 ring-1 ring-inset focus:ring-2 focus:ring-inset focus:ring-indigo-500 sm:text-sm sm:leading-6 input"
                  aria-invalid="true" aria-describedby="name-error"/>
           <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
             <svg v-if="errors.tax_number" class="h-5 w-5 text-red-500" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">

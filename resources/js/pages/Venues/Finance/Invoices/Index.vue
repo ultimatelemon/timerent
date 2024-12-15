@@ -3,7 +3,7 @@
     <div class="mb-12 flex justify-between">
       <div>
         <div class="font-semibold text-lg">Facturen</div>
-        <div class="text-sm">Beheer hier alle facturen</div>
+        <div class="text-sm dark:text-slate-400">Beheer hier alle facturen</div>
       </div>
       <div>
         <!--        <button @click="$router.push({ name: 'venues.units.create' })" class="btn btn-primary">Nieuwe unit</button>-->
@@ -14,7 +14,7 @@
       <div class="grid grid-cols-3 gap-12">
         <div>
           <p>Zoeken</p>
-          <input v-model="searchQuery" type="text" placeholder="Zoek op ID of email">
+          <input class="input" v-model="searchQuery" type="text" placeholder="Zoek op ID of email">
         </div>
         <div>
           <p>Status</p>

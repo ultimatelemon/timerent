@@ -2,7 +2,7 @@
   <div>
     <div>
       <div class="font-semibold text-lg">Algemene instellingen</div>
-      <div class="text-sm">Beheer hier de algemene instellingen voor je onderneming</div>
+      <div class="text-sm dark:text-slate-400">Beheer hier de algemene instellingen voor je onderneming</div>
     </div>
 
     <div v-if="success" class="my-12 alert alert-success">
@@ -17,7 +17,7 @@
           <input v-model="formData.reservation_prefix" type="text" name="reservation_prefix" id="reservation_prefix"
                  v-on:keyup.enter="postData"
                  :class="errors.reservation_prefix ? 'ring-red-300' : ''"
-                 class="block w-full rounded-md border-0 py-1.5 pr-10 ring-1 ring-inset focus:ring-2 focus:ring-inset focus:ring-indigo-500 sm:text-sm sm:leading-6"
+                 class="block w-full rounded-md border-0 py-1.5 pr-10 ring-1 ring-inset focus:ring-2 focus:ring-inset focus:ring-indigo-500 sm:text-sm sm:leading-6 input"
                  aria-invalid="true" aria-describedby="name-error"/>
           <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
             <svg v-if="errors.reservation_prefix" class="h-5 w-5 text-red-500" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
@@ -35,7 +35,7 @@
           <input v-model="formData.cancellation_hours" type="text" name="cancellation_hours" id="cancellation_hours"
                  v-on:keyup.enter="postData"
                  :class="errors.cancellation_hours ? 'ring-red-300' : ''"
-                 class="block w-full rounded-md border-0 py-1.5 pr-10 ring-1 ring-inset focus:ring-2 focus:ring-inset focus:ring-indigo-500 sm:text-sm sm:leading-6"
+                 class="block w-full rounded-md border-0 py-1.5 pr-10 ring-1 ring-inset focus:ring-2 focus:ring-inset focus:ring-indigo-500 sm:text-sm sm:leading-6 input"
                  aria-invalid="true" aria-describedby="name-error"/>
           <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
             <svg v-if="errors.cancellation_hours" class="h-5 w-5 text-red-500" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">

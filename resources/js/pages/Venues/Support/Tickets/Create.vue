@@ -3,7 +3,7 @@
     <div class="mb-12 flex justify-between">
       <div>
         <div class="font-semibold text-lg">Nieuw ticket</div>
-        <div class="text-sm">Maak een nieuw ticket aan en ons support team neemt zo snel mogelijk contact met je op.
+        <div class="text-sm dark:text-slate-400">Maak een nieuw ticket aan en ons support team neemt zo snel mogelijk contact met je op.
         </div>
       </div>
       <div>
@@ -25,6 +25,7 @@
             <input type="text"
                    name="title"
                    id="title"
+                   class="input"
                    v-model="formData.title"
                    placeholder="Waar gaat je vraag over?"
             />

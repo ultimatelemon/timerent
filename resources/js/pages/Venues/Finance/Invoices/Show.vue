@@ -53,10 +53,10 @@
                     <span class="flex-shrink-0 text-gray-400"></span>
                   </div>
                 </div>
-                <div class="ml-4 flex-shrink-0">
-                  <a href="#" class="font-medium text-indigo-600 hover:text-indigo-500">Factuur mailen</a>
-                  <span class="font-semibold text-black px-2">—</span>
-                  <button @click="downloadInvoice" class="font-medium text-indigo-600 hover:text-indigo-500">Factuur downloaden</button>
+                <div class="ml-4 flex-shrink-0 ">
+                  <a href="#" class="font-medium text-indigo-600 hover:text-indigo-500 dark:text-slate-400">Factuur mailen</a>
+                  <span class="font-semibold text-black px-2 dark:text-slate-400">—</span>
+                  <button @click="downloadInvoice" class="font-medium text-indigo-600 hover:text-indigo-500 dark:text-slate-400">Factuur downloaden</button>
                 </div>
               </li>
             </ul>

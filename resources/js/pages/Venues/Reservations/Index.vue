@@ -3,7 +3,7 @@
     <div class="mb-12 flex justify-between">
       <div>
         <div class="font-semibold text-lg">Reserveringen</div>
-        <div class="text-sm">Beheer hier alle reserveringen</div>
+        <div class="text-sm dark:text-slate-400">Beheer hier alle reserveringen</div>
       </div>
       <div>
 <!--        <button @click="$router.push({ name: 'venues.units.create' })" class="btn btn-primary">Nieuwe unit</button>-->
@@ -11,7 +11,7 @@
     </div>
     <div class="mb-12">
       <div class="font-semibold mb-2">Filteren</div>
-      <input v-model="searchQuery" type="text" placeholder="Zoek op ID of email">
+      <input class="input" v-model="searchQuery" type="text" placeholder="Zoek op ID of email">
     </div>
     <div class="mt-8 flow-root">
       <div class="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">

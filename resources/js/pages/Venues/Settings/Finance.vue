@@ -2,7 +2,7 @@
   <div v-if="venue">
     <div>
       <div class="font-semibold text-lg">Financiële instellingen</div>
-      <div class="text-sm">Hoe wil je betalingen ontvangen?</div>
+      <div class="text-sm dark:text-slate-400">Hoe wil je betalingen ontvangen?</div>
     </div>
 
     <div v-if="success" class="my-12 alert alert-success">
@@ -16,10 +16,10 @@
           <div
               @click="formData.payment_service_provider = psp.text_id"
               :class="formData.payment_service_provider === psp.text_id ? 'border-blue-500' : ''"
-              class="bg-white rounded-lg border-2 w-48 h-32 leading-none px-4 py-6 transition duration-150 relative cursor-pointer">
+              class="bg-white rounded-lg border-2 w-48 h-32 leading-none px-4 py-6 transition duration-150 relative cursor-pointer dark:bg-slate-800">
             <img :src="psp.image" :alt="psp.name"
                  class="mx-auto w-16 h-8 object-contain mb-4">
-            <h1 class="text-xs text-center text-gray-500">{{ psp.name }}</h1>
+            <h1 class="text-xs text-center text-gray-500 dark:text-slate-400">{{ psp.name }}</h1>
             <div class="absolute bottom-1 right-1 left-1">
               <div v-if="current_psp === psp.text_id" class="text-green-500 p-1 text-xs rounded-full text-center">
                 Huidige provider
@@ -34,12 +34,12 @@
       <div v-if="formData.payment_service_provider !== 'timerent'">
         <label for="name" class="block text-sm font-medium leading-6 text-gray-900">API key<span
             v-if="true"
-            class="required-star">*</span> <span class="text-xs">(Je API key is vanwege veiligheid niet meer zichtbaar na het opslaan van je instellingen)</span></label>
+            class="required-star">*</span> <span class="text-xs dark:text-slate-400">(Je API key is vanwege veiligheid niet meer zichtbaar na het opslaan van je instellingen)</span></label>
         <div class="relative mt-2 rounded-md shadow-sm">
           <input v-model="formData.payment_api_key" type="text" name="name" id="name"
                  v-on:keyup.enter="postData"
                  :class="errors.name ? 'ring-red-300' : ''"
-                 class="block w-full rounded-md border-0 py-1.5 pr-10 ring-1 ring-inset focus:ring-2 focus:ring-inset focus:ring-indigo-500 sm:text-sm sm:leading-6"
+                 class="block w-full rounded-md border-0 py-1.5 pr-10 ring-1 ring-inset focus:ring-2 focus:ring-inset focus:ring-indigo-500 sm:text-sm sm:leading-6 input"
                  aria-invalid="true" aria-describedby="name-error"/>
           <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
             <svg v-if="errors.name" class="h-5 w-5 text-red-500" viewBox="0 0 20 20" fill="currentColor"

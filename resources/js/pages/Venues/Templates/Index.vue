@@ -3,7 +3,7 @@
     <div class="mb-12 flex justify-between">
       <div>
         <div class="font-semibold text-lg">Templates</div>
-        <div class="text-sm">Beheer hier de templates voor je onderneming</div>
+        <div class="text-sm dark:text-slate-400">Beheer hier de templates voor je onderneming</div>
       </div>
       <div>
         <button @click="$router.push({ name: 'venues.templates.create' })" class="btn btn-primary">Nieuwe template</button>
@@ -11,7 +11,7 @@
     </div>
     <div class="mb-12">
       <div class="font-semibold mb-2">Filteren</div>
-      <input v-model="searchQuery" type="text" placeholder="Zoek op naam">
+      <input class="input" v-model="searchQuery" type="text" placeholder="Zoek op naam">
     </div>
     <div class="mt-8 flow-root">
       <div class="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">

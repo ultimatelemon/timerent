@@ -3,7 +3,7 @@
     <div class="mb-12 flex justify-between">
       <div>
         <div class="font-semibold text-lg">Reservering: #{{ reservation.number }}</div>
-        <div class="text-sm">Beheer hier de reservering</div>
+        <div class="text-sm dark:text-slate-400">Beheer hier de reservering</div>
       </div>
       <div v-if="reservation.member.id">
         <button @click="this.$router.push({name: 'venues.members.edit', params: {venue: this.$route.params.venue, member: reservation.member.id}})" class="btn btn-primary">Bekijk gebruiker</button>
@@ -22,7 +22,7 @@
         </div>
         <div class="border-t border-gray-100 px-4 py-6 sm:col-span-1 sm:px-0">
           <dt class="text-sm font-semibold leading-6 text-gray-900">Email adres</dt>
-          <input class="mt-1 text-sm leading-6 text-gray-700 sm:mt-2" v-model="formData.email">
+          <input class="mt-1 text-sm leading-6 text-gray-700 sm:mt-2 input" v-model="formData.email">
         </div>
         <div class="border-t border-gray-100 px-4 py-6 sm:col-span-1 sm:px-0">
           <dt class="text-sm font-semibold leading-6 text-gray-900">Commentaar / Notities (zichtbaar voor klant)</dt>
@@ -30,7 +30,7 @@
         </div>
         <div class="border-t border-gray-100 px-4 py-6 sm:col-span-1 sm:px-0">
           <dt class="text-sm font-semibold leading-6 text-gray-900">Telefoonnummer</dt>
-          <input class="mt-1 text-sm leading-6 text-gray-700 sm:mt-2" v-model="formData.phone_number">
+          <input class="mt-1 text-sm leading-6 text-gray-700 sm:mt-2 input" v-model="formData.phone_number">
         </div>
         <div class="border-t border-gray-100 px-4 py-6 sm:col-span-2 sm:px-0">
           <dt class="text-sm font-semibold leading-6 text-gray-900">Unit(s)</dt>
@@ -54,9 +54,9 @@
                   </div>
                 </div>
                 <div class="ml-4 flex-shrink-0">
-                  <a href="#" class="font-medium text-indigo-600 hover:text-indigo-500">Factuur opnieuw mailen</a>
-                  <span class="font-semibold text-black px-2">—</span>
-                  <button @click="downloadInvoice" class="font-medium text-indigo-600 hover:text-indigo-500">Factuur downloaden</button>
+                  <a href="#" class="font-medium text-indigo-600 hover:text-indigo-500 dark:text-slate-400">Factuur opnieuw mailen</a>
+                  <span class="font-semibold text-black px-2 dark:text-slate-400">—</span>
+                  <button @click="downloadInvoice" class="font-medium text-indigo-600 hover:text-indigo-500 dark:text-slate-400">Factuur downloaden</button>
                 </div>
               </li>
               <li class="flex items-center justify-between py-4 pl-4 pr-5 text-sm leading-6">
@@ -67,7 +67,7 @@
                   </div>
                 </div>
                 <div class="ml-4 flex-shrink-0">
-                  <button @click="resendConfirmationMail" class="font-medium text-indigo-600 hover:text-indigo-500">Bevestiging opnieuw mailen</button>
+                  <button @click="resendConfirmationMail" class="font-medium text-indigo-600 hover:text-indigo-500 dark:text-slate-400">Bevestiging opnieuw mailen</button>
                 </div>
               </li>
             </ul>

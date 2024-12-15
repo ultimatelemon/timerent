@@ -15,10 +15,16 @@ class WeekResource extends JsonResource
     public function toArray(Request $request): array
     {
         return [
-            'template' => new TemplateResource($this->template),
+            'id' => $this->id,
+            'template' => $this->template,
+            'template_name' => $this->template_name,
+//            'changed_from_origin' => $this->changed_from_origin,
+            'changed_from_origin' => $this->changed_from_origin,
             'unit' => new UnitResource($this->unit),
             'year' => $this->year,
             'week' => $this->week,
+            'interval' => $this->interval,
+            'price' => $this->price,
         ];
     }
 }

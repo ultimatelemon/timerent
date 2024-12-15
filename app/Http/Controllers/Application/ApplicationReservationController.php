@@ -47,7 +47,7 @@ class ApplicationReservationController extends ApiController
 
         $total = collect($validated['timeblocks'])->sum(fn($x) => $x['timeblock']['price']);
 
-        $taxLow = $taxHigh = 0;
+        $taxLow = $taxHigh = $revenueHigh = $revenueLow = 0;
 
         $date = Carbon::now()->setDateFrom($validated['date'])->toDateString();
 
@@ -80,11 +80,17 @@ class ApplicationReservationController extends ApiController
                 return $this->error(['error' => "Product '$prod->name' is alleen te reserveren bij bijhorende unit(s)"]);
             }
 
-            $total += $prod->price * ($prod->time_per_timeblock ? count($validated['timeblocks']) : 1);
-            $taxLow += $prod->tax_percentage === 9 ? round($prod->price - ($prod->price / 1.09)) : 0;
-            $taxHigh += $prod->tax_percentage === 21 ? round($prod->price - ($prod->price / 1.21)) : 0;
+            $timeblockMultiplier = $prod->price_per_timeblock ? count($validated['timeblocks']) : 1;
+            $total += floor(($prod->price * ($prod->price_per_timeblock ? $timeblockMultiplier : 1)));
+            $taxLow += floor($prod->tax_percentage === 9 ? round(($prod->price * $timeblockMultiplier) - (($prod->price * $timeblockMultiplier) / 1.09), 2) : 0);
+            $taxHigh += floor($prod->tax_percentage === 21 ? round(($prod->price * $timeblockMultiplier) - (($prod->price * $timeblockMultiplier) / 1.21), 2) : 0);
+            $revenueHigh += floor($prod->tax_percentage === 21 ? $prod->price * $timeblockMultiplier : 0);
+            $revenueLow += floor($prod->tax_percentage === 9 ? $prod->price * $timeblockMultiplier : 0);
+
             $reservation->update([
                 'payment_amount' => $total,
+                'revenue_high' => $revenueHigh,
+                'revenue_low' => $revenueLow,
                 'tax_high' => $taxHigh,
                 'tax_low' => $taxLow,
             ]);
@@ -101,10 +107,15 @@ class ApplicationReservationController extends ApiController
             if (!ReservationHelper::checkIfTimeblockIsAvailable($timeblock['timeblock']['unit_id'], $from, $to)) return $this->error(['error' => '1 of meerdere tijdblokken zijn niet beschikbaar.']);
 
             $unit = Unit::where('id', $timeblock['timeblock']['unit_id'])->where('venue_id', $venue->id)->firstOrFail();
-            $taxHigh += $unit->tax_percentage === 21 ? round($timeblock['timeblock']['price'] - ($timeblock['timeblock']['price'] / 1.21)) : 0;
-            $taxLow += $unit->tax_percentage === 9 ? round($timeblock['timeblock']['price'] - ($timeblock['timeblock']['price'] / 1.09)) : 0;
+            $taxHigh += floor($unit->tax_percentage === 21 ? round($timeblock['timeblock']['price'] - ($timeblock['timeblock']['price'] / 1.21)) : 0);
+            $taxLow += floor($unit->tax_percentage === 9 ? round($timeblock['timeblock']['price'] - ($timeblock['timeblock']['price'] / 1.09)) : 0);
+            ray($timeblock['timeblock']['price'])->red();
+            $revenueHigh += floor($unit->tax_percentage === 21 ? $timeblock['timeblock']['price'] : 0);
+            $revenueLow += floor($unit->tax_percentage === 9 ? $timeblock['timeblock']['price'] : 0);
 
             $reservation->update([
+                'revenue_high' => $revenueHigh,
+                'revenue_low' => $revenueLow,
                 'tax_low' => $taxLow,
                 'tax_high' => $taxHigh,
             ]);
@@ -129,6 +140,8 @@ class ApplicationReservationController extends ApiController
             'email' => $reservation->email,
             'phone_number' => $reservation->phone_number,
             'payment_amount' => $reservation->payment_amount,
+            'revenue_high' => $reservation->revenue_high,
+            'revenue_low' => $reservation->revenue_low,
             'tax_high' => $reservation->tax_high,
             'tax_low' => $reservation->tax_low,
             'payment_status' => $reservation->payment_status,

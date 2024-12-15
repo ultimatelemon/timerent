@@ -19,6 +19,8 @@ class Reservation extends Model
         'email',
         'payment_provider',
         'payment_amount',
+        'revenue_high',
+        'revenue_low',
         'tax_high',
         'tax_low',
         'payment_id',

@@ -17,7 +17,8 @@ return new class extends Migration
             $table->integer('month');
             $table->integer('year');
 
-            $table->integer('total_revenue');
+            $table->integer('revenue_high');
+            $table->integer('revenue_low');
 
             $table->integer('tax_amount_high');
             $table->integer('tax_amount_low');

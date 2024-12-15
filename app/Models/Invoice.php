@@ -16,6 +16,8 @@ class Invoice extends Model
         'email',
         'phone_number',
         'payment_amount',
+        'revenue_high',
+        'revenue_low',
         'tax_low',
         'tax_high',
         'payment_id',

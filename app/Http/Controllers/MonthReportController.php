@@ -47,7 +47,8 @@ class MonthReportController extends ApiController
         $keys = [
             'month',
             'year',
-            'total_revenue',
+            'revenue_high',
+            'revenue_low',
             'tax_amount_high',
             'tax_amount_low',
             'customer_count',
@@ -71,14 +72,17 @@ class MonthReportController extends ApiController
      */
     public function generate(Venue $venue): void
     {
-        $monthToGenerate = now()->month === 1 ? 12 : now()->month - 1;
-        $yearToGenerate = $monthToGenerate === 12 ? now()->year - 1 : now()->year;
+        $monthToGenerate = 12;
+        $yearToGenerate = 2024;
+//        $monthToGenerate = now()->month === 1 ? 12 : now()->month - 1;
+//        $yearToGenerate = $monthToGenerate === 12 ? now()->year - 1 : now()->year;
         $from = Carbon::now()->setMonth($monthToGenerate)->setYear($yearToGenerate)->startOfMonth()->setTime(0, 0, 0)->format('Y-m-d H:i:s');
         $to = Carbon::now()->setMonth($monthToGenerate)->setYear($yearToGenerate)->endOfMonth()->setTime(23, 59, 59)->format('Y-m-d H:i:s');
 
         $reservations = $venue->reservations()->where('created_at', '>', $from)->where('created_at', '<', $to)->where('payment_status', 'paid')->get();
         $customer_count = $venue->reservations()->where('payment_status', 'paid')->distinct()->count('email');
-        $revenue = collect($reservations->map(function ($reservation) {return $reservation->payment_amount;}))->sum();
+        $revenueHigh = collect($reservations->map(function ($reservation) {return $reservation->revenue_high;}))->sum();
+        $revenueLow = collect($reservations->map(function ($reservation) {return $reservation->revenue_low;}))->sum();
         $tax_low = collect($reservations->map(function ($reservation) {return $reservation->tax_low;}))->sum();
         $tax_high = collect($reservations->map(function ($reservation) {return $reservation->tax_high;}))->sum();
 
@@ -90,7 +94,8 @@ class MonthReportController extends ApiController
             'period_to' => $to,
             'reservation_count' => $reservations->count(),
             'customer_count' => $customer_count,
-            'total_revenue' => $revenue,
+            'revenue_high' => $revenueHigh,
+            'revenue_low' => $revenueLow,
             'tax_amount_high' => $tax_high,
             'tax_amount_low' => $tax_low,
             'available_at' => now(),

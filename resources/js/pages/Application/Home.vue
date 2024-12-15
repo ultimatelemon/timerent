@@ -58,7 +58,7 @@
             <div>
               <div class="text-sm">{{ product.description ?? "Dit product heeft (nog) geen omschrijving" }}</div>
             </div>
-            <div class="text-center">{{ $filters.currency(product.price) }}</div>
+            <div class="text-center">{{ $filters.currency(product.price) }} {{ product.price_per_timeblock ? '/ tijdblock' : '/ reservering' }}</div>
             <div class="text-center">
               <input class="checkbox" type="checkbox" @change="toggleProduct(product.id)">
             </div>

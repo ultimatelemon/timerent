@@ -17,17 +17,17 @@
             id="flatpickr-from"
             v-model="from"
             :config="config"
-            class="input cursor-pointer"
+            class="input cursor-pointer mt-2"
             :placeholder="from ?? 'Selecteer een datum'"
         />
       </div>
       <div>
-        <label for="flatpickr-to" class="font-semibold">Tot</label>
+        <label for="flatpickr-to" class="font-semibold">Tot en met</label>
         <flat-pickr
             id="flatpickr-to"
             v-model="to"
             :config="config"
-            class="input cursor-pointer"
+            class="input cursor-pointer mt-2"
             :placeholder="to ?? 'Selecteer een datum'"
         />
       </div>
@@ -36,18 +36,20 @@
       </div>
     </div>
 
-    <div class="mb-8 grid grid-cols-1 lg:grid-cols-4 gap-8">
+    <div class="mb-4 grid grid-cols-1 lg:grid-cols-3 gap-4">
+      <h2 class="text-sm text-gray-600 dark:text-white">Omzet inclusief BTW</h2>
+      <h2 class="text-sm text-gray-600 dark:text-white">Omzet exclusief BTW</h2>
+      <h2 class="text-sm text-gray-600 dark:text-white">BTW</h2>
+    </div>
+
+    <div class="mb-4 grid grid-cols-1 lg:grid-cols-3 gap-4">
       <div class="shadow rounded-lg overflow-x-auto bg-gray-50 p-4 dark:bg-slate-800">
-        <h2 class="text-sm text-gray-600 dark:text-white">Omzet (incl. btw)</h2>
-        <p class="font-semibold text-3xl">{{ $filters.currency(statistics.revenue_incl) }}</p>
+        <h2 class="text-sm text-gray-600 dark:text-white">Omzet hoog (incl. BTW)</h2>
+        <p class="font-semibold text-3xl">{{ $filters.currency(statistics.revenue_high) }}</p>
       </div>
       <div class="shadow rounded-lg overflow-x-auto bg-gray-50 p-4 dark:bg-slate-800">
-        <h2 class="text-sm text-gray-600 dark:text-white">Omzet (excl. btw)</h2>
-        <p class="font-semibold text-3xl">{{ $filters.currency(statistics.revenue_excl) }}</p>
-      </div>
-      <div class="shadow rounded-lg overflow-x-auto bg-gray-50 p-4 dark:bg-slate-800">
-        <h2 class="text-sm text-gray-600 dark:text-white">BTW laag (9%)</h2>
-        <p class="font-semibold text-3xl">{{ $filters.currency(statistics.tax_low) }}</p>
+        <h2 class="text-sm text-gray-600 dark:text-white">Omzet hoog (excl. BTW)</h2>
+        <p class="font-semibold text-3xl">{{ $filters.currency(statistics.revenue_high_exclusive_tax) }}</p>
       </div>
       <div class="shadow rounded-lg overflow-x-auto bg-gray-50 p-4 dark:bg-slate-800">
         <h2 class="text-sm text-gray-600 dark:text-white">BTW hoog (21%)</h2>
@@ -55,28 +57,45 @@
       </div>
     </div>
 
-    <div class="mb-12 grid grid-cols-1 lg:grid-cols-4 gap-8 ">
+    <div class="mb-4 grid grid-cols-1 lg:grid-cols-3 gap-4 ">
       <div class="shadow rounded-lg overflow-x-auto bg-gray-50 p-4 dark:bg-slate-800">
-        <h2 class="text-sm text-gray-600 dark:text-white">Klantenaantal</h2>
-        <p class="font-semibold text-3xl">{{ statistics.customer_count }}</p>
+        <h2 class="text-sm text-gray-600 dark:text-white">Omzet laag (incl. BTW)</h2>
+        <p class="font-semibold text-3xl">{{ $filters.currency(statistics.revenue_low) }}</p>
       </div>
       <div class="shadow rounded-lg overflow-x-auto bg-gray-50 p-4 dark:bg-slate-800">
-        <h2 class="text-sm text-gray-600 dark:text-white">Totaal reserveringen</h2>
-        <p class="font-semibold text-3xl">{{ statistics.reservations_count }}</p>
+        <h2 class="text-sm text-gray-600 dark:text-white">Omzet laag (excl. BTW)</h2>
+        <p class="font-semibold text-3xl">{{ $filters.currency(statistics.revenue_low_exclusive_tax) }}</p>
       </div>
       <div class="shadow rounded-lg overflow-x-auto bg-gray-50 p-4 dark:bg-slate-800">
-        <h2 class="text-sm text-gray-600 dark:text-white">Gemiddelde klantbesteding (incl. btw)</h2>
-        <p class="font-semibold text-3xl">{{ $filters.currency(statistics.revenue_incl / statistics.customer_count || 0) }}</p>
+        <h2 class="text-sm text-gray-600 dark:text-white">BTW laag (9%)</h2>
+        <p class="font-semibold text-3xl">{{ $filters.currency(statistics.tax_low) }}</p>
+      </div>
+      <!--      <div class="shadow rounded-lg overflow-x-auto bg-gray-50 p-4 dark:bg-slate-800">-->
+      <!--        <h2 class="text-sm text-gray-600 dark:text-white">Totale BTW</h2>-->
+      <!--        <p class="font-semibold text-3xl">{{ $filters.currency(statistics.tax_low + statistics.tax_high) }}</p>-->
+      <!--      </div>-->
+    </div>
+
+    <div class="mb-12 grid grid-cols-1 lg:grid-cols-3 gap-4 ">
+      <div class="shadow rounded-lg overflow-x-auto bg-gray-50 p-4 dark:bg-slate-800">
+        <h2 class="text-sm text-gray-600 dark:text-white">Totale omzet (incl. BTW)</h2>
+        <p class="font-semibold text-3xl">{{ $filters.currency(statistics.revenue_high + statistics.revenue_low) }}</p>
       </div>
       <div class="shadow rounded-lg overflow-x-auto bg-gray-50 p-4 dark:bg-slate-800">
-        <h2 class="text-sm text-gray-600 dark:text-white">Gemiddelde besteding (incl. btw)</h2>
-        <p class="font-semibold text-3xl">{{ $filters.currency((statistics.revenue_incl / statistics.reservations_count || 0)) }}</p>
+        <h2 class="text-sm text-gray-600 dark:text-white">Totale omzet (excl. BTW)</h2>
+        <p class="font-semibold text-3xl">{{ $filters.currency(statistics.revenue_high_exclusive_tax + statistics.revenue_low_exclusive_tax) }}</p>
+      </div>
+      <div class="shadow rounded-lg overflow-x-auto bg-gray-50 p-4 dark:bg-slate-800">
+        <h2 class="text-sm text-gray-600 dark:text-white">Totaal BTW</h2>
+        <p class="font-semibold text-3xl">{{ $filters.currency(statistics.tax_high + statistics.tax_low) }}</p>
       </div>
     </div>
 
     <div>
       <div class="font-semibold text-lg">Maandrapportages</div>
-      <div class="text-sm dark:text-slate-400">Elke maand staat er een maandrapportage voor je klaar voor de boekhouding.</div>
+      <div class="text-sm dark:text-slate-400">Elke maand staat er een maandrapportage voor je klaar voor de
+        boekhouding.
+      </div>
     </div>
 
     <div class="mt-8 flow-root">
@@ -85,22 +104,42 @@
           <table class="min-w-full divide-y divide-gray-300">
             <thead>
             <tr>
-              <th scope="col" class="whitespace-nowrap py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-0">Periode</th>
-              <th scope="col" class="whitespace-nowrap px-2 py-3.5 text-left text-sm font-semibold text-gray-900">Jaar</th>
-              <th scope="col" class="whitespace-nowrap px-2 py-3.5 text-left text-sm font-semibold text-gray-900">Totale omzet</th>
-              <th scope="col" class="whitespace-nowrap px-2 py-3.5 text-left text-sm font-semibold text-gray-900">Klanten aantal</th>
-              <th scope="col" class="whitespace-nowrap px-2 py-3.5 text-left text-sm font-semibold text-gray-900">Reservering aantal</th>
+              <th scope="col"
+                  class="whitespace-nowrap py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-0">
+                Periode
+              </th>
+              <th scope="col" class="whitespace-nowrap px-2 py-3.5 text-left text-sm font-semibold text-gray-900">Jaar
+              </th>
+              <th scope="col" class="whitespace-nowrap px-2 py-3.5 text-left text-sm font-semibold text-gray-900">Totale
+                omzet
+              </th>
+              <th scope="col" class="whitespace-nowrap px-2 py-3.5 text-left text-sm font-semibold text-gray-900">
+                Klanten aantal
+              </th>
+              <th scope="col" class="whitespace-nowrap px-2 py-3.5 text-left text-sm font-semibold text-gray-900">
+                Reservering aantal
+              </th>
             </tr>
             </thead>
             <tbody class="divide-y divide-gray-200 bg-white">
-            <tr v-if="month_reports.length > 0" v-for="month_report in month_reports" :key="month_report.id" class="even:bg-gray-50 hover:bg-gray-100 hover:cursor-pointer" @click="this.$router.push({name: 'venues.reservations.edit', params: {venue: this.$route.params.venue, reservation: reservation.id}})">
+            <tr v-if="month_reports.length > 0" v-for="month_report in month_reports" :key="month_report.id"
+                class="even:bg-gray-50 hover:bg-gray-100 hover:cursor-pointer"
+                @click="this.$router.push({name: 'venues.reservations.edit', params: {venue: this.$route.params.venue, reservation: reservation.id}})">
               <td class="whitespace-nowrap py-2 pl-4 pr-3 text-sm text-gray-500 sm:pl-0">{{ month_report.month }}</td>
               <td class="whitespace-nowrap px-2 py-2 text-sm font-medium text-gray-900">{{ month_report.year }}</td>
-              <td class="whitespace-nowrap px-2 py-2 text-sm font-medium text-gray-900">{{ $filters.currency(month_report.total_revenue) }}</td>
-              <td class="whitespace-nowrap px-2 py-2 text-sm font-medium text-gray-900">{{ month_report.customer_count }}</td>
-              <td class="whitespace-nowrap px-2 py-2 text-sm font-medium text-gray-900">{{ month_report.reservation_count }}</td>
               <td class="whitespace-nowrap px-2 py-2 text-sm font-medium text-gray-900">
-                <button @click.stop="downloadMonthReport(month_report.id, month_report.month, month_report.year)" class="btn btn-primary"><i class="fa fa-download"></i></button>
+                {{ $filters.currency(month_report.total_revenue) }}
+              </td>
+              <td class="whitespace-nowrap px-2 py-2 text-sm font-medium text-gray-900">{{
+                  month_report.customer_count
+                }}
+              </td>
+              <td class="whitespace-nowrap px-2 py-2 text-sm font-medium text-gray-900">
+                {{ month_report.reservation_count }}
+              </td>
+              <td class="whitespace-nowrap px-2 py-2 text-sm font-medium text-gray-900">
+                <button @click.stop="downloadMonthReport(month_report.id, month_report.month, month_report.year)"
+                        class="btn btn-primary"><i class="fa fa-download"></i></button>
               </td>
             </tr>
             <tr v-else class="text-center">
@@ -116,24 +155,24 @@
       </div>
     </div>
 
-<!--    <div v-if="charts" class="grid grid-cols-4 gap-4 font-semibold">-->
-<!--      <div>-->
-<!--        <p>Reserveringen per dag</p>-->
-<!--        <apexchart width="375" :series="charts.reservations.series" :options="charts.reservations.options"></apexchart>-->
-<!--      </div>-->
-<!--      <div>-->
-<!--        <p>Reserveringen per dag</p>-->
-<!--        <apexchart width="375" :series="series" :options="options"></apexchart>-->
-<!--      </div>-->
-<!--      <div>-->
-<!--        <p>Reserveringen per dag</p>-->
-<!--        <apexchart width="375" :series="series" :options="options"></apexchart>-->
-<!--      </div>-->
-<!--      <div>-->
-<!--        <p>Reserveringen per dag</p>-->
-<!--        <apexchart width="375" :series="series" :options="options"></apexchart>-->
-<!--      </div>-->
-<!--    </div>-->
+    <!--    <div v-if="charts" class="grid grid-cols-4 gap-4 font-semibold">-->
+    <!--      <div>-->
+    <!--        <p>Reserveringen per dag</p>-->
+    <!--        <apexchart width="375" :series="charts.reservations.series" :options="charts.reservations.options"></apexchart>-->
+    <!--      </div>-->
+    <!--      <div>-->
+    <!--        <p>Reserveringen per dag</p>-->
+    <!--        <apexchart width="375" :series="series" :options="options"></apexchart>-->
+    <!--      </div>-->
+    <!--      <div>-->
+    <!--        <p>Reserveringen per dag</p>-->
+    <!--        <apexchart width="375" :series="series" :options="options"></apexchart>-->
+    <!--      </div>-->
+    <!--      <div>-->
+    <!--        <p>Reserveringen per dag</p>-->
+    <!--        <apexchart width="375" :series="series" :options="options"></apexchart>-->
+    <!--      </div>-->
+    <!--    </div>-->
   </div>
 </template>
 
@@ -167,11 +206,12 @@ export default {
 
       statistics: {
         reservations_count: 0,
-        revenue: 0,
-        revenue_incl: 0,
-        revenue_excl: 0,
-        tax_low: 0,
+        revenue_high: 0,
+        revenue_low: 0,
+        revenue_high_exclusive_tax: 0,
+        revenue_low_exclusive_tax: 0,
         tax_high: 0,
+        tax_low: 0,
         customer_count: 0,
       },
 
@@ -206,10 +246,12 @@ export default {
       })
           .then(response => {
             this.statistics.reservations_count = response.data.data.reservations_count
-            this.statistics.revenue_incl = response.data.data.revenue_incl
-            this.statistics.revenue_excl = response.data.data.revenue_excl
-            this.statistics.tax_low = response.data.data.tax_low
+            this.statistics.revenue_high = response.data.data.revenue_high
+            this.statistics.revenue_low = response.data.data.revenue_low
+            this.statistics.revenue_high_exclusive_tax = response.data.data.revenue_high_exclusive_tax
+            this.statistics.revenue_low_exclusive_tax = response.data.data.revenue_low_exclusive_tax
             this.statistics.tax_high = response.data.data.tax_high
+            this.statistics.tax_low = response.data.data.tax_low
             this.statistics.customer_count = response.data.data.customer_count
             this.charts = response.data.data.charts;
             console.log(response.data.data.reservations_count)
@@ -241,16 +283,16 @@ export default {
   },
 
   watch: {
-    from: function() {
+    from: function () {
       console.log(this.from)
-    //   this.from = DateTime.fromFormat(this.from, 'dd-MM-yyyy');
-    //   this.fetchReports();
+      //   this.from = DateTime.fromFormat(this.from, 'dd-MM-yyyy');
+      //   this.fetchReports();
     },
     //
-    to: function() {
+    to: function () {
       console.log(this.to)
-    //   this.to = DateTime.fromFormat(this.to, 'dd-MM-yyyy');
-    //   this.fetchReports();
+      //   this.to = DateTime.fromFormat(this.to, 'dd-MM-yyyy');
+      //   this.fetchReports();
     },
   }
 }

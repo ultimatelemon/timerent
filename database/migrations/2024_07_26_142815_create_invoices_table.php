@@ -19,6 +19,8 @@ return new class extends Migration
             $table->string('phone_number');
 
             $table->integer('payment_amount');
+            $table->integer('revenue_high')->nullable();
+            $table->integer('revenue_low')->nullable();
             $table->integer('tax_low')->nullable();
             $table->integer('tax_high')->nullable();
 

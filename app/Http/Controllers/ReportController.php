@@ -39,7 +39,8 @@ class ReportController extends ApiController implements HasMiddleware
         $to = Carbon::parse($validatedRequest['to'])->setHour(23)->setMinute(59)->setSecond(59);
 
         $reservations = $venue->reservations->where('created_at', '>=', $from)->where('created_at', '<=', $to)->where('payment_status', 'paid');
-        $revenue = collect($reservations->map(function ($reservation) {return $reservation->payment_amount;}))->sum();
+        $revenueHigh = collect($reservations->map(function ($reservation) {return $reservation->revenue_high;}))->sum();
+        $revenueLow = collect($reservations->map(function ($reservation) {return $reservation->revenue_low;}))->sum();
         $tax_low = collect($reservations->map(function ($reservation) {return $reservation->tax_low;}))->sum();
         $tax_high = collect($reservations->map(function ($reservation) {return $reservation->tax_high;}))->sum();
         $customer_count = $venue->reservations()->where('payment_status', 'paid')->distinct()->count('email');
@@ -65,8 +66,10 @@ class ReportController extends ApiController implements HasMiddleware
 
         return $this->success([
             'reservations_count' => $reservations->count(),
-            'revenue_incl' => $revenue,
-            'revenue_excl' => $revenue - ($tax_low + $tax_high),
+            'revenue_high' => $revenueHigh,
+            'revenue_low' => $revenueLow,
+            'revenue_high_exclusive_tax' => $revenueHigh - $tax_high,
+            'revenue_low_exclusive_tax' => $revenueLow - $tax_low,
             'tax_low' => $tax_low,
             'tax_high' => $tax_high,
             'customer_count' => $customer_count,

@@ -165,6 +165,10 @@
                 </li>
               </ul>
             </li>
+            <li @click="toggleTheme">
+              <div v-if="theme === 'light'" class="btn btn-secondary"><i class="fa fa-moon"></i></div>
+              <div v-if="theme === 'dark'" class="btn btn-secondary"><i class="fa fa-sun"></i></div>
+            </li>
             <li class="-mx-6 mt-auto cursor-pointer" @click="logout">
               <div
                   class="flex items-center border-t gap-x-4 px-6 py-3 text-sm font-semibold leading-6 text-gray-900 hover:bg-gray-50 justify-between dark:border-slate-950">
@@ -259,6 +263,7 @@ export default {
   components: {ChevronRightIcon},
   data() {
     return {
+      theme: window.localStorage.getItem("theme"),
       user: null,
       role: null,
       navigation: [],
@@ -268,6 +273,18 @@ export default {
   },
 
   methods: {
+
+    toggleTheme() {
+      if(window.localStorage.getItem('theme') === 'dark') {
+        window.localStorage.setItem('theme', 'light')
+        document.documentElement.classList.remove('dark');
+        this.theme = 'light'
+      } else {
+        window.localStorage.setItem('theme', 'dark')
+        this.theme = 'dark'
+        document.documentElement.classList.add('dark');
+      }
+    },
 
     fetchUser(venue) {
       axios.get('/users/current?venue=' + venue)

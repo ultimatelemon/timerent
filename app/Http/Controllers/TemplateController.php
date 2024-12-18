@@ -6,6 +6,7 @@ use App\Http\Requests\Venue\StoreTemplate;
 use App\Http\Resources\TemplateResource;
 use App\Models\Template;
 use App\Models\Venue;
+use App\Models\Week;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controllers\HasMiddleware;
@@ -109,10 +110,6 @@ class TemplateController extends ApiController implements HasMiddleware
 
         $venue->templates()->create($validatedRequest);
 
-        return $this->success($validatedRequest);
-
-
-//        $template = $venue->templates()->create($request->validated());
         return $this->success(new TemplateResource($template));
     }
 
@@ -156,6 +153,16 @@ class TemplateController extends ApiController implements HasMiddleware
             }
         }
         $template->update($validatedRequest);
+
+        $weeks = Week::where('template_id', $template->id)->where('changed_from_origin', false)->get();
+        foreach($weeks as $week) {
+            $week->update([
+                'template_name' => $template->name,
+                'template' => $template->template,
+                'price' => $template->price,
+                'interval' => $template->interval,
+            ]);
+        }
         return $this->success(new TemplateResource($template));
     }
 

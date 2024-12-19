@@ -37,7 +37,7 @@
               <td class="whitespace-nowrap px-2 py-2 text-sm font-medium text-gray-900" :class="product.is_active ? 'text-green-500' : 'text-red-500'">{{ product.is_active ? 'Ja' : 'Nee' }}</td>
             </tr>
             <tr v-else class="text-center">
-              <td colspan="4" class="pt-12">Er zijn nog geen producten aangemaakt of zoekopdracht niet gevonden</td>
+              <td colspan="4" class="py-12">Er zijn nog geen producten aangemaakt of zoekopdracht niet gevonden</td>
             </tr>
             </tbody>
           </table>

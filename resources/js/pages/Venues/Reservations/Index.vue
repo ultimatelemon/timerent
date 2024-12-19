@@ -39,7 +39,7 @@
               <td class="whitespace-nowrap px-2 py-2 text-sm font-medium text-gray-900 label label-danger mt-2" v-if="reservation.payment_status === 'refunded'">Geannuleerd</td>
             </tr>
             <tr v-else class="text-center">
-              <td colspan="12" class="pt-12">Er zijn nog geen opkomende reserveringen gepland</td>
+              <td colspan="12" class="py-12">Er zijn nog geen opkomende reserveringen gepland</td>
             </tr>
             </tbody>
           </table>

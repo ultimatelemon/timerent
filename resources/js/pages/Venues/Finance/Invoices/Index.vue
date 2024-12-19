@@ -80,7 +80,7 @@
               </td>
             </tr>
             <tr v-else class="text-center">
-              <td colspan="12" class="pt-12">Er zijn nog geen facturen</td>
+              <td colspan="12" class="py-12">Er zijn nog geen facturen</td>
             </tr>
             </tbody>
           </table>

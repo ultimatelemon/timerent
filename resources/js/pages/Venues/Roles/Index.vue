@@ -30,7 +30,7 @@
 <!--              <td class="whitespace-nowrap px-2 py-2 text-sm font-medium text-gray-900">{{ unit.tax_percentage }}%</td>-->
             </tr>
             <tr v-else class="text-center">
-              <td colspan="3" class="pt-12">Er zijn nog geen rollen aangemaakt of zoekopdracht niet gevonden</td>
+              <td colspan="3" class="py-12">Er zijn nog geen rollen aangemaakt of zoekopdracht niet gevonden</td>
             </tr>
             </tbody>
           </table>

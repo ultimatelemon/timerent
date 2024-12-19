@@ -52,9 +52,9 @@ class SettingController extends ApiController implements HasMiddleware
             'payment_api_key' => Crypt::encrypt($validatedRequest['payment_api_key']),
         ]);
 
-        $user = $venue->user_venues()->where('owner', true)->first()->user->email;
-        $emailNotifiable = new EmailNotifiable($user);
-        $emailNotifiable->notify(new UpdatedPaymentSettings($venue));
+//        $user = $venue->user_venues()->where('owner', true)->first()->user->email;
+//        $emailNotifiable = new EmailNotifiable($user);
+//        $emailNotifiable->notify(new UpdatedPaymentSettings($venue));
 
 
         return $this->success();

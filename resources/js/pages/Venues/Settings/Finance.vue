@@ -53,7 +53,7 @@
       </div>
       <div v-else>
         <!--        <div v-if="venue.stripe_connect_id && venue.stripe_connect_onboarded" class="text-green-500"><i class="fa fa-check"></i> Je kunt gebruik maken van Timerent Payments</div>-->
-        <div v-if="!venue.stripe_connect_id || !venue.stripe_connect_onboarded">
+        <div v-if="!venue.stripe_connect_id || !venue.stripe_connect_onboarded && venue.payment_service_provider">
           <div>
             <p>Om betalingen via Timerent te laten verlopen vragen we je om een aantal stappen te voltooien bij onze
               partner Stripe.</p>

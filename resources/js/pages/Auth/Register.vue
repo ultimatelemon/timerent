@@ -104,6 +104,7 @@ export default {
           })
           .finally(e => {
             this.loading = false;
+            this.formData.password = null;
           })
     },
 

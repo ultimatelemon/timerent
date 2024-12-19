@@ -28,7 +28,7 @@
         <div>
           <label for="email" class="block text-sm font-medium leading-6 text-gray-900">Email</label>
           <div class="mt-2">
-            <input v-model="formData.email" v-on:keyup.enter="login" type="email" autocomplete="email" required :class="errors?.errors?.email ? 'border-1 border-red-500': ''" class="block w-full border rounded-md  p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+            <input placeholder="voorbeeld@voorbeeld.nl" v-model="formData.email" v-on:keyup.enter="login" type="email" autocomplete="email" required :class="errors?.errors?.email ? 'border-1 border-red-500': ''" class="block w-full border rounded-md  p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
             <span class="text-red-500 text-sm" v-if="errors?.errors?.email">{{ errors.errors.email[0]  }}</span>
           </div>
         </div>
@@ -41,7 +41,7 @@
             </div>
           </div>
           <div class="mt-2">
-            <input v-model="formData.password" v-on:keyup.enter="login" type="password" autocomplete="password" required :class="errors?.errors?.password ? 'border-1 border-red-500': ''" class="block w-full border rounded-md  p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+            <input placeholder="********" v-model="formData.password" v-on:keyup.enter="login" type="password" autocomplete="password" required :class="errors?.errors?.password ? 'border-1 border-red-500': ''" class="block w-full border rounded-md  p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
             <span class="text-red-500 text-sm" v-if="errors?.errors?.password">{{ errors.errors.password[0]  }}</span>
           </div>
         </div>
@@ -125,12 +125,20 @@ export default {
     },
 
     resendVerificationMail() {
+      if(this.loading) return;
+      this.loading = true;
       axios.post('/sanctum/email/verify/resend', {
         email: this.formData.email,
       })
           .then(response => {
             this.errors.errors.email_verification = 'Verificatie mail is opnieuw verzonden';
             this.showResendButton = false;
+          })
+          .catch(() => {
+
+          })
+          .finally(() => {
+            this.loading = false;
           })
     },
 

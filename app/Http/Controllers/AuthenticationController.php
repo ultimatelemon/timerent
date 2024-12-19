@@ -30,6 +30,7 @@ class AuthenticationController extends ApiController
         $validatedRequest = $request->validated();
         $user = User::where('email', strtolower($validatedRequest['email']))->first();
 
+        ray($user->password);
         if(!$user || !Hash::check($request->password, $user->password))
             return $this->error([__('Ongeldig email of wachtwoord')], 400);
 

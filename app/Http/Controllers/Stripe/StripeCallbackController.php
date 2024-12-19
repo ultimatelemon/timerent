@@ -37,7 +37,8 @@ class StripeCallbackController extends Controller
         $session_id = $request->session_id;
 
         $session = $this->client->checkout->sessions->retrieve($session_id, ['expand' => ['subscription']]);
-        if($session->subscription) {
+        if($session->subscription->id) {
+            ray($session->subscription->id);
             $period_end = Carbon::createFromTimestamp($session->subscription->current_period_end)->setHour(23)->setMinute(59)->setSecond(59)->toDateTimeString();
 
             $venue = Venue::where('stripe_subscription_id', $session->id)->firstOrFail();
@@ -48,7 +49,10 @@ class StripeCallbackController extends Controller
             $user = $venue->user_venues->where('owner', true)->first()->user;
             $venue->user_venues->where('owner', true)->first()->user->notify(new OnboardEmail($venue, $user));
 
+            return view('application.callback.success');
+
         } else {
+            ray()->charles();
             //TODO: FIx this in ApplicationCallbackController
             if($session->payment_status === 'paid') {
                 $reservation = Reservation::where('payment_id', $session->id)->firstOrFail();

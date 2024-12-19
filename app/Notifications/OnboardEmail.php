@@ -69,7 +69,7 @@ class OnboardEmail extends Notification
                     '))
             ->line('Heb je na onze fantastische stappenplan nog vragen? Maak dan een ticket aan onder de "Help" knop. Onze medewerkers staan elke dag voor je klaar. Succes met Timerent!')
             ->action('Direct naar je vestiging', url(env('APP_URL') . '/store/' . $this->venue->id . '/home'))
-            ->line('Thank you for using our application!');
+            ->line('Bedankt voor je vertrouwen in Timerent!');
     }
 
     /**

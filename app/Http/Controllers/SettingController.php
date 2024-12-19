@@ -7,10 +7,13 @@ use App\Http\Requests\Venue\Settings\StoreGeneralSettings;
 use App\Http\Requests\Venue\Settings\StoreReservationSettings;
 use App\Models\Setting;
 use App\Models\Venue;
+use App\Notifications\Traits\EmailNotifiable;
+use App\Notifications\UpdatedPaymentSettings;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controllers\HasMiddleware;
 use Illuminate\Routing\Controllers\Middleware;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Crypt;
 
 class SettingController extends ApiController implements HasMiddleware
@@ -48,6 +51,11 @@ class SettingController extends ApiController implements HasMiddleware
             'payment_service_provider' => $validatedRequest['payment_service_provider'],
             'payment_api_key' => Crypt::encrypt($validatedRequest['payment_api_key']),
         ]);
+
+        $user = $venue->user_venues()->where('owner', true)->first()->user->email;
+        $emailNotifiable = new EmailNotifiable($user);
+        $emailNotifiable->notify(new UpdatedPaymentSettings($venue));
+
 
         return $this->success();
     }

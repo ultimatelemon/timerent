@@ -166,7 +166,7 @@
               </ul>
             </li>
             <li>
-              <div @click="toggleTheme" v-if="theme === 'light'" class="btn btn-secondary"><i class="fa fa-moon"></i></div>
+              <div @click="toggleTheme" v-if="theme === 'light' || !theme" class="btn btn-secondary"><i class="fa fa-moon"></i></div>
               <div @click="toggleTheme" v-if="theme === 'dark'" class="btn btn-secondary"><i class="fa fa-sun"></i></div>
             </li>
             <li class="-mx-6 mt-auto cursor-pointer" @click="logout">

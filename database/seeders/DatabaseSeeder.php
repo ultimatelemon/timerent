@@ -18,6 +18,8 @@ class DatabaseSeeder extends Seeder
         $this->call([
             RoleSeeder::class,
             EmptyTemplateSeeder::class,
+            PlanSeeder::class,
+            PSPSeeder::class,
         ]);
     }
 }

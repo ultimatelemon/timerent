@@ -306,7 +306,7 @@ export default {
       this.externalNaviation = [
         {
           name: 'Bekijk je pagina',
-          href: "https://" + this.current_venue.subdomain + ".timerent-rewrite.test",
+          href: "https://" + this.current_venue.subdomain + ".timerentapp.nl",
         },
         {
           name: 'Mijn dashboard',

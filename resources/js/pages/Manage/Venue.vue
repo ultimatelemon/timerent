@@ -4,7 +4,7 @@
       <div class="mb-12 flex justify-between">
         <div>
           <div class="font-semibold text-lg">{{ venue.name }}</div>
-          <div class="text-sm">Beheer hier de informatie en abonnement van je vestiging.</div>
+          <div class="text-sm dark:text-slate-400">Beheer hier de informatie en abonnement van je vestiging.</div>
         </div>
       </div>
     </div>
@@ -13,8 +13,8 @@
 
     <div>
       <div class="">
-        <h3 class="text-base font-semibold leading-7 text-gray-900">Vestiging informatie</h3>
-        <p class="mt-1 text-sm leading-6 text-gray-500">Praktische informatie over je vestiging.</p>
+        <h3 class="text-base font-semibold leading-7 text-gray-900 dark:text-white">Vestiging informatie</h3>
+        <p class="mt-1 text-sm leading-6 text-gray-500 dark:text-slate-400">Praktische informatie over je vestiging.</p>
       </div>
       <div class="mt-6 border-t border-gray-100">
         <dl class="divide-y divide-gray-100">
@@ -24,7 +24,7 @@
               <input v-model="formData.name" type="text" name="name" id="name"
                      v-on:keyup.enter="postData"
                      :class="errors.name ? 'ring-red-300' : ''"
-                     class="block w-full rounded-md border-0 py-1.5 pr-10 ring-1 ring-inset focus:ring-2 focus:ring-inset focus:ring-indigo-500 sm:text-sm sm:leading-6"
+                     class="input"
                      aria-invalid="true" aria-describedby="name-error"/>
               <span v-if="errors.name" class="text-red-500 text-sm">{{errors.name[0]}}</span>
             </div>
@@ -36,7 +36,7 @@
                      v-on:keyup.enter="postData"
                      :class="errors.subdomain ? 'ring-red-300' : ''"
                      placeholder="Alleen a-z, geen spaties of speciale tekens"
-                     class="block w-full rounded-md border-0 py-1.5 pr-10 ring-1 ring-inset focus:ring-2 focus:ring-inset focus:ring-indigo-500 sm:text-sm sm:leading-6"
+                     class="input"
                      aria-invalid="true" aria-describedby="name-error"/>
               <span v-if="errors.subdomain" class="text-red-500 text-sm">{{errors.subdomain[0]}}</span>
             </div>

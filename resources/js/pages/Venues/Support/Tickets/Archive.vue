@@ -45,7 +45,7 @@
               <td class="whitespace-nowrap px-2 py-2 text-sm font-medium text-gray-900">{{ ticket.user.name }}</td>
             </tr>
             <tr v-else class="text-center">
-              <td colspan="12" class="pt-12">
+              <td colspan="12" class="py-12">
                 Er zijn geen gesloten tickets gevonden
               </td>
             </tr>

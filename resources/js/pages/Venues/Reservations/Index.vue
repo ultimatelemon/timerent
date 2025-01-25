@@ -34,9 +34,11 @@
               <td class="whitespace-nowrap px-2 py-2 text-sm font-medium text-gray-900">{{ reservation.email }}</td>
               <td class="whitespace-nowrap px-2 py-2 text-sm font-medium text-gray-900">{{ $filters.currency(reservation.payment_amount) }}</td>
               <td class="whitespace-nowrap px-2 py-2 text-sm font-medium text-gray-900">{{ $filters.humanDateTime(reservation.created_at) }}</td>
-              <td class="whitespace-nowrap px-2 py-2 text-sm font-medium text-gray-900 label label-warning mt-2" v-if="reservation.payment_status === 'open'">Open</td>
-              <td class="whitespace-nowrap px-2 py-2 text-sm font-medium text-gray-900 label label-success mt-2" v-if="reservation.payment_status === 'paid'">Betaald</td>
-              <td class="whitespace-nowrap px-2 py-2 text-sm font-medium text-gray-900 label label-danger mt-2" v-if="reservation.payment_status === 'refunded'">Geannuleerd</td>
+              <td class="whitespace-nowrap px-2 py-2 text-sm font-medium text-gray-900">
+                <span class="badge badge-warning mt-2" v-if="reservation.payment_status === 'open'">Open</span>
+                <span class="badge badge-success mt-2" v-if="reservation.payment_status === 'paid'">Betaald</span>
+                <span class="badge badge-danger mt-2" v-if="reservation.payment_status === 'refunded'">Terugbetaald</span>
+              </td>
             </tr>
             <tr v-else class="text-center">
               <td colspan="12" class="py-12">Er zijn nog geen opkomende reserveringen gepland</td>

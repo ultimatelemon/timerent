@@ -21,6 +21,7 @@ return new class extends Migration
             $table->boolean('is_active')->default(false);
             $table->integer('tax_percentage');
 
+            $table->integer('max_per_reservation')->default(1);
             $table->integer('max_per_day')->default(0);
             $table->boolean('price_per_timeblock')->default(false);
 

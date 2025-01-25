@@ -28,6 +28,7 @@ class StoreProduct extends FormRequest
             'is_active' => 'required|boolean',
             'tax_percentage' => 'required|integer|in:0,9,21',
             'max_per_day' => 'min:0|max:9999|required|integer',
+            'max_per_reservation' => 'min:0|max:50|required|integer',
             'price_per_timeblock' => 'required|boolean',
             'units' => 'nullable',
             'units.*' => 'string|distinct|exists:units,id',

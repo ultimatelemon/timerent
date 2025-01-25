@@ -19,6 +19,7 @@ class Product extends Model
         'is_active',
         'tax_percentage',
         'max_per_day',
+        'max_per_reservation',
         'price_per_timeblock',
     ];
 

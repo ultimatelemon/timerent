@@ -67,25 +67,28 @@ class ApplicationReservationController extends ApiController
 
         $timeblockUnitIds = array_column($validated['timeblocks'], 'unit_id');
 
-        foreach($validated['products'] as $productId) {
-            $prod = Product::findOrFail($productId);
+        foreach($validated['products'] as $prod) {
+            $product = Product::findOrFail($prod['id']);
+            $productCount = intval($prod['count']);
 
-            if(ProductHelper::checkIfProductMaxIsBookedToday($prod, $date, $reservation)) {
+            if(ProductHelper::checkIfProductMaxIsBookedToday($product, $date, $reservation)) {
                 $reservation->forceDelete();
                 return $this->error(['error' => "Product '$prod->name' is maximaal gereserveerd voor vandaag"]);
             }
 
-            if($prod->units->pluck('id')->diff($timeblockUnitIds)->isNotEmpty()) {
+            if($product->units->pluck('id')->diff($timeblockUnitIds)->isNotEmpty()) {
                 $reservation->forceDelete();
-                return $this->error(['error' => "Product '$prod->name' is alleen te reserveren bij bijhorende unit(s)"]);
+                return $this->error(['error' => "Product '$product->name' is alleen te reserveren bij bijhorende unit(s)"]);
             }
 
-            $timeblockMultiplier = $prod->price_per_timeblock ? count($validated['timeblocks']) : 1;
-            $total += floor(($prod->price * ($prod->price_per_timeblock ? $timeblockMultiplier : 1)));
-            $taxLow += floor($prod->tax_percentage === 9 ? round(($prod->price * $timeblockMultiplier) - (($prod->price * $timeblockMultiplier) / 1.09), 2) : 0);
-            $taxHigh += floor($prod->tax_percentage === 21 ? round(($prod->price * $timeblockMultiplier) - (($prod->price * $timeblockMultiplier) / 1.21), 2) : 0);
-            $revenueHigh += floor($prod->tax_percentage === 21 ? $prod->price * $timeblockMultiplier : 0);
-            $revenueLow += floor($prod->tax_percentage === 9 ? $prod->price * $timeblockMultiplier : 0);
+            $timeblockMultiplier = ($product->price_per_timeblock ? count($validated['timeblocks']) : 1) * $productCount;
+            ray($productCount)->red();
+            ray($timeblockMultiplier)->orange();
+            $total += floor(($product->price *  $timeblockMultiplier));
+            $taxLow += floor($product->tax_percentage === 9 ? round(($product->price * $timeblockMultiplier) - (($product->price * $timeblockMultiplier) / 1.09), 2) : 0);
+            $taxHigh += floor($product->tax_percentage === 21 ? round(($product->price * $timeblockMultiplier) - (($product->price * $timeblockMultiplier) / 1.21), 2) : 0);
+            $revenueHigh += floor($product->tax_percentage === 21 ? $product->price * $timeblockMultiplier : 0);
+            $revenueLow += floor($product->tax_percentage === 9 ? $product->price * $timeblockMultiplier : 0);
 
             $reservation->update([
                 'payment_amount' => $total,
@@ -95,8 +98,39 @@ class ApplicationReservationController extends ApiController
                 'tax_low' => $taxLow,
             ]);
 
-            $reservation->products()->save($prod);
+            $reservation->products()->save($product, ['count' => $productCount]);
         }
+//
+//        foreach($validated['products'] as $productId) {
+//            $prod = Product::findOrFail($productId);
+//
+//            if(ProductHelper::checkIfProductMaxIsBookedToday($prod, $date, $reservation)) {
+//                $reservation->forceDelete();
+//                return $this->error(['error' => "Product '$prod->name' is maximaal gereserveerd voor vandaag"]);
+//            }
+//
+//            if($prod->units->pluck('id')->diff($timeblockUnitIds)->isNotEmpty()) {
+//                $reservation->forceDelete();
+//                return $this->error(['error' => "Product '$prod->name' is alleen te reserveren bij bijhorende unit(s)"]);
+//            }
+//
+//            $timeblockMultiplier = $prod->price_per_timeblock ? count($validated['timeblocks']) : 1;
+//            $total += floor(($prod->price * ($prod->price_per_timeblock ? $timeblockMultiplier : 1)));
+//            $taxLow += floor($prod->tax_percentage === 9 ? round(($prod->price * $timeblockMultiplier) - (($prod->price * $timeblockMultiplier) / 1.09), 2) : 0);
+//            $taxHigh += floor($prod->tax_percentage === 21 ? round(($prod->price * $timeblockMultiplier) - (($prod->price * $timeblockMultiplier) / 1.21), 2) : 0);
+//            $revenueHigh += floor($prod->tax_percentage === 21 ? $prod->price * $timeblockMultiplier : 0);
+//            $revenueLow += floor($prod->tax_percentage === 9 ? $prod->price * $timeblockMultiplier : 0);
+//
+//            $reservation->update([
+//                'payment_amount' => $total,
+//                'revenue_high' => $revenueHigh,
+//                'revenue_low' => $revenueLow,
+//                'tax_high' => $taxHigh,
+//                'tax_low' => $taxLow,
+//            ]);
+//
+//            $reservation->products()->save($prod);
+//        }
 
         $timeblocks = [];
         foreach ($validated['timeblocks'] as $timeblock) {

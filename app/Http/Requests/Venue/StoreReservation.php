@@ -29,8 +29,7 @@ class StoreReservation extends FormRequest
             'phone_number' => 'required|numeric|digits:10',
             'date' => 'required',
             'comments' => 'nullable|string',
-            'products' => 'nullable',
-            'products.*' => 'string|distinct|exists:products,id',
+            'products' => 'nullable|array',
             'timeblocks' => 'required',
         ];
     }

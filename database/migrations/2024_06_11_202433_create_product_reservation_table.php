@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('product_reservation', function (Blueprint $table) {
             $table->foreignUuid('product_id')->constrained();
             $table->foreignUuid('reservation_id')->constrained();
+            $table->integer('count')->default(1);
             $table->timestamps();
         });
     }

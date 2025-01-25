@@ -60,7 +60,10 @@
             </div>
             <div class="text-center">{{ $filters.currency(product.price) }} {{ product.price_per_timeblock ? '/ tijdblock' : '/ reservering' }}</div>
             <div class="text-center">
-              <input class="checkbox" type="checkbox" @change="toggleProduct(product.id)">
+              <select name="products" id="products" @change="updateSelectedProducts(product.id, $event.target.value)">
+                <option :value="0">0</option>
+                <option :value="i" v-for="i in product.max_per_reservation">{{i}}</option>
+              </select>
             </div>
           </div>
         </div>
@@ -273,11 +276,19 @@ export default {
       fp.open();
     },
 
-    toggleProduct(id) {
-      if (this.selectedProducts.includes(id)) {
-        return this.selectedProducts = this.selectedProducts.filter(e => e !== id);
+    updateSelectedProducts(productId, count) {
+      console.log('product changed')
+      const existingProduct = this.selectedProducts.find((item) => item.id === productId);
+      if(existingProduct) {
+        if(count === 0 || count === "0") {
+          this.selectedProducts = this.selectedProducts.filter((item) => item.id !== productId);
+        } else {
+          existingProduct.count = count;
+        }
+      } else if(!existingProduct) {
+        this.selectedProducts = this.selectedProducts.filter((item) => item.id !== productId);
+        this.selectedProducts.push({id: productId, count})
       }
-      return this.selectedProducts.push(id);
     },
 
     postData() {
@@ -330,7 +341,7 @@ export default {
       this.day = (DateTime.fromFormat(this.date, 'dd-MM-yyyy').weekday);
       this.selected = [];
       this.fetchUnits();
-    }
+    },
   }
 }
 </script>

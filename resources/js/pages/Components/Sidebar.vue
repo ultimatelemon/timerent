@@ -53,7 +53,7 @@
                             </router-link>
                             <Disclosure as="div" v-if="item.children && (item.permission.length > 0 ? (user.owner ? true : hasCommon(item.permission, role.flags)) : true)" :to="item.link" v-slot="{ open }">
                               <DisclosureButton
-                                  :class="[item.current ? 'bg-gray-50' : 'hover:bg-gray-50', 'flex w-full items-center gap-x-3 rounded-md p-2 text-left text-sm font-semibold leading-6 text-gray-700 dark:text-white dark:hover:bg-slate-800']">
+                                  :class="[item.current ? 'bg-gray-50' : 'hover:bg-gray-50', 'dark:text-white flex w-full items-center gap-x-3 rounded-md p-2 text-left text-sm font-semibold leading-6 text-gray-700 dark:hover:bg-slate-800']">
                                 <ChevronRightIcon
                                     :class="[open ? 'rotate-90 text-gray-500' : 'text-gray-400', 'h-5 w-5 shrink-0']"
                                     aria-hidden="true"/>
@@ -62,8 +62,8 @@
                               <DisclosurePanel as="ul" class="mt-1 px-2">
                                 <li v-for="subItem in item.children" :key="subItem.name">
                                   <router-link @click="!open" :to="subItem.link"
-                                               active-class="bg-gray-100"
-                                               class="hover:bg-gray-100 block rounded-md py-2 pl-9 pr-2 text-sm leading-6 text-gray-700">
+                                               active-class="bg-gray-100 dark:bg-slate-800"
+                                               class="hover:bg-gray-100 block rounded-md py-2 pl-9 pr-2 text-sm leading-6 text-gray-700 dark:text-white dark:hover:bg-slate-800">
                                     {{ subItem.name }}
                                   </router-link>
                                 </li>

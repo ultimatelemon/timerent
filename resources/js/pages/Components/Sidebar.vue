@@ -84,18 +84,43 @@
                         </li>
                       </ul>
                     </li>
-                    <li class="-mx-6 mt-auto cursor-pointer" @click="logout">
-                      <div
-                          class="flex items-center border-t gap-x-4 px-6 py-3 text-sm font-semibold leading-6 text-gray-900 hover:bg-gray-50 justify-between">
-                        <!--                <img class="h-8 w-8 rounded-full bg-gray-50" src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="" />-->
-                        <div class="flex flex-col">
-                          <span class="sr-only dark:text-white">Your profile</span>
-                          <span class="dark:text-white" aria-hidden="true">{{ user.user.name }}</span>
-                          <span aria-hidden="true" class="font-light text-xs dark:text-white">{{ user.user.email }}</span>
+                    <li class="-mx-6 mt-auto relative">
+                      <!-- Dropdown Menu -->
+                      <transition name="fade">
+                        <div
+                            v-if="optionsVisible"
+                            @click.stop
+                            ref="dropdownContainer"
+                            class="absolute right-0 w-48 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-lg p-3 -top-28 text-sm space-y-2 transition-all"
+                        >
+                          <button
+                              @click="toggleTheme"
+                              class="flex items-center gap-2 px-3 py-2 w-full text-left rounded-lg transition hover:bg-gray-100 dark:hover:bg-gray-700"
+                          >
+                            <i class="fa" :class="theme === 'light' || !theme ? 'fa-moon' : 'fa-sun'"></i>
+                            <span>{{ theme === 'light' || !theme ? 'Dark Mode' : 'Light Mode' }}</span>
+                          </button>
+
+                          <button
+                              @click="logout"
+                              class="flex items-center gap-2 px-3 py-2 w-full text-left rounded-lg transition hover:bg-red-100 dark:hover:bg-red-700 text-red-600 dark:text-red-400"
+                          >
+                            <i class="fa fa-sign-out"></i>
+                            <span>Afmelden</span>
+                          </button>
                         </div>
-                        <div>
+                      </transition>
+
+                      <!-- Profile Section -->
+                      <div class="flex items-center border-t gap-x-4 px-6 py-3 text-sm font-semibold leading-6 text-gray-900 dark:text-white hover:bg-gray-50 dark:hover:bg-gray-700 justify-between">
+                        <div class="flex flex-col">
+                          <span class="sr-only">Your profile</span>
+                          <span>{{ user.user.name }}</span>
+                          <span class="font-light text-xs">{{ user.user.email }}</span>
+                        </div>
+                        <div class="cursor-pointer" @click="toggleDropdown">
                           <i>
-                            <component :is="ArrowRightEndOnRectangleIcon" class="h-6 w-6 text-red-500"></component>
+                            <component :is="EllipsisVerticalIcon" class="h-6 w-6"></component>
                           </i>
                         </div>
                       </div>
@@ -165,26 +190,66 @@
                 </li>
               </ul>
             </li>
-            <li>
-              <div @click="toggleTheme" v-if="theme === 'light' || !theme" class="btn btn-secondary"><i class="fa fa-moon"></i></div>
-              <div @click="toggleTheme" v-if="theme === 'dark'" class="btn btn-secondary"><i class="fa fa-sun"></i></div>
-            </li>
-            <li class="-mx-6 mt-auto cursor-pointer" @click="logout">
-              <div
-                  class="flex items-center border-t gap-x-4 px-6 py-3 text-sm font-semibold leading-6 text-gray-900 hover:bg-gray-50 justify-between dark:border-slate-950">
-                <!--                <img class="h-8 w-8 rounded-full bg-gray-50" src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="" />-->
-                <div class="flex flex-col">
-                  <span class="sr-only dark:text-white">Your profile</span>
-                  <span class="dark:text-white" aria-hidden="true">{{ user.user.name }}</span>
-                  <span aria-hidden="true" class="font-light text-xs dark:text-white">{{ user.user.email }}</span>
+
+            <li class="-mx-6 mt-auto relative">
+              <!-- Dropdown Menu -->
+              <transition name="fade">
+                <div
+                    v-if="optionsVisible"
+                    @click.stop
+                    ref="dropdownContainer"
+                    class="absolute right-0 w-48 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-lg p-3 -top-28 text-sm space-y-2 transition-all"
+                >
+                  <button
+                      @click="toggleTheme"
+                      class="flex items-center gap-2 px-3 py-2 w-full text-left rounded-lg transition hover:bg-gray-100 dark:hover:bg-gray-700"
+                  >
+                    <i class="fa" :class="theme === 'light' || !theme ? 'fa-moon' : 'fa-sun'"></i>
+                    <span>{{ theme === 'light' || !theme ? 'Dark Mode' : 'Light Mode' }}</span>
+                  </button>
+
+                  <button
+                      @click="logout"
+                      class="flex items-center gap-2 px-3 py-2 w-full text-left rounded-lg transition hover:bg-red-100 dark:hover:bg-red-700 text-red-600 dark:text-red-400"
+                  >
+                    <i class="fa fa-sign-out"></i>
+                    <span>Afmelden</span>
+                  </button>
                 </div>
-                <div>
+              </transition>
+
+              <!-- Profile Section -->
+              <div class="flex items-center border-t gap-x-4 px-6 py-3 text-sm font-semibold leading-6 text-gray-900 dark:text-white hover:bg-gray-50 dark:hover:bg-gray-700 justify-between">
+                <div class="flex flex-col">
+                  <span class="sr-only">Your profile</span>
+                  <span>{{ user.user.name }}</span>
+                  <span class="font-light text-xs">{{ user.user.email }}</span>
+                </div>
+                <div class="cursor-pointer" @click="toggleDropdown">
                   <i>
-                    <component :is="ArrowRightEndOnRectangleIcon" class="h-6 w-6 text-red-500"></component>
+                    <component :is="EllipsisVerticalIcon" class="h-6 w-6"></component>
                   </i>
                 </div>
               </div>
             </li>
+
+
+            <!--            <li class="-mx-6 mt-auto cursor-pointer" @click="logout">-->
+<!--              <div-->
+<!--                  class="flex items-center border-t gap-x-4 px-6 py-3 text-sm font-semibold leading-6 text-gray-900 hover:bg-gray-50 justify-between dark:border-slate-950">-->
+<!--                &lt;!&ndash;                <img class="h-8 w-8 rounded-full bg-gray-50" src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="" />&ndash;&gt;-->
+<!--                <div class="flex flex-col">-->
+<!--                  <span class="sr-only dark:text-white">Your profile</span>-->
+<!--                  <span class="dark:text-white" aria-hidden="true">{{ user.user.name }}</span>-->
+<!--                  <span aria-hidden="true" class="font-light text-xs dark:text-white">{{ user.user.email }}</span>-->
+<!--                </div>-->
+<!--                <div>-->
+<!--                  <i>-->
+<!--                    <component :is="ArrowRightEndOnRectangleIcon" class="h-6 w-6 text-red-500"></component>-->
+<!--                  </i>-->
+<!--                </div>-->
+<!--              </div>-->
+<!--            </li>-->
           </ul>
         </nav>
       </div>
@@ -223,7 +288,7 @@ import {
   TransitionRoot
 } from '@headlessui/vue'
 import {HomeIcon, ArrowRightEndOnRectangleIcon, ArrowTopRightOnSquareIcon} from "@heroicons/vue/24/outline/index.js";
-import {Bars3Icon, XMarkIcon} from "@heroicons/vue/16/solid/index.js";
+import {Bars3Icon, EllipsisVerticalIcon, XMarkIcon} from "@heroicons/vue/16/solid/index.js";
 
 // { name: 'Dashboard', href: '#', icon: HomeIcon, current: true },
 // { name: 'Team', href: '#', icon: UsersIcon, current: false },
@@ -263,6 +328,7 @@ export default {
   components: {ChevronRightIcon},
   data() {
     return {
+      optionsVisible: false,
       theme: window.localStorage.getItem("theme"),
       user: null,
       role: null,
@@ -465,11 +531,26 @@ export default {
             window.location.href = '/login'
           })
     },
+
+    closeDropdown(event) {
+      if(this.$refs.dropdownContainer && !this.$refs.dropdownContainer.contains(event.target)) {
+        this.optionsVisible = false;
+      }
+    },
+
+    toggleDropdown(event) {
+      event.stopPropagation()
+      this.optionsVisible = !this.optionsVisible;
+    },
   },
 
   mounted() {
-    console.log(this.$store.state.venue.id)
     this.fetchUser(this.$store.state.venue.id);
+    document.addEventListener('click', this.closeDropdown);
+  },
+
+  beforeUnmount() {
+    document.removeEventListener('click', this.closeDropdown);
   },
 
   // TODO: Fix user store in Vuex to remove the api call to fetch user.

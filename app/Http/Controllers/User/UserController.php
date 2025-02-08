@@ -15,6 +15,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controllers\HasMiddleware;
 use Illuminate\Routing\Controllers\Middleware;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 
 class UserController extends ApiController
@@ -140,5 +141,17 @@ class UserController extends ApiController
         $user = UserVenue::where(['user_id' => $user->id, 'venue_id' => $venue->id])->firstOrFail();
         $user->delete();
         return $this->success();
+    }
+
+    public function updateCurrentUser(Request $request): JsonResponse
+    {
+        $user = Auth::user();
+        if(!$user) return $this->error();
+        $validatedRequest = Validator::make($request->all(), [
+            'name' => 'required|string|min:2|max:48',
+            'email' => 'required|string|email|email:rfc,dns|unique:users,email,'.$user->id,
+        ]);
+        $user->update($validatedRequest->validate());
+        return $this->success(new UserResource($user));
     }
 }

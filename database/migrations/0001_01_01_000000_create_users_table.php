@@ -14,10 +14,16 @@ return new class extends Migration
         Schema::create('users', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->string('name');
+
             $table->string('email')->unique();
+            $table->timestamp('new_email_verified_at')->unique();
+            $table->string('new_email_verification_token')->unique();
+            $table->string('new_email_verification_token_expires_at')->unique();
+
             $table->timestamp('email_verified_at')->nullable();
             $table->string('email_verification_token')->nullable();
             $table->timestamp('email_verification_token_expires_at')->nullable();
+
             $table->foreignUuid('role_id')->constrained()->default('509ab95a-9dbc-4857-a142-c3a1fa9a9812');
             $table->string('password');
             $table->string('password_reset_token')->nullable();

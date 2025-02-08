@@ -208,13 +208,12 @@
                     <span>{{ theme === 'light' || !theme ? 'Dark Mode' : 'Light Mode' }}</span>
                   </button>
 
-                  <button
-                      @click="toggleTheme"
-                      class="flex items-center gap-2 px-3 py-2 w-full text-left rounded-lg transition hover:bg-gray-100 dark:hover:bg-gray-700"
+                  <router-link :to="{name: 'settings'}"
+                               class="flex items-center gap-2 px-3 py-2 w-full text-left rounded-lg transition hover:bg-gray-100 dark:hover:bg-gray-700"
                   >
                     <i class="fa fa-cog"></i>
                     <span>Mijn instellingen</span>
-                  </button>
+                  </router-link>
 
                   <button
                       @click="logout"

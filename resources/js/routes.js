@@ -9,6 +9,7 @@ export const routes = [
     { path: '/select', component: () => import('./pages/VenueSelector.vue'), name: 'venueselect', meta: { title: "pages.login" } },
     { path: '/password-forgot', component: () => import('./pages/Auth/PasswordForgot.vue'), name: 'password-forgot', meta: { title: "pages.login" } },
     { path: '/password-reset', component: () => import('./pages/Auth/PasswordReset.vue'), name: 'password-reset', meta: { title: "pages.login" } },
+    { path: '/settings', component: () => import('./pages/Auth/Settings.vue'), name: 'settings', meta: { title: "pages.settings" } },
 
     { path: '/manage/:venue', component: () => import('./pages/Manage/Venue.vue'), name: 'manage.venue', meta: { title: "pages.login" } },
 

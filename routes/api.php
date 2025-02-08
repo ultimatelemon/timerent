@@ -65,6 +65,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/information-messages', [InformationMessageController::class, 'index']);
     Route::post('/sanctum/logout', [\App\Http\Controllers\AuthenticationController::class, 'revokeToken']);
 
+    Route::post('/users/current/update', [\App\Http\Controllers\User\UserController::class, 'updateCurrentUser']);
     Route::get('/users/current', [\App\Http\Controllers\User\UserController::class, 'current']);
     Route::resource('/users', \App\Http\Controllers\User\UserController::class);
     Route::resource('users.user-venues', UserVenueController::class)->only(['index']);

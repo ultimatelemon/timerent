@@ -26,6 +26,7 @@ Route::get('/confirmation/{any}', function() { return view('layouts.blank-page')
 Route::get('/password-forgot', function() { return view('layouts.authentication');});
 Route::get('/password-reset', function() { return view('layouts.authentication');});
 Route::get('/select', function () { return view('layouts.dashboard'); })->name('select');
+Route::get('/settings', function () { return view('layouts.dashboard'); })->name('settings');
 Route::get('/manage/{any}', function () { return view('layouts.dashboard'); })->name('manage');
 
 Route::middleware('venueSubscription')->group(function () {

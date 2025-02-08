@@ -198,7 +198,7 @@
                     v-if="optionsVisible"
                     @click.stop
                     ref="dropdownContainer"
-                    class="absolute right-0 w-48 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-lg p-3 -top-28 text-sm space-y-2 transition-all"
+                    class="absolute right-0 w-48 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-lg p-3 -top-40 text-sm space-y-2 transition-all"
                 >
                   <button
                       @click="toggleTheme"
@@ -206,6 +206,14 @@
                   >
                     <i class="fa" :class="theme === 'light' || !theme ? 'fa-moon' : 'fa-sun'"></i>
                     <span>{{ theme === 'light' || !theme ? 'Dark Mode' : 'Light Mode' }}</span>
+                  </button>
+
+                  <button
+                      @click="toggleTheme"
+                      class="flex items-center gap-2 px-3 py-2 w-full text-left rounded-lg transition hover:bg-gray-100 dark:hover:bg-gray-700"
+                  >
+                    <i class="fa fa-cog"></i>
+                    <span>Mijn instellingen</span>
                   </button>
 
                   <button

@@ -141,22 +141,57 @@
                 </li>
               </ul>
             </li>
-            <li class="-mx-6 mt-auto cursor-pointer" @click="logout">
-              <div
-                  class="flex items-center border-t gap-x-4 px-6 py-3 text-sm font-semibold leading-6 text-gray-900 hover:bg-gray-50 justify-between dark:border-slate-950">
-                <!--                <img class="h-8 w-8 rounded-full bg-gray-50" src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="" />-->
-                <div class="flex flex-col dark:text-white">
-                  <span class="sr-only">Your profile</span>
-                  <span aria-hidden="true">{{ user.name }}</span>
-                  <span aria-hidden="true" class="font-light text-xs">{{ user.email }}</span>
+
+            <li class="-mx-6 mt-auto relative">
+              <!-- Dropdown Menu -->
+              <transition name="fade">
+                <div
+                    v-if="optionsVisible"
+                    @click.stop
+                    ref="dropdownContainer"
+                    class="absolute right-0 w-48 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-lg p-3 -top-40 text-sm space-y-2 transition-all"
+                >
+                  <button
+                      @click="toggleTheme"
+                      class="flex items-center gap-2 px-3 py-2 w-full text-left rounded-lg transition hover:bg-gray-100 dark:hover:bg-gray-700"
+                  >
+                    <i class="fa" :class="theme === 'light' || !theme ? 'fa-moon' : 'fa-sun'"></i>
+                    <span>{{ theme === 'light' || !theme ? 'Dark Mode' : 'Light Mode' }}</span>
+                  </button>
+
+                  <button
+                      @click="toggleTheme"
+                      class="flex items-center gap-2 px-3 py-2 w-full text-left rounded-lg transition hover:bg-gray-100 dark:hover:bg-gray-700"
+                  >
+                    <i class="fa fa-cog"></i>
+                    <span>Mijn instellingen</span>
+                  </button>
+
+                  <button
+                      @click="logout"
+                      class="flex items-center gap-2 px-3 py-2 w-full text-left rounded-lg transition hover:bg-red-100 dark:hover:bg-red-700 text-red-600 dark:text-red-400"
+                  >
+                    <i class="fa fa-sign-out"></i>
+                    <span>Afmelden</span>
+                  </button>
                 </div>
-                <div>
+              </transition>
+
+              <!-- Profile Section -->
+              <div class="flex items-center border-t gap-x-4 px-6 py-3 text-sm font-semibold leading-6 text-gray-900 dark:text-white hover:bg-gray-50 dark:hover:bg-gray-700 justify-between">
+                <div class="flex flex-col">
+                  <span class="sr-only">Your profile</span>
+                  <span>{{ user.name }}</span>
+                  <span class="font-light text-xs">{{ user.email }}</span>
+                </div>
+                <div class="cursor-pointer" @click="toggleDropdown">
                   <i>
-                    <component :is="ArrowRightEndOnRectangleIcon" class="h-6 w-6 text-red-500"></component>
+                    <component :is="EllipsisVerticalIcon" class="h-6 w-6"></component>
                   </i>
                 </div>
               </div>
             </li>
+
           </ul>
         </nav>
       </div>
@@ -195,7 +230,7 @@ import {
   TransitionRoot,
 } from '@headlessui/vue'
 import {HomeIcon, ArrowRightEndOnRectangleIcon, ArrowTopRightOnSquareIcon} from "@heroicons/vue/24/outline/index.js";
-import {Bars3Icon, XMarkIcon, ChevronRightIcon} from "@heroicons/vue/16/solid/index.js";
+import {Bars3Icon, XMarkIcon, ChevronRightIcon, EllipsisVerticalIcon} from "@heroicons/vue/16/solid/index.js";
 
 const sidebarOpen = ref(false)
 </script>
@@ -215,6 +250,8 @@ export default {
   name: "Sidebar",
   data() {
     return {
+      theme: window.localStorage.getItem('theme'),
+      optionsVisible: false,
       user: null,
       role: null,
       venue: null,
@@ -234,6 +271,18 @@ export default {
 
   methods: {
 
+    toggleTheme() {
+      if(window.localStorage.getItem('theme') === 'dark') {
+        window.localStorage.setItem('theme', 'light')
+        document.documentElement.classList.remove('dark');
+        this.theme = 'light'
+      } else {
+        window.localStorage.setItem('theme', 'dark')
+        this.theme = 'dark'
+        document.documentElement.classList.add('dark');
+      }
+    },
+
     fetchUser() {
       axios.get('/users/current')
           .then(response => {
@@ -246,27 +295,6 @@ export default {
           })
     },
 
-    // fetchUser(venue) {
-    //   axios.get('/users/current?venue=' + venue)
-    //       .then(response => {
-    //         this.user = response.data.data.user;
-    //         this.role = response.data.data.role;
-    //         // this.fetchNavigation();
-    //       })
-    //       .catch(e => {
-    //         console.log(e.message)
-    //       })
-    // },
-
-    // fetchUser() {
-    //   axios.get('/users/current')
-    //       .then(response => {
-    //         // this.current_user = response.data.data.user;
-    //         this.current_user_role = response.data.role;
-    //         // this.fetchData();
-    //       })
-    // },
-
     hasCommon(permission, flags) {
       return flags.some(item1 => permission.some(item2 => item1 === item2));
     },
@@ -277,10 +305,22 @@ export default {
             window.location.href = '/login'
           })
     },
+
+    closeDropdown(event) {
+      if(this.$refs.dropdownContainer && !this.$refs.dropdownContainer.contains(event.target)) {
+        this.optionsVisible = false;
+      }
+    },
+
+    toggleDropdown(event) {
+      event.stopPropagation();
+      this.optionsVisible = !this.optionsVisible;
+    }
   },
 
   mounted() {
     this.fetchUser();
+    document.addEventListener('click', this.closeDropdown);
   },
 
   // TODO: Fix user store in Vuex to remove the api call to fetch user.
